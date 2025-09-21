@@ -24,13 +24,14 @@ type RootLayoutProps = {
 };
 
 const RootLayout = ({ children }: RootLayoutProps) => (
-  <html lang="pt-BR" suppressHydrationWarning>
+  <html lang="pt-BR">
     <body
       className={cn(
         geistSans.variable,
         geistMono.variable,
         "overflow-x-hidden font-sans antialiased sm:px-4"
       )}
+      suppressHydrationWarning
     >
       <Providers>
         {children}
