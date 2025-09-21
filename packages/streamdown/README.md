@@ -1,58 +1,58 @@
 # Streamdown
 
-A drop-in replacement for react-markdown, designed for AI-powered streaming.
+Uma substituição direta para react-markdown, projetada para streaming alimentado por IA.
 
 [![npm version](https://img.shields.io/npm/v/streamdown)](https://www.npmjs.com/package/streamdown)
 
-## Overview
+## Visão Geral
 
-Formatting Markdown is easy, but when you tokenize and stream it, new challenges arise. Streamdown is built specifically to handle the unique requirements of streaming Markdown content from AI models, providing seamless formatting even with incomplete or unterminated Markdown blocks.
+Formatar Markdown é fácil, mas quando você tokeniza e faz streaming, novos desafios surgem. O Streamdown foi construído especificamente para lidar com os requisitos únicos de streaming de conteúdo Markdown de modelos de IA, fornecendo formatação perfeita mesmo com blocos Markdown incompletos ou não terminados.
 
-Streamdown powers the [AI Elements Response](https://ai-sdk.dev/elements/components/response) component but can be installed as a standalone package for your own streaming needs.
+O Streamdown alimenta o componente [AI Elements Response](https://ai-sdk.dev/elements/components/response), mas pode ser instalado como um pacote independente para suas próprias necessidades de streaming.
 
-## Features
+## Funcionalidades
 
-- 🚀 **Drop-in replacement** for `react-markdown`
-- 🔄 **Streaming-optimized** - Handles incomplete Markdown gracefully
-- 🎨 **Unterminated block parsing** - Styles incomplete bold, italic, code, links, and headings
-- 📊 **GitHub Flavored Markdown** - Tables, task lists, and strikethrough support
-- 🔢 **Math rendering** - LaTeX equations via KaTeX
-- 📈 **Mermaid diagrams** - Render Mermaid diagrams as code blocks with a button to render them
-- 🎯 **Code syntax highlighting** - Beautiful code blocks with Shiki
-- 🛡️ **Security-first** - Built on harden-react-markdown for safe rendering
-- ⚡ **Performance optimized** - Memoized rendering for efficient updates
+- 🚀 **Substituição direta** para `react-markdown`
+- 🔄 **Otimizado para streaming** - Lida com Markdown incompleto de forma elegante
+- 🎨 **Análise de blocos não terminados** - Estiliza bold, itálico, código, links e cabeçalhos incompletos
+- 📊 **GitHub Flavored Markdown** - Suporte para tabelas, listas de tarefas e texto riscado
+- 🔢 **Renderização matemática** - Equações LaTeX via KaTeX
+- 📈 **Diagramas Mermaid** - Renderiza diagramas Mermaid como blocos de código com botão para renderizá-los
+- 🎯 **Destaque de sintaxe de código** - Blocos de código bonitos com Shiki
+- 🛡️ **Segurança em primeiro lugar** - Construído sobre harden-react-markdown para renderização segura
+- ⚡ **Otimizado para performance** - Renderização memoizada para atualizações eficientes
 
-## Installation
+## Instalação
 
 ```bash
 npm i streamdown
 ```
 
-Then, update your Tailwind `globals.css` to include the following.
+Em seguida, atualize seu `globals.css` do Tailwind para incluir o seguinte.
 
 ```css
 @source "../node_modules/streamdown/dist/index.js";
 ```
 
-Make sure the path matches the location of the `node_modules` folder in your project. This will ensure that the Streamdown styles are applied to your project.
+Certifique-se de que o caminho corresponda à localização da pasta `node_modules` em seu projeto. Isso garantirá que os estilos do Streamdown sejam aplicados ao seu projeto.
 
-## Usage
+## Uso
 
-### Basic Example
+### Exemplo Básico
 
 ```tsx
 import { Streamdown } from 'streamdown';
 
 export default function Page() {
-  const markdown = "# Hello World\n\nThis is **streaming** markdown!";
+  const markdown = "# Olá Mundo\n\nEste é um markdown de **streaming**!";
 
   return <Streamdown>{markdown}</Streamdown>;
 }
 ```
 
-### Mermaid Diagrams
+### Diagramas Mermaid
 
-Streamdown supports Mermaid diagrams using the `mermaid` language identifier:
+O Streamdown suporta diagramas Mermaid usando o identificador de linguagem `mermaid`:
 
 ```tsx
 import { Streamdown } from 'streamdown';
@@ -60,32 +60,32 @@ import type { MermaidConfig } from 'mermaid';
 
 export default function Page() {
   const markdown = `
-# Flowchart Example
+# Exemplo de Fluxograma
 
 \`\`\`mermaid
 graph TD
-    A[Start] --> B{Is it working?}
-    B -->|Yes| C[Great!]
-    B -->|No| D[Debug]
+    A[Início] --> B{Está funcionando?}
+    B -->|Sim| C[Ótimo!]
+    B -->|Não| D[Debugar]
     D --> B
 \`\`\`
 
-# Sequence Diagram
+# Diagrama de Sequência
 
 \`\`\`mermaid
 sequenceDiagram
-    participant User
+    participant Usuário
     participant API
-    participant Database
+    participant Banco de Dados
 
-    User->>API: Request data
-    API->>Database: Query
-    Database-->>API: Results
-    API-->>User: Response
+    Usuário->>API: Solicitar dados
+    API->>Banco de Dados: Consulta
+    Banco de Dados-->>API: Resultados
+    API-->>Usuário: Resposta
 \`\`\`
   `;
 
-  // Optional: Customize Mermaid theme and colors
+  // Opcional: Personalizar tema e cores do Mermaid
   const mermaidConfig: MermaidConfig = {
     theme: 'dark',
     themeVariables: {
@@ -102,7 +102,7 @@ sequenceDiagram
 }
 ```
 
-### With AI SDK
+### Com AI SDK
 
 ```tsx
 'use client';
@@ -138,10 +138,10 @@ export default function Page() {
           value={input}
           onChange={e => setInput(e.target.value)}
           disabled={status !== 'ready'}
-          placeholder="Say something..."
+          placeholder="Digite algo..."
         />
         <button type="submit" disabled={status !== 'ready'}>
-          Submit
+          Enviar
         </button>
       </form>
     </>
@@ -151,54 +151,54 @@ export default function Page() {
 
 ## Props
 
-Streamdown accepts all the same props as react-markdown, plus additional streaming-specific options:
+O Streamdown aceita todas as mesmas props do react-markdown, além de opções adicionais específicas para streaming:
 
-| Prop | Type | Default | Description |
+| Prop | Tipo | Padrão | Descrição |
 |------|------|---------|-------------|
-| `children` | `string` | - | The Markdown content to render |
-| `parseIncompleteMarkdown` | `boolean` | `true` | Parse and style unterminated Markdown blocks |
-| `className` | `string` | - | CSS class for the container |
-| `components` | `object` | - | Custom component overrides |
-| `remarkPlugins` | `array` | `[remarkGfm, remarkMath]` | Remark plugins to use |
-| `rehypePlugins` | `array` | `[rehypeKatex]` | Rehype plugins to use |
-| `allowedImagePrefixes` | `array` | `['*']` | Allowed image URL prefixes |
-| `allowedLinkPrefixes` | `array` | `['*']` | Allowed link URL prefixes |
-| `defaultOrigin` | `string` | - | Default origin to use for relative URLs in links and images |
-| `shikiTheme` | `[BundledTheme, BundledTheme]` | `['github-light', 'github-dark']` | The light and dark themes to use for code blocks |
-| `mermaidConfig` | `MermaidConfig` | - | Custom configuration for Mermaid diagrams (theme, colors, etc.) |
-| `controls` | `boolean \| { table?: boolean, code?: boolean, mermaid?: boolean }` | `true` | Control visibility of copy/download buttons |
+| `children` | `string` | - | O conteúdo Markdown para renderizar |
+| `parseIncompleteMarkdown` | `boolean` | `true` | Analisar e estilizar blocos Markdown não terminados |
+| `className` | `string` | - | Classe CSS para o contêiner |
+| `components` | `object` | - | Sobrescrições de componentes personalizados |
+| `remarkPlugins` | `array` | `[remarkGfm, remarkMath]` | Plugins Remark a usar |
+| `rehypePlugins` | `array` | `[rehypeKatex]` | Plugins Rehype a usar |
+| `allowedImagePrefixes` | `array` | `['*']` | Prefixos de URL de imagem permitidos |
+| `allowedLinkPrefixes` | `array` | `['*']` | Prefixos de URL de link permitidos |
+| `defaultOrigin` | `string` | - | Origem padrão para usar em URLs relativas em links e imagens |
+| `shikiTheme` | `[BundledTheme, BundledTheme]` | `['github-light', 'github-dark']` | Os temas claro e escuro para usar em blocos de código |
+| `mermaidConfig` | `MermaidConfig` | - | Configuração personalizada para diagramas Mermaid (tema, cores, etc.) |
+| `controls` | `boolean \| { table?: boolean, code?: boolean, mermaid?: boolean }` | `true` | Controlar visibilidade dos botões copiar/baixar |
 
-## Architecture
+## Arquitetura
 
-Streamdown is built as a monorepo with:
+O Streamdown é construído como um monorepo com:
 
-- **`packages/streamdown`** - The core React component library
-- **`apps/website`** - Documentation and demo site
+- **`packages/streamdown`** - A biblioteca de componentes React principal
+- **`apps/website`** - Site de documentação e demonstrações
 
-## Development
+## Desenvolvimento
 
 ```bash
-# Install dependencies
+# Instalar dependências
 pnpm install
 
-# Build the streamdown package
+# Compilar o pacote streamdown
 pnpm --filter streamdown build
 
-# Run development server
+# Executar servidor de desenvolvimento
 pnpm dev
 
-# Run tests
+# Executar testes
 pnpm test
 
-# Build packages
+# Compilar pacotes
 pnpm build
 ```
 
-## Requirements
+## Requisitos
 
 - Node.js >= 18
 - React >= 19.1.1
 
-## Contributing
+## Contribuindo
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contribuições são bem-vindas! Sinta-se à vontade para enviar um Pull Request.

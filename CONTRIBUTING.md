@@ -1,156 +1,157 @@
-# Contributing to Streamdown
+# Contribuindo para o Streamdown
 
-Thank you for your interest in contributing to Streamdown! We welcome contributions from the community.
+Obrigado pelo seu interesse em contribuir para o Streamdown! Acolhemos contribuições da comunidade.
 
-## Getting Started
+## Primeiros Passos
 
-### Prerequisites
+### Pré-requisitos
 
-- Node.js 18 or higher
-- pnpm 9.0.0 (specified in packageManager field)
+- Node.js 18 ou superior
+- pnpm 9.0.0 (especificado no campo packageManager)
 
-### Setup
+### Configuração
 
-1. Fork the repository
-2. Clone your fork:
+1. Faça um fork do repositório
+2. Clone seu fork:
    ```bash
-   git clone https://github.com/your-username/streamdown.git
+   git clone https://github.com/seu-usuario/streamdown.git
    cd streamdown
    ```
-3. Install dependencies:
+3. Instale as dependências:
    ```bash
    pnpm install
    ```
-4. Run the tests to ensure everything is working:
+4. Execute os testes para garantir que tudo esteja funcionando:
    ```bash
    pnpm test
    ```
 
-## Development Workflow
+## Fluxo de Desenvolvimento
 
-### Project Structure
+### Estrutura do Projeto
 
-This is a monorepo managed with Turbo. The main package is located at:
-- `packages/streamdown/` - The core Streamdown React component library
+Este é um monorepo gerenciado com Turbo. O pacote principal está localizado em:
 
-### Available Scripts
+- `packages/streamdown/` - A biblioteca de componentes React principal do Streamdown
 
-- `pnpm dev` - Start development mode
-- `pnpm build` - Build all packages
-- `pnpm test` - Run tests
-- `pnpm test:coverage` - Run tests with coverage
-- `pnpm test:ui` - Run tests with UI
-- `pnpm lint` - Run linting
-- `pnpm format` - Format code with Prettier
-- `pnpm check-types` - Type checking
+### Scripts Disponíveis
 
-### Making Changes
+- `pnpm dev` - Iniciar modo de desenvolvimento
+- `pnpm build` - Compilar todos os pacotes
+- `pnpm test` - Executar testes
+- `pnpm test:coverage` - Executar testes com cobertura
+- `pnpm test:ui` - Executar testes com interface
+- `pnpm lint` - Executar linting
+- `pnpm format` - Formatar código com Prettier
+- `pnpm check-types` - Verificação de tipos
 
-1. Create a new branch for your feature or fix:
+### Fazendo Alterações
+
+1. Crie um novo branch para sua funcionalidade ou correção:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/nome-da-sua-funcionalidade
    ```
 
-2. Make your changes and ensure:
-   - All tests pass (`pnpm test`)
-   - Code is properly formatted (`pnpm format`)
-   - Type checking passes (`pnpm check-types`)
-   - Linting passes (`pnpm lint`)
+2. Faça suas alterações e garanta que:
+   - Todos os testes passem (`pnpm test`)
+   - O código esteja devidamente formatado (`pnpm format`)
+   - A verificação de tipos passe (`pnpm check-types`)
+   - O linting passe (`pnpm lint`)
 
-3. Write or update tests for your changes
+3. Escreva ou atualize testes para suas alterações
 
-4. Create a changeset for your changes:
+4. Crie um changeset para suas alterações:
    ```bash
    pnpm changeset
    ```
-   - Select the package(s) affected
-   - Choose the appropriate version bump (patch/minor/major)
-   - Write a concise description of the changes
+   - Selecione o(s) pacote(s) afetado(s)
+   - Escolha o bump de versão apropriado (patch/minor/major)
+   - Escreva uma descrição concisa das alterações
 
-## Commit Guidelines
+## Diretrizes de Commit
 
-We follow conventional commits for clear commit history:
+Seguimos conventional commits para um histórico claro de commits:
 
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `style:` Code style changes (formatting, etc)
-- `refactor:` Code changes that neither fix bugs nor add features
-- `test:` Adding or updating tests
-- `chore:` Maintenance tasks
+- `feat:` Novas funcionalidades
+- `fix:` Correções de bugs
+- `docs:` Alterações na documentação
+- `style:` Alterações de estilo de código (formatação, etc)
+- `refactor:` Alterações de código que não corrigem bugs nem adicionam funcionalidades
+- `test:` Adicionando ou atualizando testes
+- `chore:` Tarefas de manutenção
 
-Examples:
+Exemplos:
 ```
-feat: add support for custom code block themes
-fix: resolve markdown parsing issue with nested lists
-docs: update README with new API examples
+feat: adicionar suporte para temas personalizados de blocos de código
+fix: resolver problema de parsing de markdown com listas aninhadas
+docs: atualizar README com novos exemplos de API
 ```
 
-## Pull Request Process
+## Processo de Pull Request
 
-1. Ensure your PR:
-   - Has a clear, descriptive title
-   - Includes a changeset (run `pnpm changeset` if you haven't)
-   - Passes all CI checks
-   - Includes tests for new functionality
-   - Updates documentation if needed
+1. Garanta que seu PR:
+   - Tenha um título claro e descritivo
+   - Inclua um changeset (execute `pnpm changeset` se não fez)
+   - Passe em todas as verificações de CI
+   - Inclua testes para novas funcionalidades
+   - Atualize a documentação se necessário
 
-2. PR Description should include:
-   - What changes were made
-   - Why these changes were necessary
-   - Any breaking changes
-   - Screenshots/demos for UI changes
+2. A Descrição do PR deve incluir:
+   - Quais alterações foram feitas
+   - Por que essas alterações foram necessárias
+   - Qualquer alteração que quebra compatibilidade
+   - Screenshots/demos para alterações de UI
 
-3. Link any related issues using keywords like `Fixes #123` or `Closes #456`
+3. Vincule issues relacionadas usando palavras-chave como `Fixes #123` ou `Closes #456`
 
-## Testing
+## Testes
 
-### Running Tests
+### Executando Testes
 
 ```bash
-# Run all tests
+# Executar todos os testes
 pnpm test
 
-# Run tests with coverage
+# Executar testes com cobertura
 pnpm test:coverage
 
-# Run tests with UI
+# Executar testes com UI
 pnpm test:ui
 
-# Run tests in watch mode (in package directory)
+# Executar testes em modo watch (no diretório do pacote)
 cd packages/streamdown
 pnpm vitest
 ```
 
-### Writing Tests
+### Escrevendo Testes
 
-- Tests are located in `packages/streamdown/__tests__/`
-- Use descriptive test names
-- Test both success and error cases
-- Ensure good coverage for new features
+- Os testes estão localizados em `packages/streamdown/__tests__/`
+- Use nomes de teste descritivos
+- Teste tanto casos de sucesso quanto de erro
+- Garanta boa cobertura para novas funcionalidades
 
-## Release Process
+## Processo de Release
 
-Releases are automated through GitHub Actions and changesets:
+Os releases são automatizados através do GitHub Actions e changesets:
 
-1. When PRs with changesets are merged to `main`, a "Version Packages" PR is automatically created
-2. This PR updates package versions and changelogs
-3. When the Version Packages PR is merged, packages are automatically published to npm
+1. Quando PRs com changesets são mesclados na `main`, um PR "Version Packages" é criado automaticamente
+2. Este PR atualiza versões de pacotes e changelogs
+3. Quando o PR Version Packages é mesclado, os pacotes são publicados automaticamente no npm
 
-## Code Style
+## Estilo de Código
 
-- We use TypeScript for type safety
-- Follow the existing code style in the project
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Keep functions small and focused
+- Usamos TypeScript para segurança de tipos
+- Siga o estilo de código existente no projeto
+- Use nomes significativos para variáveis e funções
+- Adicione comentários para lógica complexa
+- Mantenha funções pequenas e focadas
 
-## Getting Help
+## Obtendo Ajuda
 
-- Open an issue for bugs or feature requests
-- Join discussions in GitHub Discussions
-- Check existing issues before creating new ones
+- Abra uma issue para bugs ou solicitações de funcionalidades
+- Participe das discussões no GitHub Discussions
+- Verifique issues existentes antes de criar novas
 
-## License
+## Licença
 
-By contributing to Streamdown, you agree that your contributions will be licensed under the Apache-2.0 License.
+Ao contribuir para o Streamdown, você concorda que suas contribuições serão licenciadas sob a Licença Apache-2.0.

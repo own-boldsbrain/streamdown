@@ -1,3 +1,3 @@
-# Vercel Community Code of Conduct
+# Código de Conduta da Comunidade Vercel
 
-Please see https://community.vercel.com/guidelines for the latest version.
+Por favor, consulte https://community.vercel.com/guidelines para a versão mais recente.
