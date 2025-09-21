@@ -36,10 +36,10 @@ export default function Page() {
           value={input}
           onChange={e => setInput(e.target.value)}
           disabled={status !== 'ready'}
-          placeholder="Say something..."
+          placeholder="Digite algo..."
         />
         <button type="submit" disabled={status !== 'ready'}>
-          Submit
+          Enviar
         </button>
       </form>
     </>
@@ -80,10 +80,10 @@ export default function Page() {
           value={input}
           onChange={e => setInput(e.target.value)}
           disabled={status !== 'ready'}
-          placeholder="Say something..."
+          placeholder="Digite algo..."
         />
         <button type="submit" disabled={status !== 'ready'}>
-          Submit
+          Enviar
         </button>
       </form>
     </>
@@ -92,13 +92,13 @@ export default function Page() {
 `;
 
 const cssCode = `/*
- * Update your Tailwind globals.css to include the 
- * following code. This will ensure that the
- * Streamdown styles are applied to your project.
+ * Atualize seu Tailwind globals.css para incluir o 
+ * código a seguir. Isso garantirá que os estilos
+ * do Streamdown sejam aplicados ao seu projeto.
  * 
- * Make sure the path matches the location of the
- * node_modules folder in your project i.e.
- * @source "<path-to-node_modules>/node_modules/streamdown/dist/index.js";
+ * Certifique-se de que o caminho corresponda à localização
+ * da pasta node_modules em seu projeto, ou seja:
+ * @source "<caminho-para-node_modules>/node_modules/streamdown/dist/index.js";
  */
 
 @source "../node_modules/streamdown/dist/index.js";`;
@@ -106,13 +106,13 @@ const cssCode = `/*
 export const Implementation = () => (
   <div className="divide-y sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0">
     <div className="space-y-2 px-4 pt-8 pb-16 sm:p-8!">
-      <h2 className="font-semibold text-2xl tracking-tight">Overview</h2>
+      <h2 className="font-semibold text-2xl tracking-tight">Visão Geral</h2>
       <p className="text-muted-foreground">
-        Formatting Markdown is easy, but when you tokenize and stream it, new
-        challenges arise.
+        Formatar Markdown é fácil, mas quando você tokeniza e faz streaming,
+        novos desafios surgem.
       </p>
       <p className="text-muted-foreground">
-        With{" "}
+        Com{" "}
         <a
           className="font-medium text-blue-600 underline"
           href="https://ai-sdk.dev/elements"
@@ -121,15 +121,15 @@ export const Implementation = () => (
         >
           AI Elements
         </a>
-        , we wanted a way to stream safe and perfectly formatted Markdown
-        without having to worry about the details.
+        , queríamos uma forma de fazer streaming de Markdown seguro e
+        perfeitamente formatado sem ter que se preocupar com os detalhes.
       </p>
       <p className="text-muted-foreground">
-        So we built Streamdown, a drop-in replacement for react-markdown,
-        designed for AI-powered streaming.
+        Então construímos o Streamdown, uma substituição direta para
+        react-markdown, projetada para streaming alimentado por IA.
       </p>
       <p className="text-muted-foreground">
-        It powers the AI Elements{" "}
+        Ele alimenta o componente{" "}
         <a
           className="font-medium text-blue-600 underline"
           href="https://ai-sdk.dev/elements/components/response"
@@ -138,7 +138,7 @@ export const Implementation = () => (
         >
           Response
         </a>{" "}
-        component, but you can install it as a standalone package if you want.
+        do AI Elements, mas você pode instalá-lo como um pacote independente se quiser.
       </p>
     </div>
     <div className="relative bg-background sm:col-span-2">

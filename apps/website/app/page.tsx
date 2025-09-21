@@ -17,7 +17,7 @@ import { TerminatorParser } from "./components/terminator-parser";
 export const metadata: Metadata = {
   title: "Streamdown",
   description:
-    "A drop-in replacement for react-markdown, designed for AI-powered streaming.",
+    "Uma substituição direta para react-markdown, projetada para streaming alimentado por IA.",
 };
 
 const Home = () => (

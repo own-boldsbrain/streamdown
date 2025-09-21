@@ -30,7 +30,7 @@
   },
   "author": "Hayden Bleasel <hayden.bleasel@vercel.com>",
   "license": "Apache-2.0",
-  "description": "A drop-in replacement for react-markdown, designed for AI-powered streaming.",
+  "description": "Uma substituição direta para react-markdown, projetada para streaming alimentado por IA.",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",

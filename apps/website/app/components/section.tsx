@@ -101,7 +101,7 @@ export const Section = ({
         >
           <div className="divide-y">
             <div className="w-full bg-dashed p-4 text-center font-medium text-muted-foreground text-sm">
-              With react-markdown
+              Com react-markdown
             </div>
             <div className="h-[400px] overflow-y-auto bg-background p-4">
               <ReactMarkdown>{content}</ReactMarkdown>
@@ -109,7 +109,7 @@ export const Section = ({
           </div>
           <div className="divide-y">
             <div className="w-full bg-dashed p-4 text-center font-medium text-muted-foreground text-sm">
-              With Streamdown
+              Com Streamdown
             </div>
             <div className="h-[400px] overflow-y-auto bg-background p-4">
               <Streamdown {...streamdownProps}>{content}</Streamdown>
@@ -125,7 +125,7 @@ export const Section = ({
             <RefreshCcwIcon
               className={`size-4 ${isAnimating ? "animate-spin" : ""}`}
             />
-            Reset
+            Reiniciar
           </Button>
         )}
       </div>

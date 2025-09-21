@@ -24,7 +24,7 @@ type RootLayoutProps = {
 };
 
 const RootLayout = ({ children }: RootLayoutProps) => (
-  <html lang="en" suppressHydrationWarning>
+  <html lang="pt-BR" suppressHydrationWarning>
     <body
       className={cn(
         geistSans.variable,
