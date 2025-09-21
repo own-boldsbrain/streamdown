@@ -1,7 +1,6 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import Image from "next/image";
 import { useState } from "react";
 import { Streamdown } from "streamdown";
@@ -26,11 +25,7 @@ type ChatProps = {
 };
 
 export const Chat = ({ models }: ChatProps) => {
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-    }),
-  });
+  const { messages, sendMessage, status } = useChat();
   const [input, setInput] = useState("");
   const [model, setModel] = useState(models[0].value);
 
