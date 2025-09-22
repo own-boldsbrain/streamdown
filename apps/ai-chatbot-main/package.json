@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
-    "dev:preprod": "cross-env-shell \"(Test-Path .env.preprod.local) -or (Write-Error 'Missing .env.preprod.local'); $env:NODE_ENV='development'; next dev\"",
+    "dev:preprod": "powershell -NoProfile -Command \"if(-not (Test-Path .env.preprod.local)) { Write-Error 'Missing .env.preprod.local'; exit 1 }\" && cross-env NODE_ENV=development next dev",
     "env:preprod:use": "powershell -NoProfile -Command \"Copy-Item -Force .env.preprod.local .env.local\"",
     "build": "tsx lib/db/migrate && next build",
     "build:nomigrate": "cross-env SKIP_DB_MIGRATE=1 next build",

@@ -1,70 +1,147 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
+<a href="https://streamdown.ai/">
+  <img alt="AP2 - Auto Portal Photovoltaico" src="app/(chat)/opengraph-image.png">
+  <h1 align="center">AP2 - Auto Portal Photovoltaico</h1>
 </a>
 
 <p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
+    AP2 é uma plataforma completa para gestão do ciclo de vida de sistemas fotovoltaicos, usando agentes especializados, Model Context Protocol (MCP) e mensageria NATS.
 </p>
 
 <p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
+  <a href="https://streamdown.ai/docs"><strong>Documentação</strong></a> ·
+  <a href="#recursos"><strong>Recursos</strong></a> ·
+  <a href="#arquitetura"><strong>Arquitetura</strong></a> ·
+  <a href="#fluxo-do-usuario"><strong>Fluxo do Usuário</strong></a> ·
+  <a href="#execucao-local"><strong>Execução Local</strong></a>
 </p>
 <br/>
 
-## Features
+## Recursos
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- **Agentes Especializados**
+  - Detecção, Análise, Dimensionamento, Recomendação, e mais
+  - Fases: PRE (pré-instalação), ONGOING (instalação) e POST (pós-instalação)
+  - Cada agente com ferramentas especializadas via MCP (Model Context Protocol)
 
-## Model Providers
+- **Arquitetura Moderna**
+  - [Next.js](https://nextjs.org) App Router
+  - React Server Components (RSCs)
+  - [Vercel AI SDK](https://ai-sdk.dev/docs/introduction) para streaming de respostas
+  - [NATS](https://nats.io) para mensageria entre agentes e serviços
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. The default configuration includes [xAI](https://x.ai) models (`grok-2-vision-1212`, `grok-3-mini`) routed through the gateway.
+- **Interface Rica**
+  - Componentes visuais especializados (Artifacts) para cada etapa
+  - Estilização com [Tailwind CSS](https://tailwindcss.com)
+  - Componentes de [Radix UI](https://radix-ui.com) para acessibilidade
 
-### AI Gateway Authentication
+- **Conformidade e Segurança**
+  - Compliance com a Lei 14.300/2022 (Microgeração Distribuída)
+  - LGPD: gestão cuidadosa de dados pessoais
+  - Registro SINARE para créditos de carbono (Decreto 11.075/2022)
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+## Arquitetura
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+O AP2 é construído como um sistema de agentes interconectados via NATS, cada um especializado em uma fase específica do ciclo de vida de sistemas fotovoltaicos:
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
+```mermaid
+flowchart TB
+    User(Usuário Final) -->|Interage| UI[Interface do Usuário\nAI SDK UI]
+    
+    subgraph "Sistema AP2"
+        UI <-->|Streaming| Stream[Streaming Handler\nVercel AI SDK]
+        Stream <-->|MCP Tools| Agents[Agentes AP2]
+        Agents -->|Publica| NATS[Message Broker\nNATS]
+        NATS -->|Notifica| Services[Serviços Especializados]
+        Services -->|Atualiza| DB[(Banco de Dados)]
+        Agents <-->|Consulta/Atualiza| DB
+    end
+    
+    subgraph "Integrações Externas"
+        Services <-->|APIs| External[Sistemas Externos\nConcessionárias, CCEE, etc.]
+    end
+    
+    style User fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style UI fill:#d4f1f9,stroke:#333,stroke-width:2px
+    style Stream fill:#d4f1f9,stroke:#333,stroke-width:2px
+    style Agents fill:#e1d5e7,stroke:#333,stroke-width:2px
+    style NATS fill:#ffe6cc,stroke:#333,stroke-width:2px
+    style Services fill:#d5e8d4,stroke:#333,stroke-width:2px
+    style DB fill:#f8cecc,stroke:#333,stroke-width:2px
+    style External fill:#f9f9f9,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+```
 
-## Deploy Your Own
+Cada agente:
+1. Recebe dados de entrada (validados por schema)
+2. Executa ferramentas especializadas via MCP
+3. Constrói uma resposta estruturada (também validada)
+4. Publica eventos relevantes no NATS
+5. Retorna resultados com hints para a UI renderizar componentes visuais (Artifacts)
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+## Fluxo do Usuário
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/nextjs-ai-chatbot)
+A jornada do usuário no AP2 segue um fluxo natural desde a captação do lead até a gestão pós-instalação:
 
-## Running locally
+```mermaid
+journey
+    title Jornada do Usuário no AP2
+    section Fase PRE
+        Captação de Leads: 5: Lead Management
+        Análise de Consumo: 4: Detection
+        Análise Técnica/Financeira: 4: Analysis
+        Dimensionamento: 5: Dimensioning
+        Proposta Comercial: 5: Recommendation
+    section Fase ONGOING
+        Projeto Técnico: 4: Engineering
+        Contratação: 5: Contract
+        Homologação: 3: Homologation
+        Cadeia de Suprimentos: 4: Supply Chain
+        Instalação: 5: Installation
+    section Fase POST
+        Monitoramento: 4: OEM Monitoring
+        Expansão: 3: Expansion
+        Créditos de Carbono: 3: Carbon Credits
+        Migração Mercado Livre: 3: ACL
+```
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+Veja mais detalhes no [BLUEPRINT.md](BLUEPRINT.md) e na [documentação completa](https://streamdown.ai/docs).
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
+## Execução Local
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+Você precisará das variáveis de ambiente definidas em `.env.example` para executar o AP2. Recomendamos usar as [Variáveis de Ambiente do Vercel](https://vercel.com/docs/projects/environment-variables), mas um arquivo `.env` também funciona.
+
+> Nota: Não faça commit do seu arquivo `.env` ou você exporá segredos que permitirão a outros controlar o acesso às suas contas de provedores de IA e autenticação.
+
+1. Instale a CLI do Vercel: `npm i -g vercel`
+2. Vincule a instância local com as contas do Vercel e GitHub (cria o diretório `.vercel`): `vercel link`
+3. Baixe suas variáveis de ambiente: `vercel env pull`
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+Seu aplicativo deve estar rodando em [localhost:3000](http://localhost:3000).
+
+## Configuração de Desenvolvimento
+
+Para desenvolvimento, recomendamos usar o ambiente de pré-produção:
+
+```bash
+pnpm env:preprod:use   # Configura para ambiente de pré-produção
+pnpm dev:preprod       # Inicia o servidor em modo pré-produção
+```
+
+## Documentação
+
+Para acessar a documentação completa, execute:
+
+```bash
+cd ysh-docs      # Entre no diretório da documentação 
+pnpm dev         # Inicia o servidor de documentação
+```
+
+A documentação estará disponível em [localhost:3001](http://localhost:3001).
+
+## Licença
+
+O AP2 é licenciado sob a [Licença MIT](LICENSE).
