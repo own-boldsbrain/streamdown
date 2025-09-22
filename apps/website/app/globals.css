@@ -111,6 +111,35 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Geist + YSH gradient tokens */
+:root{
+  --font-sans: var(--font-geist-sans, ui-sans-serif, system-ui);
+  --font-mono: var(--font-geist-mono, ui-monospace, SFMono-Regular);
+  --geist-bg:#fff; --geist-bg-soft:#fafafa; --geist-elev:#fff;
+  --geist-border:#eaeaea; --geist-fg:#111; --geist-fg-muted:#666; --geist-fg-subtle:#888;
+
+  --ysh-pink:#FA2348; --ysh-orange:#F95120; --ysh-amber:#FB8304; --ysh-gold:#FAB013; --ysh-cream:#F9DFCA;
+  --ysh-linear:linear-gradient(135deg,var(--ysh-pink),var(--ysh-orange),var(--ysh-amber),var(--ysh-gold),var(--ysh-cream));
+}
+:root[data-theme="dark"]{
+  --geist-bg:#000; --geist-bg-soft:#0a0a0a; --geist-elev:#111;
+  --geist-border:#222; --geist-fg:#fafafa; --geist-fg-muted:#9a9a9a; --geist-fg-subtle:#7a7a7a;
+}
+
+/* stroke/borda gradiente real */
+.ysh-gradient-border{position:relative;border-radius:inherit}
+.ysh-gradient-border::before{
+  content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;background:var(--ysh-linear);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.ysh-text-gradient{background:var(--ysh-linear);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ysh-outline:hover,.ysh-outline:focus-visible{
+  outline:2px solid transparent;outline-offset:2px;
+  background:linear-gradient(var(--geist-bg),var(--geist-bg)) padding-box, var(--ysh-linear) border-box;
+  border:1px solid transparent;border-radius:.75rem;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

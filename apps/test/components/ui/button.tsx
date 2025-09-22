@@ -3,6 +3,7 @@ import { Slot as SlotPrimitive } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { yellowGradientBg, yellowGradientStroke } from "./yello-styles/gradients"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -20,6 +21,12 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        "yello-gradient": 
+          `${yellowGradientBg} text-white shadow-xs hover:opacity-90 transition-opacity`,
+        "yello-stroke": 
+          `${yellowGradientStroke} bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:hover:bg-input/50`,
+        "yello-animated": 
+          `relative bg-clip-padding border border-transparent before:absolute before:inset-0 before:rounded-[inherit] before:[background-image:linear-gradient(to_right,#FF6B00,#FF2564,#D500D5,#9A00E9,#FF6B00)] before:animate-gradient-x before:bg-[length:500%_100%] before:-z-10 bg-background text-foreground shadow-xs`,
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
