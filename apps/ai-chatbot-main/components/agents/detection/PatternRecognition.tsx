@@ -1,6 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertTriangle,
+  BarChart3,
+  Calendar,
+  Info,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Calendar, TrendingUp, TrendingDown, AlertTriangle, Info } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Pattern = {
   pattern_type: string;
@@ -50,7 +57,10 @@ const formatPatternType = (patternType: string) => {
     .join(" ");
 };
 
-export function PatternRecognition({ patterns, insights = [] }: PatternRecognitionProps) {
+export function PatternRecognition({
+  patterns,
+  insights = [],
+}: PatternRecognitionProps) {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -59,37 +69,43 @@ export function PatternRecognition({ patterns, insights = [] }: PatternRecogniti
       <CardContent>
         <div className="mb-6 space-y-3">
           {patterns.map((pattern, index) => (
-            <div 
+            <div
+              className="flex flex-col rounded-lg border p-3"
               key={`${pattern.pattern_type}-${index}`}
-              className="border flex flex-col p-3 rounded-lg"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {getPatternIcon(pattern.pattern_type)}
-                  <span className="font-medium">{formatPatternType(pattern.pattern_type)}</span>
+                  <span className="font-medium">
+                    {formatPatternType(pattern.pattern_type)}
+                  </span>
                 </div>
                 <Badge className={getConfidenceBadgeColor(pattern.confidence)}>
                   {pattern.confidence}% Confiança
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">{pattern.description}</p>
+              <p className="text-muted-foreground text-sm">
+                {pattern.description}
+              </p>
             </div>
           ))}
 
           {patterns.length === 0 && (
             <div className="flex flex-col items-center justify-center py-6 text-center">
-              <Info className="h-8 w-8 mb-2 text-muted-foreground" />
-              <p className="text-muted-foreground">Nenhum padrão identificado.</p>
+              <Info className="mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-muted-foreground">
+                Nenhum padrão identificado.
+              </p>
             </div>
           )}
         </div>
 
         {insights && insights.length > 0 && (
           <div>
-            <h4 className="font-medium mb-2 text-sm">Insights</h4>
-            <ul className="list-disc list-inside space-y-1">
+            <h4 className="mb-2 font-medium text-sm">Insights</h4>
+            <ul className="list-inside list-disc space-y-1">
               {insights.map((insight, index) => (
-                <li key={index} className="text-sm">
+                <li className="text-sm" key={index}>
                   {insight}
                 </li>
               ))}
