@@ -1,6 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertTriangle,
+  BarChart3,
+  Calendar,
+  Info,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Calendar, TrendingUp, TrendingDown, AlertTriangle, Info } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Confidence threshold constants
 const HIGH_CONFIDENCE = 80;
@@ -27,15 +34,15 @@ const getPatternIcon = (patternType: string) => {
     case "seasonal":
       return <Calendar className="h-4 w-4 text-blue-500" />;
     case "upward_trend":
-      return <TrendingUp className="h-4 text-green-500 w-4" />;
+      return <TrendingUp className="h-4 w-4 text-green-500" />;
     case "downward_trend":
-      return <TrendingDown className="h-4 text-red-500 w-4" />;
+      return <TrendingDown className="h-4 w-4 text-red-500" />;
     case "anomaly":
-      return <AlertTriangle className="h-4 text-yellow-500 w-4" />;
+      return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
     case "cyclical":
-      return <BarChart3 className="h-4 text-purple-500 w-4" />;
+      return <BarChart3 className="h-4 w-4 text-purple-500" />;
     default:
-      return <Info className="h-4 text-gray-500 w-4" />;
+      return <Info className="h-4 w-4 text-gray-500" />;
   }
 };
 
@@ -59,7 +66,10 @@ const formatPatternType = (patternType: string) => {
     .join(" ");
 };
 
-export function PatternRecognition({ patterns, insights = [] }: PatternRecognitionProps) {
+export function PatternRecognition({
+  patterns,
+  insights = [],
+}: PatternRecognitionProps) {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -68,39 +78,47 @@ export function PatternRecognition({ patterns, insights = [] }: PatternRecogniti
       <CardContent>
         <div className="mb-6 space-y-3">
           {patterns.map((pattern) => (
-            <div 
-              key={pattern.id || `${pattern.pattern_type}-${pattern.confidence}`}
-              className="border flex-col flex p-3 rounded-lg"
+            <div
+              className="flex flex-col rounded-lg border p-3"
+              key={
+                pattern.id || `${pattern.pattern_type}-${pattern.confidence}`
+              }
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex gap-2 items-center">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   {getPatternIcon(pattern.pattern_type)}
-                  <span className="font-medium">{formatPatternType(pattern.pattern_type)}</span>
+                  <span className="font-medium">
+                    {formatPatternType(pattern.pattern_type)}
+                  </span>
                 </div>
                 <Badge className={getConfidenceBadgeColor(pattern.confidence)}>
                   {pattern.confidence}% Confiança
                 </Badge>
               </div>
-              <p className="text-muted-foreground text-sm">{pattern.description}</p>
+              <p className="text-muted-foreground text-sm">
+                {pattern.description}
+              </p>
             </div>
           ))}
 
           {patterns.length === 0 && (
             <div className="flex flex-col items-center justify-center py-6 text-center">
-              <Info className="h-8 mb-2 text-muted-foreground w-8" />
-              <p className="text-muted-foreground">Nenhum padrão identificado.</p>
+              <Info className="mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-muted-foreground">
+                Nenhum padrão identificado.
+              </p>
             </div>
           )}
         </div>
 
         {insights && insights.length > 0 && (
           <div>
-            <h4 className="font-medium mb-2 text-sm">Insights</h4>
-            <ul className="list-disc list-inside space-y-1">
+            <h4 className="mb-2 font-medium text-sm">Insights</h4>
+            <ul className="list-inside list-disc space-y-1">
               {insights.map((insight, i) => (
-                <li 
-                  key={`insight-${i}-${insight.substring(0, MAX_KEY_CHARS).replace(/\s/g, '-')}`} 
+                <li
                   className="text-sm"
+                  key={`insight-${i}-${insight.substring(0, MAX_KEY_CHARS).replace(/\s/g, "-")}`}
                 >
                   {insight}
                 </li>

@@ -1,16 +1,16 @@
 "use client";
 
+import { CheckCircle, Code2, RefreshCw, XCircle } from "lucide-react";
 import {
   type HTMLAttributes,
   memo,
+  type ReactNode,
   useCallback,
   useEffect,
-  useState,
   useRef,
-  type ReactNode,
+  useState,
 } from "react";
 import { cn } from "../utils";
-import { Code2, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 
 // Constantes para dimensões e espaçamento
 const ANIMATION_DURATION = 400; // Duração da animação em ms
@@ -33,7 +33,8 @@ const styles = {
 };
 
 // Interface para as propriedades do componente
-interface VizObjectStreamProps<T = unknown> extends HTMLAttributes<HTMLDivElement> {
+interface VizObjectStreamProps<T = unknown>
+  extends HTMLAttributes<HTMLDivElement> {
   // Objeto atual sendo construído (pode ser parcial durante o streaming)
   object?: T;
   // Esquema para validação (exibido como informação)
@@ -66,7 +67,7 @@ export const VizObjectStream = memo(
     const [formattedJson, setFormattedJson] = useState<string>("");
     const [hasAnimation, setHasAnimation] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
-    
+
     // Formata o objeto JSON para exibição
     const formatObject = useCallback((obj: T | undefined) => {
       if (!obj) {
@@ -83,16 +84,16 @@ export const VizObjectStream = memo(
     useEffect(() => {
       const formatted = formatObject(object);
       setFormattedJson(formatted);
-      
+
       // Adiciona animação apenas em alterações, não na primeira renderização
       if (formatted && containerRef.current) {
         setHasAnimation(true);
-        
+
         // Remove a animação após a duração definida
         const timer = setTimeout(() => {
           setHasAnimation(false);
         }, ANIMATION_DURATION);
-        
+
         return () => clearTimeout(timer);
       }
     }, [object, formatObject]);
@@ -113,64 +114,60 @@ export const VizObjectStream = memo(
           </div>
         );
       }
-      
+
       if (formattedJson) {
         return formattedJson;
       }
-      
-      return (
-        <div className={styles.waitingText}>
-          Aguardando dados...
-        </div>
-      );
+
+      return <div className={styles.waitingText}>Aguardando dados...</div>;
     };
 
     // Função para renderizar o ícone de status correto
     const renderStatusIcon = (): ReactNode => {
       if (isLoading) {
-        return <RefreshCw size={14} className="animate-spin text-muted-foreground" />;
+        return <RefreshCw className="animate-spin text-muted-foreground" size={14} />;
       }
-      
+
       if (isComplete && !error) {
-        return <CheckCircle size={14} className="text-green-500" />;
+        return <CheckCircle className="text-green-500" size={14} />;
       }
-      
+
       if (error) {
-        return <XCircle size={14} className="text-red-500" />;
+        return <XCircle className="text-red-500" size={14} />;
       }
-      
+
       return null;
     };
 
     return (
       <div
         className={cn(styles.container, className)}
+        data-min-height={MIN_HEIGHT}
         data-object-stream
         ref={containerRef}
-        data-min-height={MIN_HEIGHT}
         {...props}
       >
         {/* Cabeçalho com informações e controles */}
         {showControls && (
           <div className={styles.header}>
             <div className={styles.infoWrapper}>
-              <Code2 size={16} className="text-muted-foreground" />
+              <Code2 className="text-muted-foreground" size={16} />
               <span className={styles.titleText}>
                 Objeto JSON
                 {isLoading && " (streaming...)"}
                 {isComplete && " (completo)"}
               </span>
-              
+
               {renderStatusIcon()}
             </div>
-            
+
             <div className={styles.infoWrapper}>
               {onReset && (
                 <button
-                  type="button"
+                  aria-label="Reiniciar objeto"
                   className={styles.resetButton}
                   onClick={handleReset}
-                  aria-label="Reiniciar objeto"
+                  type="button"
                 >
                   Reiniciar
                 </button>
@@ -190,15 +187,13 @@ export const VizObjectStream = memo(
         >
           {renderJsonContent()}
         </div>
-        
+
         {/* Rodapé com informações do esquema */}
         {schema && (
           <div className={styles.footer}>
             <details>
               <summary className="cursor-pointer">Esquema de validação</summary>
-              <pre className={styles.schemaCode}>
-                {schema}
-              </pre>
+              <pre className={styles.schemaCode}>{schema}</pre>
             </details>
           </div>
         )}
@@ -225,18 +220,20 @@ export const VizUseObject = memo(
       clear: () => void;
     };
     showSchema?: boolean;
-  } & Omit<VizObjectStreamProps<T>, "object" | "isLoading" | "error" | "onReset">
-) => {
+  } & Omit<
+    VizObjectStreamProps<T>,
+    "object" | "isLoading" | "error" | "onReset"
+  >) => {
     const { object, error, isLoading, clear } = useObjectResult;
     const isComplete = !isLoading && !!object && !error;
-    
+
     return (
       <VizObjectStream
-        object={object}
         error={error}
-        isLoading={isLoading}
-        onReset={clear}
         isComplete={isComplete}
+        isLoading={isLoading}
+        object={object}
+        onReset={clear}
         {...props}
       />
     );
