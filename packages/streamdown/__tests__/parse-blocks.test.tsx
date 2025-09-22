@@ -142,7 +142,9 @@ $$`;
     expect(mathBlocks.length).toBe(2);
 
     expect(mathBlocks[0]).toContain("a^2 + b^2 = c^2");
-    expect(mathBlocks[1]).toContain("x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}");
+    expect(mathBlocks[1]).toContain(
+      "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}"
+    );
   });
 
   it("should handle current block ends with $$ and previous block started with $$ but didn't close", () => {
@@ -283,11 +285,11 @@ $$
 Texto depois`;
 
     const blocks = parseMarkdownIntoBlocks(markdown);
-    
+
     // Esperamos 3 blocos: texto antes, bloco de matemática, texto depois
     expect(blocks.length).toBe(3);
-    
-    const mathBlock = blocks.find(block => block.includes("x^2 + y^2 = z^2"));
+
+    const mathBlock = blocks.find((block) => block.includes("x^2 + y^2 = z^2"));
     expect(mathBlock).toBeDefined();
     expect(mathBlock?.trim().startsWith("$$")).toBe(true);
     expect(mathBlock?.trim().endsWith("$$")).toBe(true);
