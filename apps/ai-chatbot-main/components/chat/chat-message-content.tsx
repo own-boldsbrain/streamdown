@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { Streamdown } from "streamdown";
-import { cn } from "@/lib/utils";
 import { AgentCard } from "@/components/agents/agent-card";
+import { cn } from "@/lib/utils";
 
 // Definição do tipo de mensagem de chat
 interface ChatMessage {
@@ -24,7 +24,7 @@ const tryParseAgentJson = (content: string) => {
     if (content.trim().startsWith("{") && content.trim().endsWith("}")) {
       const jsonData = JSON.parse(content);
       const agentKey = Object.keys(jsonData)[0];
-      
+
       // Verifica se é um formato de resposta de agente conhecido
       const knownAgentKeys = [
         "anomaly_report",
@@ -36,7 +36,7 @@ const tryParseAgentJson = (content: string) => {
         "site_assessment",
         "preliminary_sizing",
       ];
-      
+
       if (knownAgentKeys.includes(agentKey)) {
         return { isAgentJson: true, agentKey, data: jsonData };
       }
@@ -47,30 +47,33 @@ const tryParseAgentJson = (content: string) => {
   }
 };
 
-export function ChatMessageContent({ message, className }: ChatMessageContentProps) {
+export function ChatMessageContent({
+  message,
+  className,
+}: ChatMessageContentProps) {
   const content = message.text ?? "";
-  
+
   // Análise otimizada e memoizada do conteúdo
   const { renderedContent, isAgent, agentData, agentKey } = useMemo(() => {
     const { isAgentJson, agentKey, data } = tryParseAgentJson(content);
-    
+
     if (isAgentJson && agentKey && data) {
       return {
         renderedContent: null,
         isAgent: true,
         agentData: data,
-        agentKey
+        agentKey,
       };
     }
-    
+
     return {
       renderedContent: content,
       isAgent: false,
       agentData: null,
-      agentKey: null
+      agentKey: null,
     };
   }, [content]);
-  
+
   // Se for uma resposta de agente, renderiza o componente especializado
   if (isAgent && agentData && agentKey) {
     return (
@@ -79,25 +82,25 @@ export function ChatMessageContent({ message, className }: ChatMessageContentPro
       </div>
     );
   }
-  
+
   // Caso contrário, renderiza o conteúdo usando Streamdown para melhor performance
   return (
     <div className={cn("chat-message-content", className)}>
       <Streamdown
         className={cn(
-          "max-w-none prose prose-neutral dark:prose-invert",
+          "prose prose-neutral dark:prose-invert max-w-none",
           "prose-headings:font-semibold prose-headings:tracking-tight",
-          "prose-p:leading-normal prose-pre:p-0",
+          "prose-pre:p-0 prose-p:leading-normal",
           "[&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
-          "[&_code]:break-words [&_code]:whitespace-pre-wrap",
+          "[&_code]:whitespace-pre-wrap [&_code]:break-words",
           "[&_pre]:max-w-full [&_pre]:overflow-x-auto"
         )}
-        shikiTheme={["github-light", "github-dark"]}
         controls={{
           code: true,
           table: true,
-          mermaid: true
+          mermaid: true,
         }}
+        shikiTheme={["github-light", "github-dark"]}
       >
         {renderedContent}
       </Streamdown>
