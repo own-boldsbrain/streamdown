@@ -20,8 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Slider } from "../ui/slider";
 import { cn } from "@/lib/utils";
+import { Slider } from "../ui/slider";
 
 // Constantes para configurações do TTS Player
 const DEFAULT_VOLUME = 0.7;

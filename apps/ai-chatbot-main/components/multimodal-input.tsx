@@ -28,8 +28,8 @@ import { cn } from "@/lib/utils";
 import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
 import { ChatAttachmentButton } from "./chat-attachment-button";
 import { ChatDragDropZone } from "./chat-drag-drop-zone";
-import { ChatStreamingProgress } from "./chat-streaming-progress";
 import { ChatStopButton } from "./chat-stop-button";
+import { ChatStreamingProgress } from "./chat-streaming-progress";
 import { Context } from "./elements/context";
 import {
   PromptInput,
@@ -236,7 +236,11 @@ function PureMultimodalInput({
 
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      <AnalyticsMessageMetrics chatId={chatId} messages={messages} status={status} />
+      <AnalyticsMessageMetrics
+        chatId={chatId}
+        messages={messages}
+        status={status}
+      />
 
       <MonetizationMessageLimitBanner
         className="-mt-1"
