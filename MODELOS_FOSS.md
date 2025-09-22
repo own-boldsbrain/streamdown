@@ -1,10 +1,10 @@
 # Configuração de Modelos FOSS
 
-Este projeto agora usa modelos de IA de código aberto (FOSS) em vez do AI Gateway proprietário.
+Este projeto agora usa uma **implementação mock** para demonstrar o streaming com modelos de IA de código aberto (FOSS). A API simula respostas de streaming para testar a funcionalidade do Streamdown.
 
-## Modelos Disponíveis
+## Modelos Disponíveis (Mock)
 
-A aplicação de teste inclui uma seleção de modelos FOSS populares:
+A aplicação de teste inclui uma seleção de modelos FOSS populares que são **simulados**:
 
 - **Llama 3.2 3B** (Meta) - Modelo eficiente para tarefas gerais
 - **Llama 3.2 1B** (Meta) - Versão menor, mais rápida
@@ -15,33 +15,56 @@ A aplicação de teste inclui uma seleção de modelos FOSS populares:
 - **Mistral 7B** (Mistral AI) - Modelo europeu de alta qualidade
 - **DeepSeek Coder 6.7B** - Especializado em geração de código
 
-## Como Usar
+## Como Funciona
 
-1. **Execução Local**: Os modelos rodam localmente via Hugging Face
-2. **Sem Autenticação**: Não requer chaves de API proprietárias
-3. **Privacidade**: Dados permanecem no seu ambiente local
+1. **Seleção de Modelo**: Escolha qualquer modelo da lista
+2. **Streaming Simulado**: A API retorna uma resposta mock com streaming
+3. **Demonstração**: Mostra como o Streamdown processa texto em tempo real
 
-## Configuração (Opcional)
+## Resposta Mock
 
-Para usar modelos específicos, você pode:
+A resposta atual demonstra:
 
-1. Modificar a lista `FOSS_MODELS` em `apps/test/app/page.tsx`
-2. Adicionar novos modelos do Hugging Face seguindo o formato:
+- Streaming de texto palavra por palavra
+- Delay simulado entre chunks
+- Integração perfeita com Streamdown
+- Suporte multilíngue (português incluído)
 
-   ```typescript
-   { label: "Nome do Modelo", value: "organizacao/modelo-nome" }
+## Próximos Passos para Produção
+
+Para usar modelos reais FOSS em produção:
+
+1. **Hugging Face Inference API**:
+
+   ```bash
+   pnpm add @huggingface/inference
    ```
 
-## Limitações
+2. **Configuração de API Key**:
+   - Obter token do Hugging Face
+   - Configurar variável de ambiente `HF_TOKEN`
 
-- **Requisitos de Hardware**: Modelos maiores precisam de GPU
-- **Velocidade**: Modelos locais podem ser mais lentos que APIs proprietárias
-- **Memória**: Alguns modelos requerem significativa RAM/VRAM
+3. **Integração Real**:
+   - Substituir implementação mock
+   - Usar modelos reais do Hugging Face
+   - Configurar rate limiting e caching
 
-## Próximos Passos
+4. **Alternativas FOSS**:
+   - **Ollama**: Para execução local
+   - **LM Studio**: Interface para modelos locais
+   - **Together AI**: API para modelos open source
 
-Para produção, considere:
+## Limitações da Versão Mock
 
-- Usar uma instância dedicada do Hugging Face Inference API
-- Configurar um servidor local com vLLM ou similar
-- Usar modelos quantizados para melhor performance
+- Respostas são pré-definidas
+- Não há IA real processando perguntas
+- Serve apenas para demonstração técnica
+- Ideal para testar interface e streaming
+
+## Benefícios
+
+- ✅ **Sem custos** de API
+- ✅ **Sem autenticação** necessária
+- ✅ **Demonstração perfeita** do Streamdown
+- ✅ **Código aberto** e transparente
+- ✅ **Pronto para expansão** futura
