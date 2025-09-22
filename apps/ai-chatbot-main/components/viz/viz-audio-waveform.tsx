@@ -220,20 +220,6 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     (currentTime / duration) * waveformData.length
   );
 
-  // Estilos CSS para a visualização de ondas
-  const getWaveformBarStyle = (height: number, index: number, isCompact: boolean) => {
-    return {
-      height: `${height}%`,
-      width: `${BAR_WIDTH}px`,
-      minHeight: `${MIN_BAR_HEIGHT}px`,
-      maxHeight: isCompact ? `${MAX_BAR_HEIGHT / 2}px` : `${MAX_BAR_HEIGHT}px`,
-      transform:
-        isPlaying && Math.abs(index - activeBarIndex) < ANIMATION_BAR_THRESHOLD
-          ? `scaleY(${1 + Math.random() * ANIMATION_SCALE_FACTOR})`
-          : "scaleY(1)",
-    };
-  };
-
   return (
     <Card className={cn("overflow-hidden", className)}>
       <CardContent className={cn("p-4", compact ? "space-y-2" : "space-y-4")}>
@@ -254,16 +240,28 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
             compact && "h-12"
           )}
         >
-          {waveformData.map((height, index) => (
-            <div
-              className={cn(
-                "rounded-t-sm transition-all duration-300 ease-in-out",
-                index <= activeBarIndex ? activeColor : waveColor
-              )}
-              key={`waveform-bar-${index}`}
-              style={getWaveformBarStyle(height, index, compact)}
-            />
-          ))}
+          {waveformData.map((height, index) => {
+            // Calculando o estilo da barra
+            const isActive = index <= activeBarIndex;
+            const shouldAnimate = isPlaying && Math.abs(index - activeBarIndex) < ANIMATION_BAR_THRESHOLD;
+            
+            return (
+              <div
+                className={cn(
+                  "rounded-t-sm transition-all duration-300 ease-in-out",
+                  isActive ? activeColor : waveColor,
+                  shouldAnimate ? "animate-pulse" : "",
+                  compact ? "max-h-40" : "max-h-80"
+                )}
+                key={`waveform-${height.toString().substring(0, 4)}-${index % waveformData.length}`}
+                aria-hidden="true"
+                style={{ 
+                  height: `${height}%`,
+                  width: `${BAR_WIDTH}px`,
+                }}
+              />
+            );
+          })}
         </div>
 
         {/* Controles de áudio */}

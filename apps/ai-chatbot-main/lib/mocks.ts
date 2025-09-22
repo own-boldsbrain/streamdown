@@ -4,205 +4,230 @@
  * Eles são usados para desenvolvimento, testes e demonstração dos componentes de UI.
  */
 
-import { subDays } from "date-fns";
 import type {
-  Anomaly,
-  AnomalyReportProps,
+  AnomalyData,
+  ArtifactAnomalyReportProps,
 } from "@/components/artifact-anomaly-report";
 import type {
-  Certificate,
-  ComplianceBadgeProps,
+  ArtifactComplianceBadgeProps,
+  ComplianceCertificate,
 } from "@/components/artifact-compliance-badge";
 import type {
-  RiskFactor,
-  RiskGaugeProps,
+  ArtifactRiskGaugeProps,
+  RiskAssessment,
 } from "@/components/artifact-risk-gauge";
 import type {
-  Metric,
-  RecentCall,
-  ToolInspectorProps,
+  ArtifactToolInspectorProps,
+  ToolCall,
 } from "@/components/artifact-tool-inspector";
+import { subDays } from "date-fns";
+
+// --- Constantes para Magic Numbers ---
+const DAYS_AGO_90 = 90;
+const DAYS_AGO_60 = 60;
+const DAYS_AGO_30 = 30;
+const DAYS_AGO_180 = 180;
+const DAYS_AHEAD_185 = -185;
+const DAYS_AGO_1 = 1;
+const DAYS_AGO_2 = 2;
+const DAYS_AGO_3 = 3;
+const FRACTIONAL_DAY_0_01 = 0.01;
+const FRACTIONAL_DAY_0_02 = 0.02;
 
 // Mock para ArtifactRiskGauge
-const mockRiskFactors: RiskFactor[] = [
+const mockAssessments: RiskAssessment[] = [
   {
-    name: "Volatilidade do Mercado de Energia",
-    value: 7.8,
-    description:
-      "Alta volatilidade nos preços de energia solar pode impactar o ROI.",
-  },
-  {
-    name: "Risco Regulatório",
-    value: 6.5,
-    description:
-      "Mudanças nas políticas de incentivo fiscal para energia renovável.",
-  },
-  {
-    name: "Confiabilidade da Previsão de Geração",
-    value: 8.2,
-    description:
-      "Precisão dos modelos de previsão de geração de energia solar.",
+    id: "assessment-1",
+    title: "Análise de Risco Trimestral",
+    overallRisk: 75,
+    riskLevel: "high",
+    factors: [
+      {
+        name: "Volatilidade do Mercado de Energia",
+        score: 78,
+        weight: 0.4,
+        trend: "up",
+        description:
+          "Alta volatilidade nos preços de energia solar pode impactar o ROI.",
+      },
+      {
+        name: "Risco Regulatório",
+        score: 65,
+        weight: 0.3,
+        trend: "stable",
+        description:
+          "Mudanças nas políticas de incentivo fiscal para energia renovável.",
+      },
+      {
+        name: "Confiabilidade da Previsão de Geração",
+        score: 82,
+        weight: 0.3,
+        trend: "down",
+        description:
+          "Precisão dos modelos de previsão de geração de energia solar.",
+      },
+    ],
+    assessedAt: new Date(),
+    confidence: 0.88,
+    recommendations: [
+      "Diversificar o portfólio de investimentos em energia.",
+      "Implementar hedge para mitigar a volatilidade de preços.",
+      "Aprimorar modelos de previsão com dados meteorológicos em tempo real.",
+    ],
+    historicalData: {
+      dates: [
+        subDays(new Date(), DAYS_AGO_90),
+        subDays(new Date(), DAYS_AGO_60),
+        subDays(new Date(), DAYS_AGO_30),
+        new Date(),
+      ],
+      scores: [68, 71, 70, 75],
+    },
+    isPremium: true,
   },
 ];
 
-export const mockRiskGaugeProps: RiskGaugeProps = {
-  riskLevel: 7.5,
-  riskFactors: mockRiskFactors,
-  historicalData: [
-    { date: subDays(new Date(), 90), risk: 6.8 },
-    { date: subDays(new Date(), 60), risk: 7.1 },
-    { date: subDays(new Date(), 30), risk: 7.0 },
-    { date: new Date(), risk: 7.5 },
-  ],
-  recommendations: [
-    "Diversificar o portfólio de investimentos em energia.",
-    "Implementar hedge para mitigar a volatilidade de preços.",
-    "Aprimorar modelos de previsão com dados meteorológicos em tempo real.",
-  ],
-  lastUpdated: new Date(),
+export const mockRiskGaugeProps: ArtifactRiskGaugeProps = {
+  assessments: mockAssessments,
   onExport: () => alert("Exportando relatório de risco..."),
   onShare: () => alert("Compartilhando análise de risco..."),
+  isPremiumUser: false,
 };
 
 // Mock para ArtifactAnomalyReport
-const mockAnomalies: Anomaly[] = [
+const mockAnomalies: AnomalyData[] = [
   {
     id: "ANOM-001",
-    timestamp: subDays(new Date(), 1),
+    type: "equipment_failure",
     severity: "critical",
-    description:
-      'Queda abrupta de 40% na geração da usina solar "Sol do Sertão".',
-    details:
-      "Causa provável: Desconexão inesperada do inversor principal. Impacto: Perda de 5 MWh. Ações: Equipe de manutenção notificada.",
-    affectedSystems: ["Geração", "Inversor"],
+    title: "Queda abrupta de 40% na geração",
+    description: 'Queda na usina "Sol do Sertão".',
+    detectedAt: subDays(new Date(), DAYS_AGO_1),
+    confidence: 0.95,
+    impact: { cost: 50000, efficiency: -40, risk: 90 },
+    recommendations: [
+      "Verificar conexão do inversor principal.",
+      "Inspecionar painéis solares na área afetada.",
+    ],
   },
   {
     id: "ANOM-002",
-    timestamp: subDays(new Date(), 2),
+    type: "unusual_pattern",
     severity: "high",
-    description: "Latência elevada na API de preços de energia.",
-    details:
-      "A latência da API de consulta de preços excedeu 2000ms por 30 minutos. Causa: Sobrecarga no serviço de dados. Ações: Escalado para o time de infraestrutura.",
-    affectedSystems: ["API", "Precificação"],
+    title: "Latência elevada na API de preços",
+    description: "API de preços excedeu 2000ms por 30 minutos.",
+    detectedAt: subDays(new Date(), DAYS_AGO_2),
+    confidence: 0.98,
+    impact: { cost: 5000, efficiency: -5, risk: 60 },
+    recommendations: [
+      "Escalar para o time de infraestrutura.",
+      "Verificar logs do serviço de dados.",
+    ],
   },
   {
     id: "ANOM-003",
-    timestamp: subDays(new Date(), 3),
+    type: "efficiency_drop",
     severity: "medium",
-    description: "Desvio no modelo de previsão de demanda.",
-    details:
-      "O modelo de previsão de demanda apresentou um erro de 15% acima do normal. Causa: Feriado não considerado no modelo. Ações: Modelo re-treinado com novos dados.",
-    affectedSystems: ["Previsão", "IA"],
+    title: "Desvio no modelo de previsão",
+    description: "Modelo de previsão de demanda com erro de 15%.",
+    detectedAt: subDays(new Date(), DAYS_AGO_3),
+    confidence: 0.85,
+    impact: { cost: 2500, efficiency: -15, risk: 45 },
+    recommendations: ["Re-treinar modelo com dados de feriados."],
   },
 ];
 
-export const mockAnomalyReportProps: AnomalyReportProps = {
+export const mockAnomalyReportProps: ArtifactAnomalyReportProps = {
   anomalies: mockAnomalies,
-  summary: {
-    totalAnomalies: 3,
-    criticalCount: 1,
-    highCount: 1,
-    mediumCount: 1,
-    lowCount: 0,
-  },
-  lastChecked: new Date(),
   isPremiumUser: true,
-  onViewDetails: (id) => alert(`Visualizando detalhes da anomalia ${id}`),
 };
 
 // Mock para ArtifactComplianceBadge
-const mockCertificates: Certificate[] = [
+const mockCertificates: ComplianceCertificate[] = [
   {
+    id: "cert-iso-50001",
     name: "ISO 50001 - Gestão de Energia",
+    issuer: "ABNT",
     status: "compliant",
-    description: "Norma internacional para sistemas de gestão de energia.",
+    issuedAt: subDays(new Date(), DAYS_AGO_180),
+    expiresAt: subDays(new Date(), DAYS_AHEAD_185),
     score: 95,
     requirements: [
-      { name: "Política Energética", met: true },
-      { name: "Auditoria Interna", met: true },
-      { name: "Monitoramento Contínuo", met: true },
+      {
+        id: "req-1-1",
+        name: "Política Energética",
+        description: "...",
+        status: "met",
+      },
+      {
+        id: "req-1-2",
+        name: "Auditoria Interna",
+        description: "...",
+        status: "met",
+      },
     ],
   },
   {
+    id: "cert-nbr-16149",
     name: "ABNT NBR 16149 - Sistemas Fotovoltaicos",
-    status: "partially-compliant",
-    description: "Norma brasileira para segurança de sistemas fotovoltaicos.",
+    issuer: "INMETRO",
+    status: "pending",
+    issuedAt: subDays(new Date(), DAYS_AGO_30),
     score: 80,
     requirements: [
-      { name: "Aterramento do Sistema", met: true },
-      { name: "Sinalização de Segurança", met: false },
-      { name: "Proteção Contra Surtos", met: true },
-    ],
-  },
-  {
-    name: "LEED - Liderança em Energia e Design Ambiental",
-    status: "non-compliant",
-    description: "Certificação para construções sustentáveis.",
-    score: 45,
-    requirements: [
-      { name: "Eficiência Hídrica", met: true },
-      { name: "Qualidade do Ar Interno", met: false },
-      { name: "Inovação em Design", met: false },
+      { id: "req-2-1", name: "Aterramento", description: "...", status: "met" },
+      {
+        id: "req-2-2",
+        name: "Sinalização",
+        description: "...",
+        status: "pending",
+      },
     ],
   },
 ];
 
-export const mockComplianceBadgeProps: ComplianceBadgeProps = {
+export const mockComplianceBadgeProps: ArtifactComplianceBadgeProps = {
   certificates: mockCertificates,
-  overallStatus: "partially-compliant",
-  lastAudited: subDays(new Date(), 45),
   onExport: () => alert("Exportando relatório de conformidade..."),
+  onDownload: (id: string) => alert(`Baixando certificado ${id}`),
 };
 
 // Mock para ArtifactToolInspector
-const mockMetrics: Metric[] = [
-  { name: "Custo Total", value: "$0.42", trend: "up" },
-  { name: "Duração Média", value: "350ms", trend: "down" },
-  { name: "Taxa de Sucesso", value: "99.8%", trend: "stable" },
-  { name: "Chamadas/min", value: "120", trend: "up" },
-];
-
-const mockRecentCalls: RecentCall[] = [
+const mockRecentCalls: ToolCall[] = [
   {
     id: "call-1",
     toolName: "getEnergyPrice",
     timestamp: new Date(),
     duration: 280,
-    cost: 0.002,
+    cost: 2, // in cents
     status: "success",
-    input: { location: "SP", currency: "BRL" },
-    output: { price: 540.5 },
+    inputTokens: 50,
+    outputTokens: 10,
   },
   {
     id: "call-2",
     toolName: "forecastGeneration",
-    timestamp: subDays(new Date(), 0.01),
+    timestamp: subDays(new Date(), FRACTIONAL_DAY_0_01),
     duration: 850,
-    cost: 0.015,
+    cost: 15, // in cents
     status: "success",
-    input: { plantId: "SdS-01", hours: 24 },
-    output: {
-      forecast: [
-        /* data */
-      ],
-    },
+    inputTokens: 200,
+    outputTokens: 500,
   },
   {
     id: "call-3",
     toolName: "getEnergyPrice",
-    timestamp: subDays(new Date(), 0.02),
+    timestamp: subDays(new Date(), FRACTIONAL_DAY_0_02),
     duration: 550,
-    cost: 0.005,
+    cost: 5, // in cents
     status: "error",
-    input: { location: "RJ" },
-    output: { error: "API timeout" },
+    error: "API timeout",
+    inputTokens: 45,
+    outputTokens: 0,
   },
 ];
 
-export const mockToolInspectorProps: ToolInspectorProps = {
-  metrics: mockMetrics,
-  recentCalls: mockRecentCalls,
-  lastUpdated: new Date(),
-  isPremiumUser: true,
-  onFilterChange: (filter) => alert(`Filtro alterado para: ${filter}`),
+export const mockToolInspectorProps: ArtifactToolInspectorProps = {
+  toolCalls: mockRecentCalls,
+  onRefresh: () => alert("Atualizando dados..."),
 };

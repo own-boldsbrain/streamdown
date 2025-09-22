@@ -2,7 +2,6 @@
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { Trigger } from "@radix-ui/react-select";
-import type { UIMessage } from "ai";
 import equal from "fast-deep-equal";
 import {
   type ChangeEvent,
@@ -28,8 +27,8 @@ import { cn } from "@/lib/utils";
 import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
 import { ChatAttachmentButton } from "./chat-attachment-button";
 import { ChatDragDropZone } from "./chat-drag-drop-zone";
-import { ChatStopButton } from "./chat-stop-button";
 import { ChatStreamingProgress } from "./chat-streaming-progress";
+import { ChatStopButton } from "./chat-stop-button";
 import { Context } from "./elements/context";
 import {
   PromptInput,
@@ -43,11 +42,16 @@ import {
 import { ArrowUpIcon, ChevronDownIcon, CpuIcon } from "./icons";
 import { MonetizationMessageLimitBanner } from "./monetization-message-limit-banner";
 import { PreviewAttachment } from "./preview-attachment";
-import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
 
 const DESKTOP_WIDTH_PX = 768;
 const DEFAULT_LIMIT = 100;
+
+type WindowWithTracker = Window & {
+  analyticsTracker?: {
+    trackConversion?: (event: string, props?: Record<string, unknown>) => void;
+  };
+};
 
 function PureMultimodalInput({
   chatId,
@@ -61,7 +65,7 @@ function PureMultimodalInput({
   setMessages,
   sendMessage,
   className,
-  selectedVisibilityType,
+  selectedVisibilityType: _selectedVisibilityType,
   selectedModelId,
   onModelChange,
   usage,
@@ -73,7 +77,7 @@ function PureMultimodalInput({
   stop: () => void;
   attachments: Attachment[];
   setAttachments: Dispatch<SetStateAction<Attachment[]>>;
-  messages: UIMessage[];
+  messages: ChatMessage[];
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
   className?: string;
@@ -234,23 +238,37 @@ function PureMultimodalInput({
     [setAttachments, uploadFile]
   );
 
+  const usedMessagesCount = useMemo(
+    () => messages.filter((m) => m.role === "user").length,
+    [messages]
+  );
+
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      <AnalyticsMessageMetrics
-        chatId={chatId}
-        messages={messages}
-        status={status}
-      />
+      <AnalyticsMessageMetrics chatId={chatId} messages={messages} status={status} />
 
       <MonetizationMessageLimitBanner
         className="-mt-1"
         limit={DEFAULT_LIMIT}
         onUpgrade={() => {
-          window?.analyticsTracker?.trackConversion?.("upgrade_initiated", {
-            source: "message_limit_banner",
-          });
+          (window as WindowWithTracker).analyticsTracker?.trackConversion?.(
+            "upgrade_initiated",
+            {
+              source: "message_limit_banner",
+            }
+          );
         }}
-        used={usage?.requests ?? 0}
+        used={usedMessagesCount}
+      />
+
+      {/* Hidden input for file uploads */}
+      <input
+        className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
+        multiple
+        onChange={handleFileChange}
+        ref={fileInputRef}
+        tabIndex={-1}
+        type="file"
       />
 
       {/* Drag & Drop zone above input */}
