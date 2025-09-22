@@ -25,6 +25,10 @@ import { myProvider } from "@/lib/ai/providers";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import type { AppUsage } from "@/lib/usage";
 import { cn } from "@/lib/utils";
+import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
+import { ChatAttachmentButton } from "./chat-attachment-button";
+import { ChatDragDropZone } from "./chat-drag-drop-zone";
+import { ChatStreamingProgress } from "./chat-streaming-progress";
 import { Context } from "./elements/context";
 import {
   PromptInput,
@@ -42,15 +46,11 @@ import {
   PaperclipIcon,
   StopIcon,
 } from "./icons";
+import { MonetizationMessageLimitBanner } from "./monetization-message-limit-banner";
 import { PreviewAttachment } from "./preview-attachment";
 import { SuggestedActions } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
-import { ChatAttachmentButton } from "./chat-attachment-button";
-import { ChatDragDropZone } from "./chat-drag-drop-zone";
-import { ChatStreamingProgress } from "./chat-streaming-progress";
-import { MonetizationMessageLimitBanner } from "./monetization-message-limit-banner";
-import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
 
 function PureMultimodalInput({
   chatId,
@@ -239,13 +239,24 @@ function PureMultimodalInput({
 
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      <AnalyticsMessageMetrics chatId={chatId} messages={messages as any} status={status} />
+      <AnalyticsMessageMetrics
+        chatId={chatId}
+        messages={messages as any}
+        status={status}
+      />
 
-      <MonetizationMessageLimitBanner className="-mt-1" limit={100} onUpgrade={() => {
-        if (typeof window !== 'undefined' && window.analyticsTracker) {
-          window.analyticsTracker.trackConversion?.('upgrade_initiated', { source: 'message_limit_banner' });
-        }
-      }} used={usage?.requests ?? 0} />
+      <MonetizationMessageLimitBanner
+        className="-mt-1"
+        limit={100}
+        onUpgrade={() => {
+          if (typeof window !== "undefined" && window.analyticsTracker) {
+            window.analyticsTracker.trackConversion?.("upgrade_initiated", {
+              source: "message_limit_banner",
+            });
+          }
+        }}
+        used={usage?.requests ?? 0}
+      />
 
       {/* Drag & Drop zone above input */}
       <ChatDragDropZone
@@ -256,7 +267,7 @@ function PureMultimodalInput({
           files.forEach((f) => dt.items.add(f));
           if (fileInputRef.current) {
             fileInputRef.current.files = dt.files;
-            const ev = new Event('change', { bubbles: true });
+            const ev = new Event("change", { bubbles: true });
             fileInputRef.current.dispatchEvent(ev);
           }
         }}
@@ -351,7 +362,7 @@ function PureMultimodalInput({
 
         <ChatStreamingProgress
           className="mt-2"
-          isStreaming={status === 'streaming'}
+          isStreaming={status === "streaming"}
           usage={usage}
         />
       </PromptInput>
