@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
-import { useState, memo } from 'react'
-import { Button } from '@/components/ui/button'
+import { Shield } from "lucide-react";
+import { memo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,57 +10,56 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Shield } from 'lucide-react'
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 type PrivacySettings = {
-  saveHistory: boolean
-  shareAnonymousData: boolean
-  thirdPartyIntegrations: boolean
-  cloudStorage: boolean
-}
+  saveHistory: boolean;
+  shareAnonymousData: boolean;
+  thirdPartyIntegrations: boolean;
+  cloudStorage: boolean;
+};
 
 type PrivacyCenterProps = {
-  initialSettings?: Partial<PrivacySettings>
-  onSave?: (settings: PrivacySettings) => void
-}
+  initialSettings?: Partial<PrivacySettings>;
+  onSave?: (settings: PrivacySettings) => void;
+};
 
 const defaultSettings: PrivacySettings = {
   saveHistory: true,
   shareAnonymousData: true,
   thirdPartyIntegrations: false,
-  cloudStorage: true
-}
+  cloudStorage: true,
+};
 
 const UIPrivacyCenter = memo(
   ({ initialSettings, onSave }: PrivacyCenterProps) => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
     const [settings, setSettings] = useState<PrivacySettings>({
       ...defaultSettings,
-      ...initialSettings
-    })
+      ...initialSettings,
+    });
 
     const handleToggle = (key: keyof PrivacySettings) => {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
-        [key]: !prev[key]
-      }))
-    }
+        [key]: !prev[key],
+      }));
+    };
 
     const handleSave = () => {
       if (onSave) {
-        onSave(settings)
+        onSave(settings);
       }
-      setOpen(false)
-    }
+      setOpen(false);
+    };
 
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Privacy Settings">
+          <Button aria-label="Privacy Settings" size="icon" variant="outline">
             <Shield className="h-4 w-4" />
           </Button>
         </DialogTrigger>
@@ -79,9 +79,9 @@ const UIPrivacyCenter = memo(
                 </p>
               </div>
               <Switch
-                id="save-history"
                 checked={settings.saveHistory}
-                onCheckedChange={() => handleToggle('saveHistory')}
+                id="save-history"
+                onCheckedChange={() => handleToggle("saveHistory")}
               />
             </div>
             <div className="flex items-center justify-between">
@@ -92,9 +92,9 @@ const UIPrivacyCenter = memo(
                 </p>
               </div>
               <Switch
-                id="anonymous-data"
                 checked={settings.shareAnonymousData}
-                onCheckedChange={() => handleToggle('shareAnonymousData')}
+                id="anonymous-data"
+                onCheckedChange={() => handleToggle("shareAnonymousData")}
               />
             </div>
             <div className="flex items-center justify-between">
@@ -105,9 +105,9 @@ const UIPrivacyCenter = memo(
                 </p>
               </div>
               <Switch
-                id="third-party"
                 checked={settings.thirdPartyIntegrations}
-                onCheckedChange={() => handleToggle('thirdPartyIntegrations')}
+                id="third-party"
+                onCheckedChange={() => handleToggle("thirdPartyIntegrations")}
               />
             </div>
             <div className="flex items-center justify-between">
@@ -118,26 +118,30 @@ const UIPrivacyCenter = memo(
                 </p>
               </div>
               <Switch
-                id="cloud-storage"
                 checked={settings.cloudStorage}
-                onCheckedChange={() => handleToggle('cloudStorage')}
+                id="cloud-storage"
+                onCheckedChange={() => handleToggle("cloudStorage")}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              onClick={() => setOpen(false)}
+              type="button"
+              variant="outline"
+            >
               Cancelar
             </Button>
-            <Button type="button" onClick={handleSave}>
+            <Button onClick={handleSave} type="button">
               Salvar alterações
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
-)
+);
 
-UIPrivacyCenter.displayName = 'UIPrivacyCenter'
+UIPrivacyCenter.displayName = "UIPrivacyCenter";
 
-export { UIPrivacyCenter }
+export { UIPrivacyCenter };

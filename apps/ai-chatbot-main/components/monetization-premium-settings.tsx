@@ -1,36 +1,36 @@
-'use client'
+"use client";
 
-import { useState, memo } from 'react'
-import { Button } from '@/components/ui/button'
+import { Crown } from "lucide-react";
+import { memo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import { Slider } from '@/components/ui/slider'
-import { Crown } from 'lucide-react'
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type PremiumSettings = {
-  prioritySupport: boolean
-  highThroughput: boolean
-  betaFeatures: boolean
-  customModels: boolean
-  maxTokens: number
-  advancedAnalytics: boolean
-}
+  prioritySupport: boolean;
+  highThroughput: boolean;
+  betaFeatures: boolean;
+  customModels: boolean;
+  maxTokens: number;
+  advancedAnalytics: boolean;
+};
 
 type PremiumSettingsProps = {
-  className?: string
-  initialSettings?: Partial<PremiumSettings>
-  onSave?: (settings: PremiumSettings) => void
-}
+  className?: string;
+  initialSettings?: Partial<PremiumSettings>;
+  onSave?: (settings: PremiumSettings) => void;
+};
 
 const defaultSettings: PremiumSettings = {
   prioritySupport: true,
@@ -38,35 +38,35 @@ const defaultSettings: PremiumSettings = {
   betaFeatures: false,
   customModels: false,
   maxTokens: 8192,
-  advancedAnalytics: true
-}
+  advancedAnalytics: true,
+};
 
 const MonetizationPremiumSettings = memo(
   ({ className, initialSettings, onSave }: PremiumSettingsProps) => {
     const [settings, setSettings] = useState<PremiumSettings>({
       ...defaultSettings,
-      ...initialSettings
-    })
+      ...initialSettings,
+    });
 
     const handleToggle = (key: keyof PremiumSettings) => {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
-        [key]: !prev[key]
-      }))
-    }
+        [key]: !prev[key],
+      }));
+    };
 
     const handleSliderChange = (value: number[]) => {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
-        maxTokens: value[0]
-      }))
-    }
+        maxTokens: value[0],
+      }));
+    };
 
     const handleSave = () => {
       if (onSave) {
-        onSave(settings)
+        onSave(settings);
       }
-    }
+    };
 
     return (
       <Card className={className}>
@@ -80,24 +80,26 @@ const MonetizationPremiumSettings = memo(
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="features" className="w-full">
+          <Tabs className="w-full" defaultValue="features">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="features">Recursos</TabsTrigger>
               <TabsTrigger value="limits">Limites</TabsTrigger>
             </TabsList>
-            <TabsContent value="features" className="space-y-4 pt-4">
+            <TabsContent className="space-y-4 pt-4" value="features">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="priority-support">Suporte prioritário</Label>
+                    <Label htmlFor="priority-support">
+                      Suporte prioritário
+                    </Label>
                     <p className="text-muted-foreground text-sm">
                       Receba suporte em até 1 hora
                     </p>
                   </div>
                   <Switch
-                    id="priority-support"
                     checked={settings.prioritySupport}
-                    onCheckedChange={() => handleToggle('prioritySupport')}
+                    id="priority-support"
+                    onCheckedChange={() => handleToggle("prioritySupport")}
                   />
                 </div>
 
@@ -109,9 +111,9 @@ const MonetizationPremiumSettings = memo(
                     </p>
                   </div>
                   <Switch
-                    id="high-throughput"
                     checked={settings.highThroughput}
-                    onCheckedChange={() => handleToggle('highThroughput')}
+                    id="high-throughput"
+                    onCheckedChange={() => handleToggle("highThroughput")}
                   />
                 </div>
 
@@ -119,63 +121,71 @@ const MonetizationPremiumSettings = memo(
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="beta-features">Recursos beta</Label>
-                      <Badge variant="outline" className="text-xs">Novo</Badge>
+                      <Badge className="text-xs" variant="outline">
+                        Novo
+                      </Badge>
                     </div>
                     <p className="text-muted-foreground text-sm">
                       Acesso antecipado a novos recursos
                     </p>
                   </div>
                   <Switch
-                    id="beta-features"
                     checked={settings.betaFeatures}
-                    onCheckedChange={() => handleToggle('betaFeatures')}
+                    id="beta-features"
+                    onCheckedChange={() => handleToggle("betaFeatures")}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="custom-models">Modelos personalizados</Label>
+                    <Label htmlFor="custom-models">
+                      Modelos personalizados
+                    </Label>
                     <p className="text-muted-foreground text-sm">
                       Use seus próprios modelos treinados
                     </p>
                   </div>
                   <Switch
-                    id="custom-models"
                     checked={settings.customModels}
-                    onCheckedChange={() => handleToggle('customModels')}
+                    id="custom-models"
+                    onCheckedChange={() => handleToggle("customModels")}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="advanced-analytics">Analytics avançado</Label>
+                    <Label htmlFor="advanced-analytics">
+                      Analytics avançado
+                    </Label>
                     <p className="text-muted-foreground text-sm">
                       Relatórios e insights detalhados
                     </p>
                   </div>
                   <Switch
-                    id="advanced-analytics"
                     checked={settings.advancedAnalytics}
-                    onCheckedChange={() => handleToggle('advancedAnalytics')}
+                    id="advanced-analytics"
+                    onCheckedChange={() => handleToggle("advancedAnalytics")}
                   />
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="limits" className="space-y-4 pt-4">
+            <TabsContent className="space-y-4 pt-4" value="limits">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="max-tokens">Limite de tokens</Label>
-                    <span className="text-muted-foreground text-sm">{settings.maxTokens}</span>
+                    <span className="text-muted-foreground text-sm">
+                      {settings.maxTokens}
+                    </span>
                   </div>
                   <Slider
+                    aria-label="Token limit"
                     id="max-tokens"
-                    min={1024}
                     max={32_768}
+                    min={1024}
+                    onValueChange={handleSliderChange}
                     step={1024}
                     value={[settings.maxTokens]}
-                    onValueChange={handleSliderChange}
-                    aria-label="Token limit"
                   />
                   <p className="text-muted-foreground text-xs">
                     Define o número máximo de tokens por requisição
@@ -190,10 +200,10 @@ const MonetizationPremiumSettings = memo(
           <Button onClick={handleSave}>Salvar alterações</Button>
         </CardFooter>
       </Card>
-    )
+    );
   }
-)
+);
 
-MonetizationPremiumSettings.displayName = 'MonetizationPremiumSettings'
+MonetizationPremiumSettings.displayName = "MonetizationPremiumSettings";
 
-export { MonetizationPremiumSettings }
+export { MonetizationPremiumSettings };
