@@ -1,0 +1,240 @@
+{
+  "version": "1.0.0",
+  "context": "Templates de mensageria por persona e região",
+  "personas": [
+    {
+      "id": "B1-RS",
+      "class": "residencial",
+      "label": "Residencial Pequeno",
+      "energy_profile": {
+        "consumption_kWh_month_range": [100, 400],
+        "suggested_kWp_range": [1.5, 3.5],
+        "tiers": ["baixo_consumo", "casa_pequena"]
+      },
+      "regions": {
+        "N": {
+          "value_prop": "Economia de energia mesmo em dias nublados da Amazônia",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}? Mesmo aqui no Norte, nossos painéis captam energia em dias parcialmente nublados.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes? Toque no botão abaixo.",
+            "footer": "Energia solar para todos! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Detalhada",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nMesmo aqui na região Norte, você pode economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit", "Mais Informações"]
+          },
+          "email": {
+            "subject": "Economize {{economia_pct}}% na conta de luz com energia solar mesmo na Amazônia!",
+            "preheader": "Sistema {{kit_nome}} ideal para seu consumo de {{consumo_kWh_mes}}kWh/mês, funcionando até em dias parcialmente nublados."
+          },
+          "sms": "Yello Solar: {{persona_nome}}, economize {{economia_pct}}% na conta com {{kit_nome}}. Retorno em {{payback_anos}} anos. Confira: {{link_curto}} PARE p/ sair"
+        },
+        "NE": {
+          "value_prop": "Aproveite o sol do Nordeste para zerar sua conta de luz",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}? Aqui no Nordeste, temos o melhor índice solar do Brasil!\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes? Toque no botão abaixo.",
+            "footer": "Energia solar para todos! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Detalhada",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nAqui no Nordeste você pode aproveitar o melhor índice solar do Brasil e economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit"]
+          },
+          "email": {
+            "subject": "Aproveite o sol do Nordeste e economize {{economia_pct}}% na conta de luz!",
+            "preheader": "Sistema {{kit_nome}} ideal para seu consumo de {{consumo_kWh_mes}}kWh/mês, com o melhor índice solar do Brasil."
+          },
+          "sms": "Yello Solar: {{persona_nome}}, economize {{economia_pct}}% na conta com {{kit_nome}}. Sol do NE a seu favor. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "CO": {
+          "value_prop": "Energia solar constante o ano todo no Centro-Oeste",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}? No Centro-Oeste temos sol forte quase o ano todo!\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes? Toque no botão abaixo.",
+            "footer": "Energia solar para todos! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Detalhada",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nNo Centro-Oeste você tem sol forte quase o ano todo, ideal para economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é perfeito para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit", "Mais Informações"]
+          },
+          "email": {
+            "subject": "Aproveite o sol do Centro-Oeste e economize {{economia_pct}}% na conta de luz!",
+            "preheader": "Sistema {{kit_nome}} ideal para seu consumo de {{consumo_kWh_mes}}kWh/mês, com sol forte quase o ano todo."
+          },
+          "sms": "Yello Solar: {{persona_nome}}, economize {{economia_pct}}% na conta com {{kit_nome}}. Sol constante do CO a seu favor. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "SE": {
+          "value_prop": "Reduza o impacto da bandeira vermelha com energia solar",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}? Proteja-se das bandeiras vermelhas!\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes? Toque no botão abaixo.",
+            "footer": "Energia solar para todos! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Detalhada",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nProteja-se das bandeiras vermelhas e economize até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit"]
+          },
+          "email": {
+            "subject": "Proteja-se das bandeiras vermelhas e economize {{economia_pct}}% na conta!",
+            "preheader": "Sistema {{kit_nome}} ideal para seu consumo de {{consumo_kWh_mes}}kWh/mês, com economia garantida mesmo em períodos de crise."
+          },
+          "sms": "Yello Solar: {{persona_nome}}, economize {{economia_pct}}% e evite bandeiras vermelhas com {{kit_nome}}. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "S": {
+          "value_prop": "Energia solar eficiente mesmo nos dias frios do Sul",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}? Funciona perfeitamente mesmo no clima do Sul!\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes? Toque no botão abaixo.",
+            "footer": "Energia solar para todos! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Detalhada",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nMesmo com o clima do Sul, você pode economizar até {{economia_pct}}% na sua conta de luz com o {{kit_nome}}.\n\nSeu consumo de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit", "Mais Informações"]
+          },
+          "email": {
+            "subject": "Energia solar funciona mesmo no Sul! Economize {{economia_pct}}% na sua conta",
+            "preheader": "Sistema {{kit_nome}} ideal para seu consumo de {{consumo_kWh_mes}}kWh/mês, eficiente mesmo nos dias frios."
+          },
+          "sms": "Yello Solar: {{persona_nome}}, economize {{economia_pct}}% mesmo no clima do Sul com {{kit_nome}}. Veja: {{link_curto}} PARE p/ sair"
+        }
+      }
+    },
+    {
+      "id": "C2-RJ",
+      "class": "comercial",
+      "label": "Comercial Médio",
+      "energy_profile": {
+        "consumption_kWh_month_range": [800, 2000],
+        "suggested_kWp_range": [5, 12],
+        "tiers": ["médio_consumo", "loja_pequena", "escritório"]
+      },
+      "regions": {
+        "N": {
+          "value_prop": "Reduza custos operacionais com energia solar no Norte",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal reduzir até {{economia_pct}}% nos custos operacionais da sua empresa com o {{kit_nome}}?\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes sobre esta solução? Toque no botão abaixo.",
+            "footer": "Energia solar para empresas! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Comercial",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nReduca até {{economia_pct}}% nos custos operacionais da sua empresa na região Norte com o {{kit_nome}}.\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit"]
+          },
+          "email": {
+            "subject": "Reduza custos operacionais em {{economia_pct}}% com energia solar para sua empresa",
+            "preheader": "Sistema comercial {{kit_nome}} ideal para consumo de {{consumo_kWh_mes}}kWh/mês, funcionando perfeitamente na região Norte."
+          },
+          "sms": "Yello Solar B2B: {{persona_nome}}, reduza {{economia_pct}}% nos custos da sua empresa com {{kit_nome}}. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "NE": {
+          "value_prop": "Aproveite o sol do Nordeste para sua empresa economizar",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal reduzir até {{economia_pct}}% nos custos operacionais da sua empresa com o {{kit_nome}}? No Nordeste, temos o melhor índice solar do Brasil!\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes sobre esta solução? Toque no botão abaixo.",
+            "footer": "Energia solar para empresas! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Comercial",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nNo Nordeste, sua empresa pode aproveitar o melhor índice solar do Brasil e economizar até {{economia_pct}}% nos custos com o {{kit_nome}}.\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit", "Mais Informações"]
+          },
+          "email": {
+            "subject": "Aproveite o sol do Nordeste para sua empresa economizar {{economia_pct}}%",
+            "preheader": "Sistema comercial {{kit_nome}} ideal para consumo de {{consumo_kWh_mes}}kWh/mês, com o melhor índice solar do Brasil."
+          },
+          "sms": "Yello Solar B2B: {{persona_nome}}, reduza {{economia_pct}}% nos custos com energia usando o sol do NE. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "CO": {
+          "value_prop": "Energia solar constante para seu negócio no Centro-Oeste",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal reduzir até {{economia_pct}}% nos custos operacionais da sua empresa com o {{kit_nome}}? No Centro-Oeste temos sol forte quase o ano todo!\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes sobre esta solução? Toque no botão abaixo.",
+            "footer": "Energia solar para empresas! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Comercial",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nNo Centro-Oeste, sua empresa terá sol forte quase o ano todo, economizando até {{economia_pct}}% com o {{kit_nome}}.\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit"]
+          },
+          "email": {
+            "subject": "Sol do Centro-Oeste a favor da sua empresa: economize {{economia_pct}}%",
+            "preheader": "Sistema comercial {{kit_nome}} ideal para consumo de {{consumo_kWh_mes}}kWh/mês, com sol forte quase o ano todo."
+          },
+          "sms": "Yello Solar B2B: {{persona_nome}}, reduza {{economia_pct}}% nos custos com energia no CO. Veja: {{link_curto}} PARE p/ sair"
+        },
+        "SE": {
+          "value_prop": "Proteja sua empresa das bandeiras vermelhas com energia solar",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal reduzir até {{economia_pct}}% nos custos operacionais da sua empresa com o {{kit_nome}}? Proteja seu negócio das bandeiras vermelhas!\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes sobre esta solução? Toque no botão abaixo.",
+            "footer": "Energia solar para empresas! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Comercial",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nProteja sua empresa das bandeiras vermelhas e economize até {{economia_pct}}% nos custos com o {{kit_nome}}.\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit", "Mais Informações"]
+          },
+          "email": {
+            "subject": "Proteja sua empresa das bandeiras vermelhas: economize {{economia_pct}}%",
+            "preheader": "Sistema comercial {{kit_nome}} ideal para consumo de {{consumo_kWh_mes}}kWh/mês, com economia garantida mesmo em períodos de crise."
+          },
+          "sms": "Yello Solar B2B: {{persona_nome}}, proteja sua empresa das bandeiras vermelhas. Economize {{economia_pct}}%. {{link_curto}} PARE p/ sair"
+        },
+        "S": {
+          "value_prop": "Energia solar eficiente para empresas mesmo no clima do Sul",
+          "whatsapp": {
+            "header": "Olá {{persona_nome}}! ☀️",
+            "body": "Que tal reduzir até {{economia_pct}}% nos custos operacionais da sua empresa com o {{kit_nome}}? Funciona perfeitamente mesmo no clima do Sul!\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.\n\nQuer mais detalhes sobre esta solução? Toque no botão abaixo.",
+            "footer": "Energia solar para empresas! Responda SAIR para cancelar mensagens.",
+            "cta": {
+              "text": "Ver Proposta Comercial",
+              "url_template": "https://ysh.proposta.app/{{proposta_id}}"
+            }
+          },
+          "telegram": {
+            "text": "☀️ Olá {{persona_nome}}!\n\nMesmo com o clima do Sul, sua empresa pode economizar até {{economia_pct}}% nos custos com o {{kit_nome}}.\n\nSeu consumo comercial de {{consumo_kWh_mes}}kWh/mês é ideal para esse sistema, com retorno em {{payback_anos}} anos.",
+            "keyboard": ["Ver Proposta", "Falar com Consultor", "Simular Outro Kit"]
+          },
+          "email": {
+            "subject": "Energia solar funciona no Sul! Sua empresa pode economizar {{economia_pct}}%",
+            "preheader": "Sistema comercial {{kit_nome}} ideal para consumo de {{consumo_kWh_mes}}kWh/mês, eficiente mesmo nos dias frios."
+          },
+          "sms": "Yello Solar B2B: {{persona_nome}}, reduza {{economia_pct}}% nos custos mesmo no clima do Sul. Veja: {{link_curto}} PARE p/ sair"
+        }
+      }
+    }
+  ]
+}

@@ -35,13 +35,13 @@ describe("Mermaid", () => {
 
   it("applies custom className", async () => {
     const { act } = await import("@testing-library/react");
-    
+
     const { container } = render(
       <Mermaid chart="graph TD; A-->B" className="custom-class" />
     );
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
     const mermaidContainer = container.firstChild as HTMLElement;
