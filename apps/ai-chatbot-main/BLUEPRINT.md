@@ -1,4 +1,117 @@
-# AP2 - Auto Portal Photovoltaico: Blueprint Técnico
+# Infra: Modos de Operação de Banco (DB vs NO-DB)
+
+O projeto suporta dois modos principais para desenvolvimento e pré-produção.
+
+## 1. NO-DB Mode
+
+Usado para desenvolvimento rápido de UI / fluxo de chat sem dependência de banco.
+
+Variáveis relevantes:
+
+```env
+ALLOW_GUEST_NO_DB=1
+ENABLE_GUEST_USER_FALLBACK=false
+```
+
+Características:
+
+- `ALLOW_GUEST_NO_DB=1` força `getDb()` a retornar `null` e o provider `guest` faz early-return sem tocar no DB.
+- Sessões guest recebem IDs sintéticos (`guest-<timestamp>`).
+- Não há persistência de chats, mensagens ou usuários.
+
+## 2. DB Mode (LibSQL / Turso / Postgres)
+
+Quando `ALLOW_GUEST_NO_DB!=1` o código tenta inicializar o driver definido em `DB_DRIVER`.
+
+LibSQL local (arquivo):
+
+```env
+DB_DRIVER=libsql
+LIBSQL_URL=file:./dev.db
+```
+
+Turso remoto:
+
+```env
+DB_DRIVER=libsql
+LIBSQL_URL=libsql://<db>-<org>.turso.io
+LIBSQL_AUTH_TOKEN=<token>
+```
+
+Postgres (exemplo):
+
+```env
+DB_DRIVER=postgres
+POSTGRES_URL=postgresql://user:pass@host:5432/dbname
+```
+
+## Migração mínima LibSQL
+
+Executar:
+
+```bash
+pnpm migrate:libsql
+```
+
+Cria a tabela `User` se não existir.
+
+## Fallbacks
+
+- `ENABLE_GUEST_USER_FALLBACK=true` permite retornar usuários guest sintéticos em algumas operações mesmo com falha de DB.
+- Recomenda-se manter `false` em pré-produção para detectar problemas reais.
+
+## Rota de Saúde do Banco
+
+Endpoint: `GET /api/health/db`
+
+Resposta (exemplo):
+
+```json
+{
+    "driver": "libsql",
+    "allowGuestNoDb": false,
+    "enableGuestFallback": false,
+    "mode": "connected",
+    "tables": ["User"],
+    "timestamp": "2025-09-22T12:00:00.000Z"
+}
+```
+
+Campos:
+
+- `mode`: `no-db` | `connected` | `error`
+- `tables`: lista detectada (heurística leve); vazia em NO-DB ou se introspecção falhar.
+
+Uso rápido:
+
+```bash
+curl http://localhost:3000/api/health/db
+```
+
+## Fluxo Guest Credentials
+
+1. Se `ALLOW_GUEST_NO_DB=1`: early-return em `auth.ts` cria perfil ephemeral.
+2. Caso contrário: import dinâmico de `createGuestUser()` insere linha na tabela `User` (LibSQL) com fallback select.
+3. Em erro e `ENABLE_GUEST_USER_FALLBACK=true`: gera guest sintético e loga aviso.
+
+## Scripts Relevantes
+
+```bash
+pnpm dev                # modo padrão
+pnpm dev:preprod        # usa .env.preprod.local se configurado
+pnpm migrate:libsql     # aplica DDL mínima (User)
+pnpm db:migrate         # pipeline Drizzle (quando expandido)
+```
+
+## Próximos Passos Sugeridos
+
+- Expandir DDL (Chat, Message, Document, Vote) sob Drizzle.
+- Adicionar testes e2e para NO-DB vs DB usando Playwright + seeds.
+- Endpoint `/api/health/app` agregando versão, build hash, uptime.
+- Observabilidade: integrar OpenTelemetry exporter condicional.
+
+<!-- Removido H1 duplicado anterior para evitar múltiplos títulos principais -->
+## AP2 - Auto Portal Photovoltaico: Blueprint Técnico
 
 > **Versão 1.0** · Arquitetura baseada em agentes e fluxo de eventos · Protocolo: MCP · Mensageria: NATS · UI: Artifacts/AI SDK UI
 

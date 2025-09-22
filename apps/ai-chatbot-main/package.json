@@ -21,7 +21,7 @@
     "db:up": "drizzle-kit up",
     "db:setup-libsql": "node scripts/setup-libsql.js",
     "db:push:sqlite": "drizzle-kit push:sqlite",
-  "migrate:libsql": "tsx lib/db/migrate-libsql.ts",
+    "migrate:libsql": "tsx lib/db/migrate-libsql.ts",
     "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
   },
   "dependencies": {
