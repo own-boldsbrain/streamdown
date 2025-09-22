@@ -1,0 +1,54 @@
+{
+  "name": "@streamdown/ai-sdk-core",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "homepage": "https://streamdown.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vercel/streamdown.git",
+    "directory": "packages/ai-sdk-core"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:ui": "vitest --ui run",
+    "test:coverage": "vitest --coverage run",
+    "dev": "tsup --watch"
+  },
+  "author": "Streamdown Team",
+  "license": "Apache-2.0",
+  "description": "AI SDK Core - Funções para interagir com modelos de linguagem e IA",
+  "devDependencies": {
+    "@types/node": "^24",
+    "@vitest/coverage-v8": "^3.2.4",
+    "tsup": "^8.5.0",
+    "typescript": "^5",
+    "vitest": "^3.2.4",
+    "zod": "^4.1.5"
+  },
+  "dependencies": {
+    "zod": "^4.1.5"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}
