@@ -64,48 +64,30 @@ export async function createUser(email: string, password: string) {
 }
 
 export async function createGuestUser() {
+  const db = getDb();
+  if (!db) {
+    throw new Error("NO_DB_MODE");
+  }
+
+  const email = `guest+${Date.now()}@local`;
+  const password = generateHashedPassword(generateUUID());
+
   try {
-    if (ALLOW_GUEST_NO_DB) {
-      const ts = Date.now();
-      return { id: `guest-${ts}`, email: `guest.${ts}@local` };
+    const result = await db
+      .insert(user)
+      .values({ email, password })
+      .returning({ id: user.id, email: user.email });
+
+    if (Array.isArray(result) && result[0]?.id) {
+      return result[0];
     }
 
-    const db = getDb();
-    if (!db && ENABLE_GUEST_USER_FALLBACK) {
-      const ts = Date.now();
-      return { id: `guest-${ts}`, email: `guest.${ts}@local` };
-    }
-    if (!db) {
-      // Modo estrito: sem fallback e sem instância de DB
-      throw new Error("NO_DB_MODE");
+    if (result && 'id' in result && 'email' in result) {
+      return result as { id: number; email: string };
     }
 
-    const email = `guest+${Date.now()}@local`;
-    const password = generateHashedPassword(generateUUID());
-
-    let inserted: any = null;
-    try {
-      const maybePromise = (db as any)
-        .insert(user)
-        .values({ email, password })
-        .returning?.({ id: user.id, email: user.email });
-      inserted =
-        maybePromise instanceof Promise ? await maybePromise : maybePromise;
-    } catch (err) {
-      console.warn(
-        "Insert returning unsupported; falling back to select:",
-        err
-      );
-    }
-
-    if (Array.isArray(inserted) && inserted[0]?.id) {
-      return inserted[0];
-    }
-    if (inserted?.id && inserted?.email) {
-      return inserted;
-    }
-
-    const selected = await (db as any)
+    // Fallback for drivers that don't support returning
+    const selected = await db
       .select({ id: user.id, email: user.email })
       .from(user)
       .where(eq(user.email, email))
@@ -115,13 +97,21 @@ export async function createGuestUser() {
       return selected[0];
     }
 
-    const ts = Date.now();
-    return { id: `guest-${ts}`, email: `guest.${ts}@local` };
+    throw new Error("Failed to create guest user and verify insertion.");
   } catch (error) {
-    return handleDbError(error, "Failed to create guest user", {
-      id: `guest-${Date.now()}`,
-      email: "guest.fallback@local",
-    });
+    // Fallback for drivers that don't support returning
+    const selected = await db
+      .select({ id: user.id, email: user.email })
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1);
+
+    if (selected?.[0]) {
+      return selected[0];
+    }
+    
+    console.error("Failed to create guest user:", error);
+    throw new Error("Failed to create guest user.");
   }
 }
 
