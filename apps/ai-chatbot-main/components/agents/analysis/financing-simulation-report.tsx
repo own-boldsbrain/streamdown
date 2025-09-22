@@ -2,6 +2,11 @@ import { Calculator, DollarSign, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Constantes
+const PERCENTAGE_MULTIPLIER = 100;
+const ANNUAL_INTEREST_DECIMALS = 2;
+const IRR_DECIMALS = 1;
+
 type FinancingOption = {
   option_name: string;
   interest_rate: number;
@@ -78,14 +83,14 @@ export const FinancingSimulationReport = ({
             Opções de Financiamento
           </h4>
 
-          {financing_options.map((option, index) => (
+          {financing_options.map((option) => (
             <div
               className={`rounded-lg border p-4 ${
                 option.option_name === recommended_option
                   ? "border-green-500 bg-green-50 dark:bg-green-950/20"
                   : "border-border"
               }`}
-              key={`option-${index}`}
+              key={`option-${option.option_name.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div className="mb-3 flex items-center justify-between">
                 <h5 className="font-semibold">{option.option_name}</h5>
@@ -98,7 +103,7 @@ export const FinancingSimulationReport = ({
                 <div>
                   <p className="text-muted-foreground">Taxa de Juros</p>
                   <p className="font-semibold">
-                    {(option.interest_rate * 100).toFixed(2)}% a.a.
+                    {(option.interest_rate * PERCENTAGE_MULTIPLIER).toFixed(ANNUAL_INTEREST_DECIMALS)}% a.a.
                   </p>
                 </div>
                 <div>
@@ -125,7 +130,7 @@ export const FinancingSimulationReport = ({
                     TIR (Taxa Interna de Retorno)
                   </span>
                   <span className="font-semibold text-green-600">
-                    {(option.irr * 100).toFixed(1)}%
+                    {(option.irr * PERCENTAGE_MULTIPLIER).toFixed(IRR_DECIMALS)}%
                   </span>
                 </div>
               </div>

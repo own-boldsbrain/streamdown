@@ -3,7 +3,7 @@
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AnomalyReportSchema } from "@/lib/schemas/ap2";
+import { AnomalyReportSchema, type AnomalyReport } from "@/lib/schemas/ap2";
 
 export default function AnomalyReportArtifact({
   seed,
@@ -15,23 +15,14 @@ export default function AnomalyReportArtifact({
     schema: AnomalyReportSchema,
     initialValue: {
       system_id: (seed?.system_id as string) || "system-default",
+      anomalies_detected: [],
+      total_anomalies: 0,
+      risk_assessment: ""
     },
   });
 
-  // Cast do objeto para acessar propriedades de forma segura
-  const typedObject = object as
-    | {
-        system_id?: string;
-        total_anomalies?: number;
-        risk_assessment?: string;
-        anomalies_detected?: Array<{
-          type?: string;
-          month?: string;
-          severity?: string;
-          description?: string;
-        }>;
-      }
-    | undefined;
+  // Usando o tipo definido no schema
+  const typedObject = object as AnomalyReport | undefined;
 
   return (
     <Card>
@@ -76,7 +67,7 @@ export default function AnomalyReportArtifact({
             {typedObject.anomalies_detected &&
               typedObject.anomalies_detected.length > 0 && (
                 <ul className="ml-5 list-disc">
-                  {typedObject.anomalies_detected.map((anomaly, index) => (
+                  {typedObject.anomalies_detected.map((anomaly, index: number) => (
                     <li key={`anomaly-${index}-${anomaly.type || "unknown"}`}>
                       {anomaly.type || "Tipo desconhecido"} ·
                       {anomaly.severity || "severity n/a"} ·

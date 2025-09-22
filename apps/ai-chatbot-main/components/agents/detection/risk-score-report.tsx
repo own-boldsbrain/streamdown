@@ -3,6 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
+// Constantes
+const HIGH_RISK_THRESHOLD = 80;
+const MEDIUM_RISK_THRESHOLD = 60;
+const MAX_RECOMMENDATION_KEY_LENGTH = 20;
+
 type RiskScoreData = {
   risk_score: {
     system_id: string;
@@ -18,16 +23,22 @@ type RiskScoreData = {
 };
 
 const getRiskLevel = (score: number) => {
-  if (score >= 80)
+  if (score >= HIGH_RISK_THRESHOLD) {
     return { level: "high", color: "bg-red-500", text: "Alto Risco" };
-  if (score >= 60)
+  }
+  if (score >= MEDIUM_RISK_THRESHOLD) {
     return { level: "medium", color: "bg-yellow-500", text: "Risco Médio" };
+  }
   return { level: "low", color: "bg-green-500", text: "Baixo Risco" };
 };
 
 const getRiskIcon = (score: number) => {
-  if (score >= 80) return <AlertTriangle className="h-4 w-4" />;
-  if (score >= 60) return <TrendingUp className="h-4 w-4" />;
+  if (score >= HIGH_RISK_THRESHOLD) {
+    return <AlertTriangle className="h-4 w-4" />;
+  }
+  if (score >= MEDIUM_RISK_THRESHOLD) {
+    return <TrendingUp className="h-4 w-4" />;
+  }
   return <Shield className="h-4 w-4" />;
 };
 
@@ -84,8 +95,11 @@ export const RiskScoreReport = ({ data }: { data: RiskScoreData }) => {
           <div className="mt-6">
             <h4 className="mb-3 font-semibold text-sm">Recomendações</h4>
             <ul className="space-y-2">
-              {recommendations.map((rec, index) => (
-                <li className="flex items-start gap-2 text-sm" key={index}>
+              {recommendations.map((rec) => (
+                <li 
+                  className="flex items-start gap-2 text-sm" 
+                  key={`rec-${rec.substring(0, MAX_RECOMMENDATION_KEY_LENGTH)}`}
+                >
                   <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{rec}</span>
                 </li>

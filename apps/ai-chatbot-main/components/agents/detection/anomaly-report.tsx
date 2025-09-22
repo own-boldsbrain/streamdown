@@ -64,10 +64,10 @@ export const AnomalyReport = ({ data }: { data: AnomalyReportData }) => {
           </p>
         </div>
         <div className="space-y-4">
-          {anomalies_detected.map((anomaly, index) => (
+          {anomalies_detected.map((anomaly) => (
             <div
               className="flex items-start justify-between rounded-lg border p-3"
-              key={index}
+              key={`${anomaly.type}-${anomaly.month}-${anomaly.deviation_percent}`}
             >
               <div>
                 <p className="font-semibold capitalize">

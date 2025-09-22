@@ -2,6 +2,9 @@ import { CheckCircle, Clock, Shield, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Constantes
+const MAX_REQUIREMENT_KEY_LENGTH = 30;
+
 type ComplianceStatusData = {
   compliance_status: {
     system_id: string;
@@ -80,10 +83,10 @@ export const ComplianceStatusReport = ({
             Requisitos Verificados
           </h4>
           <div className="grid gap-2">
-            {requirements_met.map((requirement, index) => (
+            {requirements_met.map((requirement) => (
               <div
                 className="flex items-center gap-3 rounded-lg border bg-green-50 p-3 dark:bg-green-950/20"
-                key={`requirement-${index}`}
+                key={`requirement-${requirement.substring(0, MAX_REQUIREMENT_KEY_LENGTH)}`}
               >
                 <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />
                 <span className="text-sm">{requirement}</span>

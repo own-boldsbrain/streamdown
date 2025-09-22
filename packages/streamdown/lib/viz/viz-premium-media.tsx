@@ -216,7 +216,10 @@ const VizPremiumMedia = memo(
 
       document.addEventListener("fullscreenchange", handleFullscreenChange);
       return () => {
-        document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        document.removeEventListener(
+          "fullscreenchange",
+          handleFullscreenChange
+        );
       };
     }, []);
 
@@ -305,10 +308,10 @@ const VizPremiumMedia = memo(
           <div className={mediaClasses.controlsBar}>
             <div className="flex items-center gap-2">
               <button
-                type="button"
                 aria-label={isPlaying ? "Pausar" : "Reproduzir"}
                 className={mediaClasses.playButton}
                 onClick={togglePlayPause}
+                type="button"
               >
                 {isPlaying ? (
                   <Pause className="h-6 w-6" />
@@ -318,6 +321,7 @@ const VizPremiumMedia = memo(
               </button>
 
               <button
+                type="button"
                 aria-label={isMuted ? "Ativar som" : "Desativar som"}
                 className={mediaClasses.volumeButton}
                 onClick={toggleMute}
@@ -335,13 +339,14 @@ const VizPremiumMedia = memo(
             </div>
 
             <button
-              type="button"
+              aria-label="Barra de progresso"
               className={mediaClasses.progressBar}
               onClick={handleProgressClick}
-              aria-label="Barra de progresso"
+              type="button"
             >
               <div
                 className={mediaClasses.progressFill}
+                // eslint-disable-next-line react/forbid-dom-props
                 style={{
                   width: `${(currentTime / duration) * PROGRESS_BAR_MAX_WIDTH_PERCENT}%`,
                 }}
@@ -351,6 +356,7 @@ const VizPremiumMedia = memo(
             <div className="flex items-center gap-2">
               {downloadable && (
                 <button
+                  type="button"
                   aria-label="Download"
                   className={mediaClasses.downloadButton}
                   onClick={handleDownload}
@@ -361,6 +367,7 @@ const VizPremiumMedia = memo(
 
               {type === "video" && (
                 <button
+                  type="button"
                   aria-label="Tela cheia"
                   className={mediaClasses.volumeButton}
                   onClick={toggleFullscreen}
@@ -376,16 +383,16 @@ const VizPremiumMedia = memo(
 
     // Renderizar ícone do tipo de mídia
     const renderMediaIcon = () => {
-      switch (type) {
-        case "video":
-          return <Video className="h-6 w-6" />;
-        case "audio":
-          return <Music className="h-6 w-6" />;
-        case "pdf":
-          return <FileText className="h-6 w-6" />;
-        default:
-          return <AlertCircle className="h-6 w-6" />;
+      if (type === "video") {
+        return <Video className="h-6 w-6" />;
       }
+      if (type === "audio") {
+        return <Music className="h-6 w-6" />;
+      }
+      if (type === "pdf") {
+        return <FileText className="h-6 w-6" />;
+      }
+      return <AlertCircle className="h-6 w-6" />;
     };
 
     if (error) {
