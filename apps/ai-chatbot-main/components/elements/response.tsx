@@ -2,14 +2,12 @@
 
 import { type ComponentProps, memo } from "react";
 import { Streamdown } from "streamdown";
-import { ConsumptionValidationReport } from "@/components/agents/analysis/consumption-validation-report";
-import { FinancingSimulationReport } from "@/components/agents/analysis/financing-simulation-report";
-import { OriginationSummaryReport } from "@/components/agents/analysis/origination-summary-report";
-import { PotentialJourneyReport } from "@/components/agents/analysis/potential-journey-report";
-import { AnomalyReport } from "@/components/agents/detection/anomaly-report";
-import { ComplianceStatusReport } from "@/components/agents/detection/compliance-status-report";
-import { ConsumptionPatternsReport } from "@/components/agents/detection/consumption-patterns-report";
-import { RiskScoreReport } from "@/components/agents/detection/risk-score-report";
+import { ConsumptionValidationReport } from "@/components/agents/analysis/ConsumptionValidationReport";
+import { FinancingSimulationReport } from "@/components/agents/analysis/FinancingSimulationReport";
+import { AnomalyReport } from "@/components/agents/detection/AnomalyReport";
+import { ComplianceStatusReport } from "@/components/agents/detection/ComplianceStatusReport";
+import { ConsumptionPatternsReport } from "@/components/agents/detection/ConsumptionPatternsReport";
+import { RiskScoreReport } from "@/components/agents/detection/RiskScoreReport";
 import { cn } from "@/lib/utils";
 
 const agentComponents: Record<string, React.ComponentType<any>> = {
@@ -19,8 +17,6 @@ const agentComponents: Record<string, React.ComponentType<any>> = {
   compliance_status: ComplianceStatusReport,
   consumption_validation: ConsumptionValidationReport,
   financing_simulation: FinancingSimulationReport,
-  potential_journey: PotentialJourneyReport,
-  origination_summary: OriginationSummaryReport,
   // Adicione outros componentes de agente aqui
   // site_assessment: SiteAssessmentReport,
   // preliminary_sizing: PreliminarySizingReport,
