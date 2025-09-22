@@ -36,5 +36,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
-  }
+  },
+  "python.analysis.typeCheckingMode": "off"
 }
