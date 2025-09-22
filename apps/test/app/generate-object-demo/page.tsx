@@ -4,10 +4,16 @@ import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { useState } from "react";
 import { Streamdown } from "streamdown";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 type OutputType = "object" | "array" | "enum" | "no-schema";
 
@@ -45,10 +51,13 @@ export default function GenerateObjectDemo() {
             output: "array",
             schema: z.object({
               name: z.string(),
-              class: z.string().describe("Character class, e.g. warrior, mage, or thief."),
+              class: z
+                .string()
+                .describe("Character class, e.g. warrior, mage, or thief."),
               description: z.string(),
             }),
-            prompt: "Generate 3 hero descriptions for a fantasy role playing game.",
+            prompt:
+              "Generate 3 hero descriptions for a fantasy role playing game.",
           });
           break;
 
@@ -57,9 +66,10 @@ export default function GenerateObjectDemo() {
             model: openai("gpt-4o"),
             output: "enum",
             enum: ["action", "comedy", "drama", "horror", "sci-fi"],
-            prompt: "Classify the genre of this movie plot: " +
-              "\"A group of astronauts travel through a wormhole in search of a " +
-              "new habitable planet for humanity.\"",
+            prompt:
+              "Classify the genre of this movie plot: " +
+              '"A group of astronauts travel through a wormhole in search of a ' +
+              'new habitable planet for humanity."',
           });
           break;
 
@@ -77,7 +87,9 @@ export default function GenerateObjectDemo() {
 
       setGeneratedObject(result.object);
     } catch {
-      setGeneratedObject({ error: "Error generating object. Please check the console for details." });
+      setGeneratedObject({
+        error: "Error generating object. Please check the console for details.",
+      });
     } finally {
       setLoading(false);
     }
@@ -104,14 +116,19 @@ export default function GenerateObjectDemo() {
     }
 
     if (Array.isArray(obj)) {
-      return obj.map((item, index) => {
-        if (typeof item === "object" && item !== null) {
-          return `## Item ${index + 1}\n\n${Object.entries(item)
-            .map(([key, value]) => `**${key}**: ${Array.isArray(value) ? value.join(", ") : String(value)}`)
-            .join("\n")}`;
-        }
-        return `- ${String(item)}`;
-      }).join("\n\n");
+      return obj
+        .map((item, index) => {
+          if (typeof item === "object" && item !== null) {
+            return `## Item ${index + 1}\n\n${Object.entries(item)
+              .map(
+                ([key, value]) =>
+                  `**${key}**: ${Array.isArray(value) ? value.join(", ") : String(value)}`
+              )
+              .join("\n")}`;
+          }
+          return `- ${String(item)}`;
+        })
+        .join("\n\n");
     }
 
     if (typeof obj === "string") {
@@ -122,7 +139,7 @@ export default function GenerateObjectDemo() {
     return Object.entries(obj as Record<string, unknown>)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
-          return `## ${key}\n\n${value.map(item => `- ${String(item)}`).join("\n")}`;
+          return `## ${key}\n\n${value.map((item) => `- ${String(item)}`).join("\n")}`;
         }
         if (typeof value === "object" && value !== null) {
           return `## ${key}\n\n${renderObjectAsMarkdown(value)}`;
@@ -134,7 +151,9 @@ export default function GenerateObjectDemo() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-4">
-      <h1 className="font-bold text-2xl">Generate Object Demo with Streamdown</h1>
+      <h1 className="font-bold text-2xl">
+        Generate Object Demo with Streamdown
+      </h1>
       <p>
         This demo uses <code>generateObject()</code> to generate structured data
         and renders it with Streamdown.
@@ -144,7 +163,10 @@ export default function GenerateObjectDemo() {
         <label className="block font-medium text-sm" htmlFor="outputType">
           Output Type:
         </label>
-        <Select value={outputType} onValueChange={(value: OutputType) => setOutputType(value)}>
+        <Select
+          onValueChange={(value: OutputType) => setOutputType(value)}
+          value={outputType}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select output type" />
           </SelectTrigger>
@@ -152,7 +174,9 @@ export default function GenerateObjectDemo() {
             <SelectItem value="object">Object (with schema)</SelectItem>
             <SelectItem value="array">Array (with schema)</SelectItem>
             <SelectItem value="enum">Enum</SelectItem>
-            <SelectItem value="no-schema">No Schema (free-form JSON)</SelectItem>
+            <SelectItem value="no-schema">
+              No Schema (free-form JSON)
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -177,14 +201,18 @@ export default function GenerateObjectDemo() {
       {generatedObject != null && (
         <div className="space-y-4">
           <div className="space-y-2">
-            <h2 className="font-semibold text-xl">Generated Object (Raw JSON):</h2>
+            <h2 className="font-semibold text-xl">
+              Generated Object (Raw JSON):
+            </h2>
             <pre className="whitespace-pre-wrap rounded bg-gray-100 p-4 text-sm">
               {JSON.stringify(generatedObject, null, 2)}
             </pre>
           </div>
 
           <div className="space-y-2">
-            <h2 className="font-semibold text-xl">Rendered as Markdown with Streamdown:</h2>
+            <h2 className="font-semibold text-xl">
+              Rendered as Markdown with Streamdown:
+            </h2>
             <div className="rounded border p-4">
               <Streamdown>{renderObjectAsMarkdown(generatedObject)}</Streamdown>
             </div>
