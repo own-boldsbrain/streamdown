@@ -33,7 +33,8 @@ const tableClasses = {
   bordered: "border-collapse border border-border",
   borderedCell: "border border-border",
   compact: "text-xs [&_td]:p-2 [&_th]:p-2",
-  errorMessage: "p-4 text-red-500 text-sm border border-red-200 rounded-md bg-red-50 dark:bg-red-950/10",
+  errorMessage:
+    "p-4 text-red-500 text-sm border border-red-200 rounded-md bg-red-50 dark:bg-red-950/10",
 };
 
 const VizDataTable = memo(
@@ -148,10 +149,10 @@ const VizDataTable = memo(
 
     return (
       <div className={cn(tableClasses.container, className)} {...props}>
-        <div 
+        <div
           className={tableClasses.tableWrapper}
-          style={tableStyles}
           data-testid="viz-data-table"
+          style={tableStyles}
         >
           <table
             className={cn(
@@ -164,12 +165,14 @@ const VizDataTable = memo(
               <tr>
                 {headers.map((header, index) => (
                   <th
-                    key={`header-${index}`}
                     className={cn(
                       tableClasses.tableHeaderCell,
                       bordered && tableClasses.borderedCell,
-                      highlightFirstColumn && index === 0 && tableClasses.firstColumnHighlight
+                      highlightFirstColumn &&
+                        index === 0 &&
+                        tableClasses.firstColumnHighlight
                     )}
+                    key={`header-${index}`}
                   >
                     {header}
                   </th>
@@ -179,21 +182,25 @@ const VizDataTable = memo(
             <tbody className={tableClasses.tableBody}>
               {rows.map((row, rowIndex) => (
                 <tr
-                  key={`row-${rowIndex}`}
                   className={cn(
                     tableClasses.tableRow,
                     zebra && tableClasses.tableRowZebra,
-                    highlightFirstRow && rowIndex === 0 && tableClasses.firstRowHighlight
+                    highlightFirstRow &&
+                      rowIndex === 0 &&
+                      tableClasses.firstRowHighlight
                   )}
+                  key={`row-${rowIndex}`}
                 >
                   {row.map((cell, cellIndex) => (
                     <td
-                      key={`cell-${rowIndex}-${cellIndex}`}
                       className={cn(
                         tableClasses.tableCell,
                         bordered && tableClasses.borderedCell,
-                        highlightFirstColumn && cellIndex === 0 && tableClasses.firstColumnHighlight
+                        highlightFirstColumn &&
+                          cellIndex === 0 &&
+                          tableClasses.firstColumnHighlight
                       )}
+                      key={`cell-${rowIndex}-${cellIndex}`}
                     >
                       {cell}
                     </td>
@@ -203,12 +210,8 @@ const VizDataTable = memo(
             </tbody>
           </table>
         </div>
-        
-        {caption && (
-          <div className={tableClasses.caption}>
-            {caption}
-          </div>
-        )}
+
+        {caption && <div className={tableClasses.caption}>{caption}</div>}
       </div>
     );
   }
