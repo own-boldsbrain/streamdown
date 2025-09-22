@@ -1,4 +1,4 @@
-import { EmbeddingModelV1 } from './types.js';
+import type { EmbeddingModelV1 } from "./types.js";
 
 // Embed Options
 export type EmbedOptions = {
@@ -36,16 +36,16 @@ export async function embed(options: EmbedOptions): Promise<EmbedResult> {
   try {
     const response = await model.doEmbed({
       values: [value],
-      abortSignal
+      abortSignal,
     });
 
     if (!response.embeddings || response.embeddings.length === 0) {
-      throw new Error('No embeddings returned from model');
+      throw new Error("No embeddings returned from model");
     }
 
     return {
       embedding: response.embeddings[0],
-      usage: response.usage
+      usage: response.usage,
     };
   } catch (error) {
     throw new Error(`Embedding generation failed: ${error}`);
@@ -55,7 +55,9 @@ export async function embed(options: EmbedOptions): Promise<EmbedResult> {
 /**
  * Generate embeddings for several values using an embedding model (batch embedding).
  */
-export async function embedMany(options: EmbedManyOptions): Promise<EmbedManyResult> {
+export async function embedMany(
+  options: EmbedManyOptions
+): Promise<EmbedManyResult> {
   const { model, values, abortSignal } = options;
 
   if (values.length === 0) {
@@ -65,16 +67,16 @@ export async function embedMany(options: EmbedManyOptions): Promise<EmbedManyRes
   try {
     const response = await model.doEmbed({
       values,
-      abortSignal
+      abortSignal,
     });
 
     if (!response.embeddings) {
-      throw new Error('No embeddings returned from model');
+      throw new Error("No embeddings returned from model");
     }
 
     return {
       embeddings: response.embeddings,
-      usage: response.usage
+      usage: response.usage,
     };
   } catch (error) {
     throw new Error(`Batch embedding generation failed: ${error}`);

@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { LanguageModelV1 } from './types.js';
+import { z } from "zod";
+import type { LanguageModelV1 } from "./types.js";
 
 // Generate Object Options
 export type GenerateObjectOptions<T = any> = {
@@ -9,8 +9,8 @@ export type GenerateObjectOptions<T = any> = {
   schemaDescription?: string;
   prompt?: string;
   messages?: Array<{
-    role: 'system' | 'user' | 'assistant' | 'tool';
-    content: string | Array<{ type: 'text'; text: string }>;
+    role: "system" | "user" | "assistant" | "tool";
+    content: string | Array<{ type: "text"; text: string }>;
     name?: string;
     toolCallId?: string;
     toolCalls?: Array<{
@@ -27,14 +27,14 @@ export type GenerateObjectOptions<T = any> = {
 
 export type GenerateObjectResult<T = any> = {
   object: T;
-  finishReason: 'stop' | 'length' | 'content-filter' | 'error' | 'other';
+  finishReason: "stop" | "length" | "content-filter" | "error" | "other";
   usage: {
     promptTokens: number;
     completionTokens: number;
     totalTokens: number;
   };
   warnings?: Array<{
-    type: 'unsupported-setting';
+    type: "unsupported-setting";
     setting: string;
     details?: string;
   }>;
@@ -56,29 +56,32 @@ export async function generateObject<T = any>(
     system,
     maxTokens,
     temperature = 0, // Lower temperature for structured output
-    abortSignal
+    abortSignal,
   } = options;
 
   // Convert prompt to messages if provided
-  let finalMessages = messages.map(msg => ({
+  let finalMessages = messages.map((msg) => ({
     role: msg.role,
-    content: typeof msg.content === 'string'
-      ? [{ type: 'text' as const, text: msg.content }]
-      : msg.content,
+    content:
+      typeof msg.content === "string"
+        ? [{ type: "text" as const, text: msg.content }]
+        : msg.content,
     name: msg.name,
     toolCallId: msg.toolCallId,
-    toolCalls: msg.toolCalls
+    toolCalls: msg.toolCalls,
   }));
 
   if (prompt && messages.length === 0) {
-    finalMessages = [{ role: 'user', content: [{ type: 'text', text: prompt }] }];
+    finalMessages = [
+      { role: "user", content: [{ type: "text", text: prompt }] },
+    ];
   }
 
   // Add system message if provided
   if (system) {
     finalMessages = [
-      { role: 'system', content: [{ type: 'text', text: system }] },
-      ...finalMessages
+      { role: "system", content: [{ type: "text", text: system }] },
+      ...finalMessages,
     ];
   }
 
@@ -90,38 +93,38 @@ export async function generateObject<T = any>(
     // Handle Zod schema
     schemaObject = schema._def;
     mode = {
-      type: 'object-json' as const,
+      type: "object-json" as const,
       schema: schemaObject,
       schemaName,
-      schemaDescription
+      schemaDescription,
     };
   } else {
     // Handle plain JSON schema
     schemaObject = schema;
     mode = {
-      type: 'object-json' as const,
+      type: "object-json" as const,
       schema: schemaObject,
       schemaName,
-      schemaDescription
+      schemaDescription,
     };
   }
 
   // Prepare model call options
   const callOptions = {
     mode,
-    inputFormat: 'messages' as const,
-    prompt: '',
+    inputFormat: "messages" as const,
+    prompt: "",
     messages: finalMessages,
     maxTokens,
     temperature,
-    abortSignal
+    abortSignal,
   };
 
   try {
     const response = await model.doGenerate(callOptions);
 
     if (!response.text) {
-      throw new Error('No text response from model');
+      throw new Error("No text response from model");
     }
 
     // Parse the JSON response
@@ -136,7 +139,9 @@ export async function generateObject<T = any>(
     if (schema instanceof z.ZodSchema) {
       const validationResult = schema.safeParse(parsedObject);
       if (!validationResult.success) {
-        throw new Error(`Schema validation failed: ${validationResult.error.message}`);
+        throw new Error(
+          `Schema validation failed: ${validationResult.error.message}`
+        );
       }
       parsedObject = validationResult.data;
     }
@@ -147,9 +152,10 @@ export async function generateObject<T = any>(
       usage: {
         promptTokens: response.usage.promptTokens,
         completionTokens: response.usage.completionTokens,
-        totalTokens: response.usage.promptTokens + response.usage.completionTokens
+        totalTokens:
+          response.usage.promptTokens + response.usage.completionTokens,
       },
-      warnings: response.warnings
+      warnings: response.warnings,
     };
   } catch (error) {
     throw new Error(`Object generation failed: ${error}`);

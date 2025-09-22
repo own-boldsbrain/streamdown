@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 import {
-  LanguageModelV1,
-  LanguageModelV1CallOptions,
-  LanguageModelV1Message,
+  type LanguageModelV1,
+  type LanguageModelV1CallOptions,
+  type LanguageModelV1Message,
   LanguageModelV1TextPart,
-  Tool
-} from './types.js';
+  type Tool,
+} from "./types.js";
 
 // Generate Text Options
 export type GenerateTextOptions = {
@@ -22,7 +22,11 @@ export type GenerateTextOptions = {
   stopSequences?: string[];
   seed?: number;
   tools?: Record<string, Tool>;
-  toolChoice?: 'auto' | 'none' | 'required' | { type: 'tool'; toolName: string };
+  toolChoice?:
+    | "auto"
+    | "none"
+    | "required"
+    | { type: "tool"; toolName: string };
   abortSignal?: AbortSignal;
 };
 
@@ -40,14 +44,20 @@ export type GenerateTextResult = {
     args: unknown;
     result: unknown;
   }>;
-  finishReason: 'stop' | 'length' | 'tool-calls' | 'content-filter' | 'error' | 'other';
+  finishReason:
+    | "stop"
+    | "length"
+    | "tool-calls"
+    | "content-filter"
+    | "error"
+    | "other";
   usage: {
     promptTokens: number;
     completionTokens: number;
     totalTokens: number;
   };
   warnings?: Array<{
-    type: 'unsupported-setting';
+    type: "unsupported-setting";
     setting: string;
     details?: string;
   }>;
@@ -56,7 +66,9 @@ export type GenerateTextResult = {
 /**
  * Generate text from a language model.
  */
-export async function generateText(options: GenerateTextOptions): Promise<GenerateTextResult> {
+export async function generateText(
+  options: GenerateTextOptions
+): Promise<GenerateTextResult> {
   const {
     model,
     prompt,
@@ -71,29 +83,31 @@ export async function generateText(options: GenerateTextOptions): Promise<Genera
     stopSequences,
     seed,
     tools = {},
-    toolChoice = 'auto',
-    abortSignal
+    toolChoice = "auto",
+    abortSignal,
   } = options;
 
   // Convert prompt to messages if provided
   let finalMessages = messages;
   if (prompt && messages.length === 0) {
-    finalMessages = [{ role: 'user', content: [{ type: 'text', text: prompt }] }];
+    finalMessages = [
+      { role: "user", content: [{ type: "text", text: prompt }] },
+    ];
   }
 
   // Add system message if provided
   if (system) {
     finalMessages = [
-      { role: 'system', content: [{ type: 'text', text: system }] },
-      ...finalMessages
+      { role: "system", content: [{ type: "text", text: system }] },
+      ...finalMessages,
     ];
   }
 
   // Prepare model call options
   const callOptions: LanguageModelV1CallOptions = {
-    mode: { type: 'regular' },
-    inputFormat: 'messages',
-    prompt: '',
+    mode: { type: "regular" },
+    inputFormat: "messages",
+    prompt: "",
     messages: finalMessages,
     maxTokens,
     temperature,
@@ -103,46 +117,47 @@ export async function generateText(options: GenerateTextOptions): Promise<Genera
     presencePenalty,
     stopSequences,
     seed,
-    abortSignal
+    abortSignal,
   };
 
   // Handle tools
   if (Object.keys(tools).length > 0) {
     callOptions.mode = {
-      type: 'object-tool',
+      type: "object-tool",
       tool: {
-        type: 'function',
-        name: 'execute_tools',
-        description: 'Execute available tools',
+        type: "function",
+        name: "execute_tools",
+        description: "Execute available tools",
         parameters: {
-          type: 'object',
+          type: "object",
           properties: Object.fromEntries(
             Object.entries(tools).map(([name, tool]) => [
               name,
               {
-                type: 'object',
+                type: "object",
                 properties: tool.parameters,
-                description: tool.description
-              }
+                description: tool.description,
+              },
             ])
-          )
-        }
-      }
+          ),
+        },
+      },
     };
   }
 
   try {
     const response = await model.doGenerate(callOptions);
 
-    let result: GenerateTextResult = {
-      text: response.text || '',
+    const result: GenerateTextResult = {
+      text: response.text || "",
       finishReason: response.finishReason,
       usage: {
         promptTokens: response.usage.promptTokens,
         completionTokens: response.usage.completionTokens,
-        totalTokens: response.usage.promptTokens + response.usage.completionTokens
+        totalTokens:
+          response.usage.promptTokens + response.usage.completionTokens,
       },
-      warnings: response.warnings
+      warnings: response.warnings,
     };
 
     // Handle tool calls
@@ -160,18 +175,20 @@ export async function generateText(options: GenerateTextOptions): Promise<Genera
               toolCallId: toolCall.toolCallId,
               toolName: toolCall.toolName,
               args: toolCall.args,
-              result: toolResult
+              result: toolResult,
             };
           } catch (error) {
-            throw new Error(`Tool ${toolCall.toolName} execution failed: ${error}`);
+            throw new Error(
+              `Tool ${toolCall.toolName} execution failed: ${error}`
+            );
           }
         })
       );
 
-      result.toolCalls = response.toolCalls.map(tc => ({
+      result.toolCalls = response.toolCalls.map((tc) => ({
         toolCallId: tc.toolCallId,
         toolName: tc.toolName,
-        args: tc.args
+        args: tc.args,
       }));
 
       result.toolResults = toolResults;

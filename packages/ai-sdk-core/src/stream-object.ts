@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { LanguageModelV1 } from './types.js';
+import type { z } from "zod";
+import type { LanguageModelV1 } from "./types.js";
 
 // Stream Object Options
 export type StreamObjectOptions<T = any> = {
@@ -9,8 +9,8 @@ export type StreamObjectOptions<T = any> = {
   schemaDescription?: string;
   prompt?: string;
   messages?: Array<{
-    role: 'system' | 'user' | 'assistant' | 'tool';
-    content: string | Array<{ type: 'text'; text: string }>;
+    role: "system" | "user" | "assistant" | "tool";
+    content: string | Array<{ type: "text"; text: string }>;
     name?: string;
     toolCallId?: string;
     toolCalls?: Array<{
@@ -27,24 +27,26 @@ export type StreamObjectOptions<T = any> = {
   onFinish?: (result: StreamObjectResult<T>) => void | Promise<void>;
 };
 
-export type StreamObjectChunk = {
-  type: 'text-delta';
-  textDelta: string;
-} | {
-  type: 'object';
-  object: any;
-};
+export type StreamObjectChunk =
+  | {
+      type: "text-delta";
+      textDelta: string;
+    }
+  | {
+      type: "object";
+      object: any;
+    };
 
 export type StreamObjectResult<T = any> = {
   object: T;
-  finishReason: 'stop' | 'length' | 'content-filter' | 'error' | 'other';
+  finishReason: "stop" | "length" | "content-filter" | "error" | "other";
   usage: {
     promptTokens: number;
     completionTokens: number;
     totalTokens: number;
   };
   warnings?: Array<{
-    type: 'unsupported-setting';
+    type: "unsupported-setting";
     setting: string;
     details?: string;
   }>;
@@ -55,7 +57,9 @@ export type StreamObjectResult<T = any> = {
  */
 export async function streamObject<T = any>(
   options: StreamObjectOptions<T>
-): Promise<ReadableStream<StreamObjectChunk> & { toDataStreamResponse: () => Response }> {
+): Promise<
+  ReadableStream<StreamObjectChunk> & { toDataStreamResponse: () => Response }
+> {
   const {
     model,
     schema,
@@ -68,29 +72,32 @@ export async function streamObject<T = any>(
     temperature = 0,
     abortSignal,
     onChunk,
-    onFinish
+    onFinish,
   } = options;
 
   // Convert prompt to messages if provided
-  let finalMessages = messages.map(msg => ({
+  let finalMessages = messages.map((msg) => ({
     role: msg.role,
-    content: typeof msg.content === 'string'
-      ? [{ type: 'text' as const, text: msg.content }]
-      : msg.content,
+    content:
+      typeof msg.content === "string"
+        ? [{ type: "text" as const, text: msg.content }]
+        : msg.content,
     name: msg.name,
     toolCallId: msg.toolCallId,
-    toolCalls: msg.toolCalls
+    toolCalls: msg.toolCalls,
   }));
 
   if (prompt && messages.length === 0) {
-    finalMessages = [{ role: 'user', content: [{ type: 'text', text: prompt }] }];
+    finalMessages = [
+      { role: "user", content: [{ type: "text", text: prompt }] },
+    ];
   }
 
   // Add system message if provided
   if (system) {
     finalMessages = [
-      { role: 'system', content: [{ type: 'text', text: system }] },
-      ...finalMessages
+      { role: "system", content: [{ type: "text", text: system }] },
+      ...finalMessages,
     ];
   }
 
@@ -98,63 +105,65 @@ export async function streamObject<T = any>(
   let schemaObject: any;
   let mode: any;
 
-  if (schema && typeof schema === 'object' && 'parse' in schema) {
+  if (schema && typeof schema === "object" && "parse" in schema) {
     // Handle Zod schema
     schemaObject = (schema as any)._def;
     mode = {
-      type: 'object-json' as const,
+      type: "object-json" as const,
       schema: schemaObject,
       schemaName,
-      schemaDescription
+      schemaDescription,
     };
   } else {
     // Handle plain JSON schema
     schemaObject = schema;
     mode = {
-      type: 'object-json' as const,
+      type: "object-json" as const,
       schema: schemaObject,
       schemaName,
-      schemaDescription
+      schemaDescription,
     };
   }
 
   // Prepare model call options
   const callOptions = {
     mode,
-    inputFormat: 'messages' as const,
-    prompt: '',
+    inputFormat: "messages" as const,
+    prompt: "",
     messages: finalMessages,
     maxTokens,
     temperature,
-    abortSignal
+    abortSignal,
   };
 
   try {
     const response = await model.doStream(callOptions);
 
-    let fullText = '';
-    let finishReason: StreamObjectResult['finishReason'] = 'other';
-    let usage: StreamObjectResult['usage'] | undefined;
+    let fullText = "";
+    let finishReason: StreamObjectResult["finishReason"] = "other";
+    let usage: StreamObjectResult["usage"] | undefined;
 
     const transformStream = new TransformStream({
       async transform(chunk: any, controller) {
         switch (chunk.type) {
-          case 'text-delta':
+          case "text-delta": {
             fullText += chunk.textDelta;
             const textChunk: StreamObjectChunk = {
-              type: 'text-delta',
-              textDelta: chunk.textDelta
+              type: "text-delta",
+              textDelta: chunk.textDelta,
             };
             controller.enqueue(textChunk);
             if (onChunk) await onChunk(textChunk);
             break;
+          }
 
-          case 'finish':
+          case "finish":
             finishReason = chunk.finishReason;
             usage = {
               promptTokens: chunk.usage.promptTokens,
               completionTokens: chunk.usage.completionTokens,
-              totalTokens: chunk.usage.promptTokens + chunk.usage.completionTokens
+              totalTokens:
+                chunk.usage.promptTokens + chunk.usage.completionTokens,
             };
 
             // Try to parse the complete text as JSON
@@ -163,17 +172,21 @@ export async function streamObject<T = any>(
 
               // Validate with schema if it's a Zod schema
               let finalObject = parsedObject;
-              if (schema && typeof schema === 'object' && 'parse' in schema) {
-                const validationResult = (schema as any).safeParse(parsedObject);
+              if (schema && typeof schema === "object" && "parse" in schema) {
+                const validationResult = (schema as any).safeParse(
+                  parsedObject
+                );
                 if (!validationResult.success) {
-                  throw new Error(`Schema validation failed: ${validationResult.error.message}`);
+                  throw new Error(
+                    `Schema validation failed: ${validationResult.error.message}`
+                  );
                 }
                 finalObject = validationResult.data;
               }
 
               const objectChunk: StreamObjectChunk = {
-                type: 'object',
-                object: finalObject
+                type: "object",
+                object: finalObject,
               };
               controller.enqueue(objectChunk);
               if (onChunk) await onChunk(objectChunk);
@@ -184,26 +197,26 @@ export async function streamObject<T = any>(
                   object: finalObject,
                   finishReason,
                   usage,
-                  warnings: response.warnings
+                  warnings: response.warnings,
                 };
                 await onFinish(result);
               }
             } catch (parseError) {
-              console.error('Failed to parse JSON:', parseError);
+              console.error("Failed to parse JSON:", parseError);
               // Emit error chunk
               const errorChunk: StreamObjectChunk = {
-                type: 'object',
-                object: { error: 'Failed to parse JSON response' }
+                type: "object",
+                object: { error: "Failed to parse JSON response" },
               };
               controller.enqueue(errorChunk);
             }
             break;
 
-          case 'error':
-            console.error('Stream error:', chunk.error);
+          case "error":
+            console.error("Stream error:", chunk.error);
             break;
         }
-      }
+      },
     });
 
     const stream = response.stream.pipeThrough(transformStream);
@@ -213,11 +226,11 @@ export async function streamObject<T = any>(
       toDataStreamResponse(): Response {
         return new Response(stream, {
           headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Transfer-Encoding': 'chunked'
-          }
+            "Content-Type": "text/plain; charset=utf-8",
+            "Transfer-Encoding": "chunked",
+          },
         });
-      }
+      },
     });
 
     return enhancedStream;
