@@ -1,38 +1,42 @@
-'use client'
+"use client";
 
+import { Keyboard } from "lucide-react";
+import { memo } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Kbd } from '@/components/ui/kbd'
-import { Keyboard } from 'lucide-react'
-import { memo } from 'react'
+  TableRow,
+} from "@/components/ui/table";
 
 const shortcuts = [
-  { command: 'Open new chat', keys: ['Ctrl', 'O'] },
-  { command: 'Focus message input', keys: ['Ctrl', 'I'] },
-  { command: 'Open keyboard shortcuts', keys: ['Ctrl', 'K'] },
-  { command: 'Toggle sidebar', keys: ['Ctrl', 'B'] }
-]
+  { command: "Open new chat", keys: ["Ctrl", "O"] },
+  { command: "Focus message input", keys: ["Ctrl", "I"] },
+  { command: "Open keyboard shortcuts", keys: ["Ctrl", "K"] },
+  { command: "Toggle sidebar", keys: ["Ctrl", "B"] },
+];
 
 const UIKeyboardShortcuts = memo(() => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Open keyboard shortcuts">
+        <Button
+          aria-label="Open keyboard shortcuts"
+          size="icon"
+          variant="outline"
+        >
           <Keyboard className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -40,8 +44,8 @@ const UIKeyboardShortcuts = memo(() => {
         <DialogHeader>
           <DialogTitle>Keyboard Shortcuts</DialogTitle>
           <DialogDescription>
-            Use these shortcuts to navigate and interact with the application more
-            efficiently.
+            Use these shortcuts to navigate and interact with the application
+            more efficiently.
           </DialogDescription>
         </DialogHeader>
         <div className="mt-4">
@@ -53,12 +57,12 @@ const UIKeyboardShortcuts = memo(() => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {shortcuts.map(shortcut => (
+              {shortcuts.map((shortcut) => (
                 <TableRow key={shortcut.command}>
                   <TableCell>{shortcut.command}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {shortcut.keys.map(key => (
+                      {shortcut.keys.map((key) => (
                         <Kbd key={key}>{key}</Kbd>
                       ))}
                     </div>
@@ -70,9 +74,9 @@ const UIKeyboardShortcuts = memo(() => {
         </div>
       </DialogContent>
     </Dialog>
-  )
-})
+  );
+});
 
-UIKeyboardShortcuts.displayName = 'UIKeyboardShortcuts'
+UIKeyboardShortcuts.displayName = "UIKeyboardShortcuts";
 
-export { UIKeyboardShortcuts }
+export { UIKeyboardShortcuts };

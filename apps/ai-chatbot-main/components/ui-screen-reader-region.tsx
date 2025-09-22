@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { useState, useEffect, memo } from 'react'
-import { cn } from '@/lib/utils'
+import { memo, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 type ScreenReaderRegionProps = {
-  className?: string
-  announcement: string
-  'aria-live'?: 'polite' | 'assertive' | 'off'
-}
+  className?: string;
+  announcement: string;
+  "aria-live"?: "polite" | "assertive" | "off";
+};
 
-const ANNOUNCEMENT_DELAY_MS = 1000
+const ANNOUNCEMENT_DELAY_MS = 1000;
 
 const ScreenReaderRegion = memo(
   ({
     className,
     announcement,
-    'aria-live': ariaLive = 'polite'
+    "aria-live": ariaLive = "polite",
   }: ScreenReaderRegionProps) => {
-    const [currentAnnouncement, setCurrentAnnouncement] = useState('')
+    const [currentAnnouncement, setCurrentAnnouncement] = useState("");
 
     // This effect ensures that the announcement is only present for a short time,
     // preventing it from being re-read on subsequent renders if the parent component updates.
@@ -25,30 +25,30 @@ const ScreenReaderRegion = memo(
     useEffect(() => {
       if (announcement) {
         // Set the new announcement
-        setCurrentAnnouncement(announcement)
+        setCurrentAnnouncement(announcement);
 
         // Clear the announcement after a delay to ensure it's read by screen readers.
         const timer = setTimeout(() => {
-          setCurrentAnnouncement('')
-        }, ANNOUNCEMENT_DELAY_MS) // 1 second should be enough for most screen readers to pick it up.
+          setCurrentAnnouncement("");
+        }, ANNOUNCEMENT_DELAY_MS); // 1 second should be enough for most screen readers to pick it up.
 
-        return () => clearTimeout(timer)
+        return () => clearTimeout(timer);
       }
-    }, [announcement])
+    }, [announcement]);
 
     return (
       <div
-        className={cn('sr-only', className)}
-        aria-live={ariaLive}
         aria-atomic="true"
+        aria-live={ariaLive}
+        className={cn("sr-only", className)}
         data-testid="screen-reader-region"
       >
         {currentAnnouncement}
       </div>
-    )
+    );
   }
-)
+);
 
-ScreenReaderRegion.displayName = 'ScreenReaderRegion'
+ScreenReaderRegion.displayName = "ScreenReaderRegion";
 
-export { ScreenReaderRegion }
+export { ScreenReaderRegion };
