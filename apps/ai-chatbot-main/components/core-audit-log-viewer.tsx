@@ -1,75 +1,78 @@
-'use client'
+"use client";
 
-import { memo, useState } from 'react'
+import { memo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { cn } from '@/lib/utils'
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 type AuditLog = {
-  id: string
-  timestamp: string
-  user: string
-  action: string
-  details: string
-}
+  id: string;
+  timestamp: string;
+  user: string;
+  action: string;
+  details: string;
+};
 
 type CoreAuditLogViewerProps = {
-  logs: AuditLog[]
-  className?: string
-}
+  logs: AuditLog[];
+  className?: string;
+};
 
 const CoreAuditLogViewer = memo(
   ({ logs, className }: CoreAuditLogViewerProps) => {
-    const [filter, setFilter] = useState('')
+    const [filter, setFilter] = useState("");
 
     const filteredLogs = logs.filter(
-      log =>
+      (log) =>
         log.user.toLowerCase().includes(filter.toLowerCase()) ||
         log.action.toLowerCase().includes(filter.toLowerCase())
-    )
+    );
 
     const exportLogs = () => {
       const csvContent =
-        'data:text/csv;charset=utf-8,' +
-        ['id', 'timestamp', 'user', 'action', 'details'].join(',') +
-        '\n' +
+        "data:text/csv;charset=utf-8," +
+        ["id", "timestamp", "user", "action", "details"].join(",") +
+        "\n" +
         filteredLogs
-          .map(e => `"${e.id}","${e.timestamp}","${e.user}","${e.action}","${e.details}"`)
-          .join('\n')
-      const encodedUri = encodeURI(csvContent)
-      const link = document.createElement('a')
-      link.setAttribute('href', encodedUri)
-      link.setAttribute('download', 'audit-logs.csv')
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
+          .map(
+            (e) =>
+              `"${e.id}","${e.timestamp}","${e.user}","${e.action}","${e.details}"`
+          )
+          .join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "audit-logs.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
 
     return (
-      <Card className={cn('h-full w-full flex flex-col', className)}>
+      <Card className={cn("flex h-full w-full flex-col", className)}>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Audit Log Viewer</CardTitle>
           <div className="flex space-x-2">
             <Input
+              className="max-w-sm"
+              onChange={(e) => setFilter(e.target.value)}
               placeholder="Filter logs..."
               value={filter}
-              onChange={e => setFilter(e.target.value)}
-              className="max-w-sm"
             />
             <Button onClick={exportLogs} variant="outline">
               Export CSV
@@ -87,7 +90,7 @@ const CoreAuditLogViewer = memo(
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLogs.map(log => (
+              {filteredLogs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell>{log.timestamp}</TableCell>
                   <TableCell>{log.user}</TableCell>
@@ -99,15 +102,15 @@ const CoreAuditLogViewer = memo(
           </Table>
         </CardContent>
         <CardFooter>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             Showing {filteredLogs.length} of {logs.length} logs.
           </div>
         </CardFooter>
       </Card>
-    )
+    );
   }
-)
+);
 
-CoreAuditLogViewer.displayName = 'CoreAuditLogViewer'
+CoreAuditLogViewer.displayName = "CoreAuditLogViewer";
 
-export { CoreAuditLogViewer }
+export { CoreAuditLogViewer };

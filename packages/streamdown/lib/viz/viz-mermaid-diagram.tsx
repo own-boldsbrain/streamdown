@@ -7,8 +7,6 @@ import { cn } from "../utils";
 // Constantes para configuração e renderização
 const DEFAULT_THEME = "default";
 const RENDER_TIMEOUT = 50;
-const ERROR_BG_COLOR = "rgba(255, 0, 0, 0.05)";
-const DIAGRAM_SCALE = 1;
 const RANDOM_ID_BASE = 36;
 const RANDOM_ID_START = 2;
 const RANDOM_ID_LENGTH = 11;
@@ -16,6 +14,7 @@ const RANDOM_ID_LENGTH = 11;
 // Classes CSS personalizadas
 const errorClasses = {
   container: "rounded-md p-4 text-red-500 text-sm w-full",
+  errorBox: "bg-red-50 dark:bg-red-950/10 p-4 rounded-md",
   preMain: "mt-2 overflow-x-auto whitespace-pre-wrap",
   preCode:
     "border-dashed border-red-200 border-t mt-4 overflow-x-auto pt-4 text-red-400 text-xs whitespace-pre-wrap",
@@ -119,14 +118,19 @@ const VizMermaidDiagram = memo(
       >
         {error ? (
           <div className={errorClasses.container}>
-            <div className="rounded-md bg-red-50 p-4 dark:bg-red-950/10">
+            <div className={errorClasses.errorBox}>
               <p className="font-medium">Erro ao renderizar o diagrama:</p>
               <pre className={errorClasses.preMain}>{error}</pre>
               <pre className={errorClasses.preCode}>{code}</pre>
             </div>
           </div>
         ) : (
-          <div className={diagramClasses.mermaidContainer}>
+          <div 
+            className={cn(
+              diagramClasses.mermaidContainer,
+              maxWidth ? `!max-w-[${maxWidth}px]` : ""
+            )}
+          >
             {svg ? (
               <div
                 className={diagramClasses.svgContainer}
@@ -142,17 +146,6 @@ const VizMermaidDiagram = memo(
         )}
 
         {caption && <div className={captionClasses}>{caption}</div>}
-
-        {maxWidth && (
-          <style jsx>{`
-            .mermaid-diagram {
-              max-width: ${maxWidth}px;
-            }
-            .mermaid-diagram svg {
-              transform: scale(${DIAGRAM_SCALE});
-            }
-          `}</style>
-        )}
       </div>
     );
   }

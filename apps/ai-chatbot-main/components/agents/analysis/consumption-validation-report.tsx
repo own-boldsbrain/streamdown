@@ -36,9 +36,17 @@ const getStatusBadge = (status: string) => {
   }
 };
 
+const HIGH_QUALITY_THRESHOLD = 0.9;
+const MEDIUM_QUALITY_THRESHOLD = 0.7;
+const PERCENTAGE_MULTIPLIER = 100;
+
 const getQualityColor = (score: number) => {
-  if (score >= 0.9) return "bg-green-500";
-  if (score >= 0.7) return "bg-yellow-500";
+  if (score >= HIGH_QUALITY_THRESHOLD) {
+    return "bg-green-500";
+  }
+  if (score >= MEDIUM_QUALITY_THRESHOLD) {
+    return "bg-yellow-500";
+  }
   return "bg-red-500";
 };
 
@@ -99,7 +107,7 @@ export const ConsumptionValidationReport = ({
               <span className="font-medium text-sm">Variação Sazonal</span>
             </div>
             <p className="font-bold text-2xl">
-              {(seasonal_variation * 100).toFixed(1)}%
+              {(seasonal_variation * PERCENTAGE_MULTIPLIER).toFixed(1)}%
             </p>
             <p className="text-muted-foreground text-xs">coeficiente</p>
           </div>
@@ -109,13 +117,15 @@ export const ConsumptionValidationReport = ({
           <div className="mb-2 flex items-center justify-between">
             <span className="font-medium text-sm">Qualidade dos Dados</span>
             <span className="font-bold text-sm">
-              {(data_quality_score * 100).toFixed(0)}%
+              {(data_quality_score * PERCENTAGE_MULTIPLIER).toFixed(0)}%
             </span>
           </div>
           <div className="h-2 w-full rounded-full bg-gray-200">
             <div
               className={`h-2 rounded-full ${getQualityColor(data_quality_score)}`}
-              style={{ width: `${data_quality_score * 100}%` }}
+              style={{
+                width: `${data_quality_score * PERCENTAGE_MULTIPLIER}%`,
+              }}
             />
           </div>
         </div>
@@ -127,7 +137,7 @@ export const ConsumptionValidationReport = ({
               {recommendations.map((rec, index) => (
                 <li
                   className="flex items-start gap-2 text-sm"
-                  key={`rec-${index}`}
+                  key={`rec-${rec.slice(0, 10)}-${index}`}
                 >
                   <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{rec}</span>

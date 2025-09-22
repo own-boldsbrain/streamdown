@@ -1,43 +1,43 @@
-'use client'
+"use client";
 
-import { memo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { memo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type Trace = {
-  id: string
-  timestamp: string
-  service: string
-  event: string
-  duration: string
-  status: 'success' | 'error' | 'in-progress'
-  details: Record<string, unknown>
-}
+  id: string;
+  timestamp: string;
+  service: string;
+  event: string;
+  duration: string;
+  status: "success" | "error" | "in-progress";
+  details: Record<string, unknown>;
+};
 
 type CoreTracePanelProps = {
-  traces: Trace[]
-  className?: string
-}
+  traces: Trace[];
+  className?: string;
+};
 
 const statusColors = {
-  success: 'bg-green-500',
-  error: 'bg-red-500',
-  'in-progress': 'bg-yellow-500'
-}
+  success: "bg-green-500",
+  error: "bg-red-500",
+  "in-progress": "bg-yellow-500",
+};
 
 const CoreTracePanel = memo(({ traces, className }: CoreTracePanelProps) => {
   return (
-    <Card className={cn('h-full w-full', className)}>
+    <Card className={cn("h-full w-full", className)}>
       <CardHeader>
         <CardTitle>Trace Panel</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-2">
-          {traces.map(trace => (
-            <div key={trace.id} className="flex items-center space-x-2">
+          {traces.map((trace) => (
+            <div className="flex items-center space-x-2" key={trace.id}>
               <span
                 className={cn(
-                  'h-2 w-2 rounded-full',
+                  "h-2 w-2 rounded-full",
                   statusColors[trace.status]
                 )}
               />
@@ -50,9 +50,9 @@ const CoreTracePanel = memo(({ traces, className }: CoreTracePanelProps) => {
         </div>
       </CardContent>
     </Card>
-  )
-})
+  );
+});
 
-CoreTracePanel.displayName = 'CoreTracePanel'
+CoreTracePanel.displayName = "CoreTracePanel";
 
-export { CoreTracePanel }
+export { CoreTracePanel };
