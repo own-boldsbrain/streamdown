@@ -17,6 +17,7 @@ import type { VisibilityType } from "@/components/visibility-selector";
 import { ChatSDKError } from "../errors";
 import type { AppUsage } from "../usage";
 import { generateUUID } from "../utils";
+import { createGuestId, getDb, handleDbError } from "./provider";
 import {
   type Chat,
   chat,
@@ -31,10 +32,10 @@ import {
   vote,
 } from "./schema";
 import { generateHashedPassword } from "./utils";
-import { getDb, handleDbError, createGuestId } from "./provider";
 
 // Enable guest user fallback for non-critical flows
-const ENABLE_GUEST_USER_FALLBACK = process.env.ENABLE_GUEST_USER_FALLBACK === "true";
+const ENABLE_GUEST_USER_FALLBACK =
+  process.env.ENABLE_GUEST_USER_FALLBACK === "true";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
@@ -54,7 +55,7 @@ export async function createUser(email: string, password: string) {
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return null;
     }
-    
+
     const hashedPassword = generateHashedPassword(password);
     return await db.insert(user).values({ email, password: hashedPassword });
   } catch (error) {
@@ -68,10 +69,10 @@ export async function createGuestUser() {
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return null;
     }
-    
+
     const email = `guest-${Date.now()}`;
     const password = generateHashedPassword(generateUUID());
-    
+
     return await db.insert(user).values({ email, password }).returning({
       id: user.id,
       email: user.email,
@@ -97,7 +98,7 @@ export async function saveChat({
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return null;
     }
-    
+
     return await db.insert(chat).values({
       id,
       createdAt: new Date(),
@@ -116,7 +117,7 @@ export async function deleteChatById({ id }: { id: string }) {
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return null;
     }
-    
+
     await db.delete(vote).where(eq(vote.chatId, id));
     await db.delete(message).where(eq(message.chatId, id));
     await db.delete(stream).where(eq(stream.chatId, id));
@@ -147,7 +148,7 @@ export async function getChatsByUserId({
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return { chats: [], hasMore: false };
     }
-    
+
     const extendedLimit = limit + 1;
 
     const query = (whereCondition?: SQL<any>) =>
@@ -207,11 +208,10 @@ export async function getChatsByUserId({
       hasMore,
     };
   } catch (error) {
-    return handleDbError(
-      error, 
-      "Failed to get chats by user id",
-      { chats: [], hasMore: false }
-    );
+    return handleDbError(error, "Failed to get chats by user id", {
+      chats: [],
+      hasMore: false,
+    });
   }
 }
 
@@ -556,7 +556,7 @@ export async function getMessageCountByUserId({
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
       return 0;
     }
-    
+
     const twentyFourHoursAgo = new Date(
       Date.now() - differenceInHours * 60 * 60 * 1000
     );
