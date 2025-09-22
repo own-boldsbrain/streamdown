@@ -1,8 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { Button } from "./ui/button";
 import { PaperclipIcon } from "./icons";
+import { Button } from "./ui/button";
 
 export type ChatAttachmentButtonProps = {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
@@ -11,12 +11,20 @@ export type ChatAttachmentButtonProps = {
   className?: string;
 };
 
-function PureChatAttachmentButton({ fileInputRef, disabled, isReasoningModel, className }: ChatAttachmentButtonProps) {
+function PureChatAttachmentButton({
+  fileInputRef,
+  disabled,
+  isReasoningModel,
+  className,
+}: ChatAttachmentButtonProps) {
   const isDisabled = Boolean(disabled) || Boolean(isReasoningModel);
 
   return (
     <Button
-      className={className ?? "aspect-square h-8 rounded-lg p-1 transition-colors hover:bg-accent"}
+      className={
+        className ??
+        "aspect-square h-8 rounded-lg p-1 transition-colors hover:bg-accent"
+      }
       data-testid="attachments-button"
       disabled={isDisabled}
       onClick={(event) => {

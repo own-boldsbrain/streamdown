@@ -46,6 +46,11 @@ import { PreviewAttachment } from "./preview-attachment";
 import { SuggestedActions } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
+import { ChatAttachmentButton } from "./chat-attachment-button";
+import { ChatDragDropZone } from "./chat-drag-drop-zone";
+import { ChatStreamingProgress } from "./chat-streaming-progress";
+import { MonetizationMessageLimitBanner } from "./monetization-message-limit-banner";
+import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
 
 function PureMultimodalInput({
   chatId,
@@ -234,23 +239,27 @@ function PureMultimodalInput({
 
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
-            sendMessage={sendMessage}
-          />
-        )}
+      <AnalyticsMessageMetrics chatId={chatId} messages={messages as any} status={status} />
 
-      <input
-        className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
-        multiple
-        onChange={handleFileChange}
-        ref={fileInputRef}
-        tabIndex={-1}
-        type="file"
+      <MonetizationMessageLimitBanner className="-mt-1" limit={100} onUpgrade={() => {
+        if (typeof window !== 'undefined' && window.analyticsTracker) {
+          window.analyticsTracker.trackConversion?.('upgrade_initiated', { source: 'message_limit_banner' });
+        }
+      }} used={usage?.requests ?? 0} />
+
+      {/* Drag & Drop zone above input */}
+      <ChatDragDropZone
+        className="hidden md:block"
+        onFilesDropped={async (files) => {
+          // simulate click on hidden input
+          const dt = new DataTransfer();
+          files.forEach((f) => dt.items.add(f));
+          if (fileInputRef.current) {
+            fileInputRef.current.files = dt.files;
+            const ev = new Event('change', { bubbles: true });
+            fileInputRef.current.dispatchEvent(ev);
+          }
+        }}
       />
 
       <PromptInput
@@ -315,10 +324,11 @@ function PureMultimodalInput({
         </div>
         <PromptInputToolbar className="!border-top-0 border-t-0! p-0 shadow-none dark:border-0 dark:border-transparent!">
           <PromptInputTools className="gap-0 sm:gap-0.5">
-            <AttachmentsButton
+            <ChatAttachmentButton
+              className="aspect-square h-8 rounded-lg p-1 transition-colors hover:bg-accent"
+              disabled={status !== "ready"}
               fileInputRef={fileInputRef}
-              selectedModelId={selectedModelId}
-              status={status}
+              isReasoningModel={selectedModelId === "chat-model-reasoning"}
             />
             <ModelSelectorCompact
               onModelChange={onModelChange}
@@ -338,6 +348,12 @@ function PureMultimodalInput({
             </PromptInputSubmit>
           )}
         </PromptInputToolbar>
+
+        <ChatStreamingProgress
+          className="mt-2"
+          isStreaming={status === 'streaming'}
+          usage={usage}
+        />
       </PromptInput>
     </div>
   );

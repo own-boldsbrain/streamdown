@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import { useEffect, useRef } from "react";
 import type { ChatMessage } from "@/lib/types";
 
 type AnalyticsTracker = {
-  trackConversion: (event: string, properties?: Record<string, unknown>) => void;
+  trackConversion: (
+    event: string,
+    properties?: Record<string, unknown>
+  ) => void;
   trackRetention: (event: string, properties?: Record<string, unknown>) => void;
   trackMessageSent: () => void;
   trackFeatureUsed: (featureName: string) => void;
@@ -17,11 +20,19 @@ export type AnalyticsMessageMetricsProps = {
   status: UseChatHelpers<ChatMessage>["status"];
 };
 
-export function AnalyticsMessageMetrics({ chatId, messages, status }: AnalyticsMessageMetricsProps) {
+export function AnalyticsMessageMetrics({
+  chatId,
+  messages,
+  status,
+}: AnalyticsMessageMetricsProps) {
   const lastCountRef = useRef<number>(messages.length);
   const lastSentRef = useRef<number | null>(null);
 
-  const tracker = (typeof window !== "undefined" ? (window as unknown as { analyticsTracker?: AnalyticsTracker }).analyticsTracker : undefined);
+  const tracker =
+    typeof window !== "undefined"
+      ? (window as unknown as { analyticsTracker?: AnalyticsTracker })
+          .analyticsTracker
+      : undefined;
 
   // Detect message sent
   useEffect(() => {

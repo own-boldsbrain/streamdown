@@ -2,10 +2,10 @@
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { memo } from "react";
-import { StopIcon } from "./icons";
 import type { ChatMessage } from "@/lib/types";
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { StopIcon } from "./icons";
+import { Button } from "./ui/button";
 
 export type ChatStopButtonProps = {
   stop: () => void;
@@ -30,9 +30,9 @@ function PureChatStopButton({
         setMessages((messages) => messages);
         onStop?.();
       }}
+      size="icon"
       type="button"
       variant="default"
-      size="icon"
     >
       <StopIcon size={14} />
     </Button>

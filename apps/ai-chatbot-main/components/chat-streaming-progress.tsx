@@ -2,8 +2,8 @@
 
 import { memo, useMemo } from "react";
 import type { AppUsage } from "@/lib/usage";
-import { Progress } from "./ui/progress";
 import { cn } from "@/lib/utils";
+import { Progress } from "./ui/progress";
 
 export type ChatStreamingProgressProps = {
   usage?: AppUsage;
@@ -13,7 +13,11 @@ export type ChatStreamingProgressProps = {
 
 const HUNDRED = 100;
 
-function PureChatStreamingProgress({ usage, isStreaming, className }: ChatStreamingProgressProps) {
+function PureChatStreamingProgress({
+  usage,
+  isStreaming,
+  className,
+}: ChatStreamingProgressProps) {
   const value = useMemo(() => {
     if (!isStreaming) {
       return 0;
@@ -23,7 +27,10 @@ function PureChatStreamingProgress({ usage, isStreaming, className }: ChatStream
     }
     const total = (usage.inputTokens || 0) + (usage.outputTokens || 0);
     const max = Math.max(total, usage.outputTokens ?? 0);
-    const pct = Math.min(HUNDRED, Math.round(((usage.outputTokens || 0) / (max || 1)) * HUNDRED));
+    const pct = Math.min(
+      HUNDRED,
+      Math.round(((usage.outputTokens || 0) / (max || 1)) * HUNDRED)
+    );
     return pct;
   }, [usage, isStreaming]);
 
@@ -34,7 +41,9 @@ function PureChatStreamingProgress({ usage, isStreaming, className }: ChatStream
   return (
     <div className={cn("flex w-full items-center gap-2", className)}>
       <Progress className="h-1" value={value} />
-      <span className="text-2xs text-muted-foreground tabular-nums">{value}%</span>
+      <span className="text-2xs text-muted-foreground tabular-nums">
+        {value}%
+      </span>
     </div>
   );
 }
