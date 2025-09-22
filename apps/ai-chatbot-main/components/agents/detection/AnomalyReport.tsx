@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Anomaly = {
   type: string;
@@ -43,22 +43,22 @@ export const AnomalyReport = ({ data }: { data: AnomalyReportData }) => {
   return (
     <Card className="w-full max-w-2xl border-border/50 shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-bold text-foreground">
+        <CardTitle className="font-bold text-foreground text-lg">
           Relatório de Anomalias de Consumo
         </CardTitle>
-        <Badge variant="outline" className="text-sm">
+        <Badge className="text-sm" variant="outline">
           ID do Sistema: {system_id}
         </Badge>
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Total de anomalias detectadas:{" "}
             <span className="font-bold text-foreground">{total_anomalies}</span>
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Avaliação de Risco:{" "}
-            <span className="font-bold capitalize text-foreground">
+            <span className="font-bold text-foreground capitalize">
               {risk_assessment}
             </span>
           </p>
@@ -66,17 +66,17 @@ export const AnomalyReport = ({ data }: { data: AnomalyReportData }) => {
         <div className="space-y-4">
           {anomalies_detected.map((anomaly, index) => (
             <div
-              key={index}
               className="flex items-start justify-between rounded-lg border p-3"
+              key={index}
             >
               <div>
                 <p className="font-semibold capitalize">
                   {anomaly.type.replace(/_/g, " ")}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Mês: {anomaly.month}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Desvio: {anomaly.deviation_percent}%
                 </p>
               </div>

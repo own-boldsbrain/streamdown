@@ -2,8 +2,8 @@
 
 import { type ComponentProps, memo } from "react";
 import { Streamdown } from "streamdown";
-import { cn } from "@/lib/utils";
 import { AnomalyReport } from "@/components/agents/detection/AnomalyReport";
+import { cn } from "@/lib/utils";
 
 const agentComponents: { [key: string]: React.ComponentType<any> } = {
   anomaly_report: AnomalyReport,
