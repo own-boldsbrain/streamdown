@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { HTMLAttributes } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../utils";
 
 // Constantes para configuração e renderização
@@ -17,14 +17,16 @@ const RANDOM_ID_LENGTH = 11;
 const errorClasses = {
   container: "rounded-md p-4 text-red-500 text-sm w-full",
   preMain: "mt-2 overflow-x-auto whitespace-pre-wrap",
-  preCode: "border-dashed border-red-200 border-t mt-4 overflow-x-auto pt-4 text-red-400 text-xs whitespace-pre-wrap",
+  preCode:
+    "border-dashed border-red-200 border-t mt-4 overflow-x-auto pt-4 text-red-400 text-xs whitespace-pre-wrap",
 };
 
 const diagramClasses = {
   mermaidContainer: "mermaid-diagram max-w-full",
   svgContainer: "flex justify-center",
   loadingContainer: "flex h-32 items-center justify-center w-full",
-  loadingSpinner: "animate-spin border-2 border-primary border-t-transparent h-6 rounded-full w-6",
+  loadingSpinner:
+    "animate-spin border-2 border-primary border-t-transparent h-6 rounded-full w-6",
 };
 
 const captionClasses = "mt-2 text-center text-muted-foreground text-sm";
@@ -116,21 +118,15 @@ const VizMermaidDiagram = memo(
         {...props}
       >
         {error ? (
-          <div 
-            className={errorClasses.container}
-          >
-            <div className="bg-red-50 dark:bg-red-950/10 p-4 rounded-md">
+          <div className={errorClasses.container}>
+            <div className="rounded-md bg-red-50 p-4 dark:bg-red-950/10">
               <p className="font-medium">Erro ao renderizar o diagrama:</p>
               <pre className={errorClasses.preMain}>{error}</pre>
-              <pre className={errorClasses.preCode}>
-                {code}
-              </pre>
+              <pre className={errorClasses.preCode}>{code}</pre>
             </div>
           </div>
         ) : (
-          <div
-            className={diagramClasses.mermaidContainer}
-          >
+          <div className={diagramClasses.mermaidContainer}>
             {svg ? (
               <div
                 className={diagramClasses.svgContainer}
@@ -145,11 +141,7 @@ const VizMermaidDiagram = memo(
           </div>
         )}
 
-        {caption && (
-          <div className={captionClasses}>
-            {caption}
-          </div>
-        )}
+        {caption && <div className={captionClasses}>{caption}</div>}
 
         {maxWidth && (
           <style jsx>{`

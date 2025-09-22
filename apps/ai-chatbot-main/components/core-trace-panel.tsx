@@ -1,11 +1,10 @@
 'use client'
 
-import React from 'react'
 import { memo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
-interface Trace {
+type Trace = {
   id: string
   timestamp: string
   service: string
@@ -15,7 +14,7 @@ interface Trace {
   details: Record<string, unknown>
 }
 
-interface CoreTracePanelProps {
+type CoreTracePanelProps = {
   traces: Trace[]
   className?: string
 }
