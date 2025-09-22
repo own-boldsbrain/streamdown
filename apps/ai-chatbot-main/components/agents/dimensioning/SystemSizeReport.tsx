@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 type SystemSizeData = {
   system_id: string;
@@ -30,10 +30,14 @@ const PERCENTAGE_MULTIPLIER = 100;
 export function SystemSizeReport({ data }: SystemSizeReportProps) {
   const getConfidenceBadge = (confidence: number) => {
     if (confidence >= HIGH_CONFIDENCE_THRESHOLD) {
-      return <Badge className="bg-green-100 text-green-800">Alta Confiança</Badge>;
+      return (
+        <Badge className="bg-green-100 text-green-800">Alta Confiança</Badge>
+      );
     }
     if (confidence >= MEDIUM_CONFIDENCE_THRESHOLD) {
-      return <Badge className="bg-yellow-100 text-yellow-800">Média Confiança</Badge>;
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800">Média Confiança</Badge>
+      );
     }
     return <Badge variant="destructive">Baixa Confiança</Badge>;
   };
@@ -48,10 +52,10 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Tamanho Recomendado */}
-        <div className="gap-4 grid-cols-1 grid md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <Card>
             <CardContent className="pt-6">
-              <div className="font-bold text-2xl text-center">
+              <div className="text-center font-bold text-2xl">
                 {data.recommended_size_kw} kWp
               </div>
               <p className="text-center text-muted-foreground text-sm">
@@ -61,7 +65,7 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="font-semibold text-center text-lg">
+              <div className="text-center font-semibold text-lg">
                 {data.min_size_kw} - {data.max_size_kw} kWp
               </div>
               <p className="text-center text-muted-foreground text-sm">
@@ -74,7 +78,8 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
               <div className="text-center">
                 {getConfidenceBadge(data.confidence_level)}
                 <p className="mt-2 text-muted-foreground text-sm">
-                  Confiança: {(data.confidence_level * PERCENTAGE_MULTIPLIER).toFixed(0)}%
+                  Confiança:{" "}
+                  {(data.confidence_level * PERCENTAGE_MULTIPLIER).toFixed(0)}%
                 </p>
               </div>
             </CardContent>
@@ -83,35 +88,83 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
 
         {/* Fatores de Dimensionamento */}
         <div>
-          <h3 className="font-semibold mb-4 text-lg">Fatores de Dimensionamento</h3>
+          <h3 className="mb-4 font-semibold text-lg">
+            Fatores de Dimensionamento
+          </h3>
           <div className="space-y-3">
             <div>
-              <div className="flex justify-between mb-1 text-sm">
+              <div className="mb-1 flex justify-between text-sm">
                 <span>Perfil de Consumo</span>
-                <span>{(data.sizing_factors.consumption_profile * PERCENTAGE_MULTIPLIER).toFixed(0)}%</span>
+                <span>
+                  {(
+                    data.sizing_factors.consumption_profile *
+                    PERCENTAGE_MULTIPLIER
+                  ).toFixed(0)}
+                  %
+                </span>
               </div>
-              <Progress value={data.sizing_factors.consumption_profile * PERCENTAGE_MULTIPLIER} className="h-2" />
+              <Progress
+                className="h-2"
+                value={
+                  data.sizing_factors.consumption_profile *
+                  PERCENTAGE_MULTIPLIER
+                }
+              />
             </div>
             <div>
-              <div className="flex justify-between mb-1 text-sm">
+              <div className="mb-1 flex justify-between text-sm">
                 <span>Área Disponível no Telhado</span>
-                <span>{(data.sizing_factors.roof_area_available * PERCENTAGE_MULTIPLIER).toFixed(0)}%</span>
+                <span>
+                  {(
+                    data.sizing_factors.roof_area_available *
+                    PERCENTAGE_MULTIPLIER
+                  ).toFixed(0)}
+                  %
+                </span>
               </div>
-              <Progress value={data.sizing_factors.roof_area_available * PERCENTAGE_MULTIPLIER} className="h-2" />
+              <Progress
+                className="h-2"
+                value={
+                  data.sizing_factors.roof_area_available *
+                  PERCENTAGE_MULTIPLIER
+                }
+              />
             </div>
             <div>
-              <div className="flex justify-between mb-1 text-sm">
+              <div className="mb-1 flex justify-between text-sm">
                 <span>Restrição Orçamentária</span>
-                <span>{(data.sizing_factors.budget_constraint * PERCENTAGE_MULTIPLIER).toFixed(0)}%</span>
+                <span>
+                  {(
+                    data.sizing_factors.budget_constraint *
+                    PERCENTAGE_MULTIPLIER
+                  ).toFixed(0)}
+                  %
+                </span>
               </div>
-              <Progress value={data.sizing_factors.budget_constraint * PERCENTAGE_MULTIPLIER} className="h-2" />
+              <Progress
+                className="h-2"
+                value={
+                  data.sizing_factors.budget_constraint * PERCENTAGE_MULTIPLIER
+                }
+              />
             </div>
             <div>
-              <div className="flex justify-between mb-1 text-sm">
+              <div className="mb-1 flex justify-between text-sm">
                 <span>Limites Regulatórios</span>
-                <span>{(data.sizing_factors.regulatory_limits * PERCENTAGE_MULTIPLIER).toFixed(0)}%</span>
+                <span>
+                  {(
+                    data.sizing_factors.regulatory_limits *
+                    PERCENTAGE_MULTIPLIER
+                  ).toFixed(0)}
+                  %
+                </span>
               </div>
-              <Progress value={data.sizing_factors.regulatory_limits * PERCENTAGE_MULTIPLIER} className="h-2" />
+              <Progress
+                className="h-2"
+                value={
+                  data.sizing_factors.regulatory_limits * PERCENTAGE_MULTIPLIER
+                }
+              />
             </div>
           </div>
         </div>
@@ -119,14 +172,17 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
         {/* Recomendações */}
         {data.recommendations.length > 0 && (
           <div>
-            <h3 className="flex font-semibold gap-2 items-center mb-3 text-lg">
-              <CheckCircle className="h-4 text-green-600 w-4" />
+            <h3 className="mb-3 flex items-center gap-2 font-semibold text-lg">
+              <CheckCircle className="h-4 w-4 text-green-600" />
               Recomendações
             </h3>
             <ul className="space-y-2">
               {data.recommendations.map((rec, index) => (
-                <li key={`rec-${rec.slice(0, 10)}-${index}`} className="flex gap-2 items-start">
-                  <CheckCircle className="flex-shrink-0 h-4 mt-0.5 text-green-600 w-4" />
+                <li
+                  className="flex items-start gap-2"
+                  key={`rec-${rec.slice(0, 10)}-${index}`}
+                >
+                  <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600" />
                   <span className="text-sm">{rec}</span>
                 </li>
               ))}
@@ -136,12 +192,17 @@ export function SystemSizeReport({ data }: SystemSizeReportProps) {
 
         {/* Avisos */}
         {data.warnings.length > 0 && (
-          <div className="border border-yellow-200 bg-yellow-50 p-4 rounded-lg">
-            <div className="flex gap-2 items-start">
-              <AlertTriangle className="flex-shrink-0 h-4 text-yellow-600 w-4" />
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-600" />
               <div className="space-y-1">
                 {data.warnings.map((warning, index) => (
-                  <p key={`warning-${warning.slice(0, 10)}-${index}`} className="text-sm">{warning}</p>
+                  <p
+                    className="text-sm"
+                    key={`warning-${warning.slice(0, 10)}-${index}`}
+                  >
+                    {warning}
+                  </p>
                 ))}
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // Teste da lógica de renderização condicional do Response component
 describe("Response Component Logic", () => {
@@ -17,12 +17,12 @@ describe("Response Component Logic", () => {
             type: "consumption_spike",
             month: "2024-07",
             deviation_percent: 45.2,
-            severity: "high" as const
-          }
+            severity: "high" as const,
+          },
         ],
         total_anomalies: 1,
-        risk_assessment: "moderate"
-      }
+        risk_assessment: "moderate",
+      },
     };
 
     const jsonString = JSON.stringify(anomalyData);
@@ -42,10 +42,10 @@ describe("Response Component Logic", () => {
           consumption_anomalies: TEST_CONSUMPTION_ANOMALIES,
           billing_irregularities: 45,
           pattern_deviations: 82,
-          compliance_risks: 55
+          compliance_risks: 55,
         },
-        recommendations: ["Investigar picos de consumo"]
-      }
+        recommendations: ["Investigar picos de consumo"],
+      },
     };
 
     const jsonString = JSON.stringify(riskData);
@@ -53,7 +53,9 @@ describe("Response Component Logic", () => {
 
     expect(parsed.risk_score).toBeDefined();
     expect(parsed.risk_score.overall_score).toBe(TEST_OVERALL_SCORE);
-    expect(parsed.risk_score.breakdown.consumption_anomalies).toBe(TEST_CONSUMPTION_ANOMALIES);
+    expect(parsed.risk_score.breakdown.consumption_anomalies).toBe(
+      TEST_CONSUMPTION_ANOMALIES
+    );
   });
 
   it("should parse JSON and identify consumption_validation", () => {
@@ -65,8 +67,8 @@ describe("Response Component Logic", () => {
         average_monthly_consumption: TEST_AVERAGE_CONSUMPTION,
         seasonal_variation: 0.23,
         data_quality_score: 0.95,
-        recommendations: ["Dados suficientes para dimensionamento"]
-      }
+        recommendations: ["Dados suficientes para dimensionamento"],
+      },
     };
 
     const jsonString = JSON.stringify(validationData);
@@ -74,7 +76,9 @@ describe("Response Component Logic", () => {
 
     expect(parsed.consumption_validation).toBeDefined();
     expect(parsed.consumption_validation.validation_status).toBe("valid");
-    expect(parsed.consumption_validation.average_monthly_consumption).toBe(TEST_AVERAGE_CONSUMPTION);
+    expect(parsed.consumption_validation.average_monthly_consumption).toBe(
+      TEST_AVERAGE_CONSUMPTION
+    );
   });
 
   it("should parse JSON and identify financing_simulation", () => {
@@ -90,11 +94,11 @@ describe("Response Component Logic", () => {
             term_months: 60,
             monthly_payment: 520.45,
             total_cost: 31_227,
-            irr: 0.12
-          }
+            irr: 0.12,
+          },
         ],
-        recommended_option: "Financiamento Bancário"
-      }
+        recommended_option: "Financiamento Bancário",
+      },
     };
 
     const jsonString = JSON.stringify(financingData);
@@ -116,8 +120,8 @@ describe("Response Component Logic", () => {
   it("should handle JSON without matching agent component", () => {
     const unknownData = {
       unknown_agent: {
-        some_data: "value"
-      }
+        some_data: "value",
+      },
     };
 
     const jsonString = JSON.stringify(unknownData);
