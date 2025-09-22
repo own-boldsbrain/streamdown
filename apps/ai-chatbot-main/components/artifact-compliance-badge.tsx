@@ -2,10 +2,7 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import {
-  AnimatePresence,
-  motion,
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Award,
   CheckCircle,
@@ -22,12 +19,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
-export type ComplianceStatus = "compliant" | "pending" | "non-compliant" | "expired";
+export type ComplianceStatus =
+  | "compliant"
+  | "pending"
+  | "non-compliant"
+  | "expired";
 
-export interface ComplianceCertificate {
+export type ComplianceCertificate = {
   id: string;
   name: string;
   issuer: string;
@@ -37,17 +43,17 @@ export interface ComplianceCertificate {
   score: number; // 0-100
   requirements: ComplianceRequirement[];
   documentUrl?: string;
-}
+};
 
-export interface ComplianceRequirement {
+export type ComplianceRequirement = {
   id: string;
   name: string;
   description: string;
   status: "met" | "pending" | "failed";
   evidence?: string;
-}
+};
 
-export interface ArtifactComplianceBadgeProps {
+export type ArtifactComplianceBadgeProps = {
   certificates: ComplianceCertificate[];
   isLoading?: boolean;
   className?: string;
@@ -56,7 +62,7 @@ export interface ArtifactComplianceBadgeProps {
   onExport?: () => void;
   onDownload?: (certificateId: string) => void;
   isPremiumUser?: boolean;
-}
+};
 
 const COMPLIANCE_STATUS_CONFIG = {
   compliant: {
@@ -105,11 +111,17 @@ const formatPercentage = (value: number): string => {
   return `${(value * PERCENTAGE_MULTIPLIER).toFixed(DECIMAL_PLACES)}%`;
 };
 
-const generateCertificateKey = (cert: ComplianceCertificate, index: number): string => {
+const generateCertificateKey = (
+  cert: ComplianceCertificate,
+  index: number
+): string => {
   return `cert-${cert.id}-${index}`;
 };
 
-const generateRequirementKey = (req: ComplianceRequirement, index: number): string => {
+const generateRequirementKey = (
+  req: ComplianceRequirement,
+  index: number
+): string => {
   return `req-${req.id}-${index}`;
 };
 
@@ -131,7 +143,9 @@ const getOverallComplianceStatus = (
   return "compliant";
 };
 
-export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = ({
+export const ArtifactComplianceBadge: React.FC<
+  ArtifactComplianceBadgeProps
+> = ({
   certificates,
   isLoading = false,
   className,
@@ -139,15 +153,22 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
   showDownload = true,
   onExport,
   onDownload,
-  isPremiumUser = false
+  isPremiumUser = false,
 }) => {
   // Calculate summary metrics
-  const compliantCount = certificates.filter(c => c.status === "compliant").length;
-  const pendingCount = certificates.filter(c => c.status === "pending").length;
-  const nonCompliantCount = certificates.filter(c => c.status === "non-compliant").length;
-  const averageScore = certificates.length > 0
-    ? certificates.reduce((sum, c) => sum + c.score, 0) / certificates.length
-    : 0;
+  const compliantCount = certificates.filter(
+    (c) => c.status === "compliant"
+  ).length;
+  const pendingCount = certificates.filter(
+    (c) => c.status === "pending"
+  ).length;
+  const nonCompliantCount = certificates.filter(
+    (c) => c.status === "non-compliant"
+  ).length;
+  const averageScore =
+    certificates.length > 0
+      ? certificates.reduce((sum, c) => sum + c.score, 0) / certificates.length
+      : 0;
 
   const overallCompliance = getOverallComplianceStatus(
     compliantCount,
@@ -156,19 +177,27 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
     certificates.length
   );
 
-  const renderCertificateCard = (certificate: ComplianceCertificate, index: number) => {
+  const renderCertificateCard = (
+    certificate: ComplianceCertificate,
+    index: number
+  ) => {
     const config = COMPLIANCE_STATUS_CONFIG[certificate.status];
-    const metRequirements = certificate.requirements.filter(r => r.status === "met").length;
+    const metRequirements = certificate.requirements.filter(
+      (r) => r.status === "met"
+    ).length;
     const totalRequirements = certificate.requirements.length;
-    const compliancePercentage = totalRequirements > 0 ? (metRequirements / totalRequirements) * PERCENTAGE_MULTIPLIER : 0;
+    const compliancePercentage =
+      totalRequirements > 0
+        ? (metRequirements / totalRequirements) * PERCENTAGE_MULTIPLIER
+        : 0;
 
     return (
       <motion.div
-        key={generateCertificateKey(certificate, index)}
-        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1 }}
         className="space-y-4"
+        initial={{ opacity: 0, y: 20 }}
+        key={generateCertificateKey(certificate, index)}
+        transition={{ delay: index * ANIMATION_DELAY_STEP }}
       >
         <Card className={cn("border-2", config.borderColor, config.bgColor)}>
           <CardHeader className="pb-3">
@@ -177,11 +206,17 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
                 {getComplianceIcon(certificate.status)}
                 <div>
                   <h4 className="font-semibold">{certificate.name}</h4>
-                  <p className="text-sm text-muted-foreground">{certificate.issuer}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {certificate.issuer}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant={certificate.status === "compliant" ? "default" : "secondary"}>
+                <Badge
+                  variant={
+                    certificate.status === "compliant" ? "default" : "secondary"
+                  }
+                >
                   {config.label}
                 </Badge>
                 {showDownload && certificate.documentUrl && (
@@ -189,9 +224,9 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
+                          onClick={() => onDownload?.(certificate.id)}
                           size="sm"
                           variant="outline"
-                          onClick={() => onDownload?.(certificate.id)}
                         >
                           <Download className="h-4 w-4" />
                         </Button>
@@ -211,16 +246,18 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
                 <span className="font-medium">Pontuação de Conformidade</span>
                 <span className="font-bold">{certificate.score}/100</span>
               </div>
-              <Progress value={certificate.score} className="h-2" />
+              <Progress className="h-2" value={certificate.score} />
             </div>
 
             {/* Requirements Progress */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium">Requisitos Atendidos</span>
-                <span className="font-bold">{metRequirements}/{totalRequirements}</span>
+                <span className="font-bold">
+                  {metRequirements}/{totalRequirements}
+                </span>
               </div>
-              <Progress value={compliancePercentage} className="h-2" />
+              <Progress className="h-2" value={compliancePercentage} />
             </div>
 
             {/* Dates */}
@@ -228,14 +265,20 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
               <div>
                 <span className="text-muted-foreground">Emitido em:</span>
                 <p className="font-medium">
-                  {formatDistanceToNow(certificate.issuedAt, { addSuffix: true, locale: ptBR })}
+                  {formatDistanceToNow(certificate.issuedAt, {
+                    addSuffix: true,
+                    locale: ptBR,
+                  })}
                 </p>
               </div>
               {certificate.expiresAt && (
                 <div>
                   <span className="text-muted-foreground">Expira em:</span>
                   <p className="font-medium">
-                    {formatDistanceToNow(certificate.expiresAt, { addSuffix: true, locale: ptBR })}
+                    {formatDistanceToNow(certificate.expiresAt, {
+                      addSuffix: true,
+                      locale: ptBR,
+                    })}
                   </p>
                 </div>
               )}
@@ -247,11 +290,15 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
               <div className="space-y-2">
                 {certificate.requirements.map((requirement, reqIndex) => (
                   <motion.div
-                    key={generateRequirementKey(requirement, reqIndex)}
-                    initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (index * 0.1) + (reqIndex * 0.05) }}
-                    className="flex items-start gap-3 p-2 rounded-lg bg-white/50"
+                    className="flex items-start gap-3 rounded-lg bg-white/50 p-2"
+                    initial={{ opacity: 0, x: -10 }}
+                    key={generateRequirementKey(requirement, reqIndex)}
+                    transition={{
+                      delay:
+                        index * ANIMATION_DELAY_STEP +
+                        reqIndex * REQUIREMENT_ANIMATION_DELAY,
+                    }}
                   >
                     <div className="mt-0.5">
                       {requirement.status === "met" && (
@@ -264,11 +311,13 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
                         <Shield className="h-4 w-4 text-red-500" />
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm">{requirement.name}</p>
-                      <p className="text-xs text-muted-foreground">{requirement.description}</p>
+                      <p className="text-muted-foreground text-xs">
+                        {requirement.description}
+                      </p>
                       {requirement.evidence && (
-                        <p className="text-xs text-blue-600 mt-1">
+                        <p className="mt-1 text-blue-600 text-xs">
                           Evidência: {requirement.evidence}
                         </p>
                       )}
@@ -316,15 +365,21 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
                 <span className="font-semibold text-lg">Status Geral</span>
               </div>
               <Badge
-                variant={overallCompliance === "compliant" ? "default" : "secondary"}
                 className="text-sm"
+                variant={
+                  overallCompliance === "compliant" ? "default" : "secondary"
+                }
               >
                 {COMPLIANCE_STATUS_CONFIG[overallCompliance].label}
               </Badge>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">{formatPercentage(averageScore / 100)}</div>
-              <div className="text-sm text-muted-foreground">Conformidade Média</div>
+              <div className="font-bold text-2xl">
+                {formatPercentage(averageScore / COMPLIANCE_MAX_SCORE)}
+              </div>
+              <div className="text-muted-foreground text-sm">
+                Conformidade Média
+              </div>
             </div>
           </div>
         </CardContent>
@@ -336,7 +391,9 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-muted-foreground text-sm">Certificações</p>
+                <p className="font-medium text-muted-foreground text-sm">
+                  Certificações
+                </p>
                 <p className="font-bold text-2xl">{certificates.length}</p>
               </div>
               <Award className="h-8 w-8 text-blue-500" />
@@ -348,8 +405,12 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-muted-foreground text-sm">Conformes</p>
-                <p className="font-bold text-2xl text-green-600">{compliantCount}</p>
+                <p className="font-medium text-muted-foreground text-sm">
+                  Conformes
+                </p>
+                <p className="font-bold text-2xl text-green-600">
+                  {compliantCount}
+                </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-500" />
             </div>
@@ -360,8 +421,12 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-muted-foreground text-sm">Pendentes</p>
-                <p className="font-bold text-2xl text-yellow-600">{pendingCount}</p>
+                <p className="font-medium text-muted-foreground text-sm">
+                  Pendentes
+                </p>
+                <p className="font-bold text-2xl text-yellow-600">
+                  {pendingCount}
+                </p>
               </div>
               <Clock className="h-8 w-8 text-yellow-500" />
             </div>
@@ -372,8 +437,12 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-muted-foreground text-sm">Não Conformes</p>
-                <p className="font-bold text-2xl text-red-600">{nonCompliantCount}</p>
+                <p className="font-medium text-muted-foreground text-sm">
+                  Não Conformes
+                </p>
+                <p className="font-bold text-2xl text-red-600">
+                  {nonCompliantCount}
+                </p>
               </div>
               <Shield className="h-8 w-8 text-red-500" />
             </div>
@@ -386,7 +455,9 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
       {/* Certificates List */}
       {certificates.length > 0 ? (
         <div className="space-y-6">
-          {certificates.map((certificate, index) => renderCertificateCard(certificate, index))}
+          {certificates.map((certificate, index) =>
+            renderCertificateCard(certificate, index)
+          )}
         </div>
       ) : (
         <Card>
@@ -401,14 +472,15 @@ export const ArtifactComplianceBadge: React.FC<ArtifactComplianceBadgeProps> = (
       )}
 
       {/* Premium Features */}
-      {!isPremiumUser && certificates.some(c => c.status === "compliant") && (
-        <div className="rounded-lg border border-yellow-200 bg-gradient-to-r from-yellow-50 p-4 to-orange-50">
+      {!isPremiumUser && certificates.some((c) => c.status === "compliant") && (
+        <div className="rounded-lg border border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 p-4">
           <div className="mb-2 flex items-center gap-2 text-yellow-800">
             <Star className="h-5 w-5" />
             <span className="font-semibold">Recursos Premium</span>
           </div>
           <p className="text-sm text-yellow-700">
-            Faça upgrade para acessar relatórios detalhados de conformidade, histórico completo de auditorias e alertas automáticos de expiração.
+            Faça upgrade para acessar relatórios detalhados de conformidade,
+            histórico completo de auditorias e alertas automáticos de expiração.
           </p>
         </div>
       )}

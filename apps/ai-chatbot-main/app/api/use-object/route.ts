@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
+import { openai } from "@ai-sdk/openai"; // ou outro provider compatível
 import { streamObject } from "ai"; // AI SDK Core
+import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { AnomalyReportSchema } from "@/lib/schemas/ap2";
-import { openai } from "@ai-sdk/openai"; // ou outro provider compatível
 
 export const runtime = "edge";
 
@@ -15,9 +15,9 @@ export async function POST(req: NextRequest) {
     prompt: [
       "Você é o Detection Agent.",
       "Gere um anomaly_report consistente com o input:",
-      JSON.stringify(input)
+      JSON.stringify(input),
     ].join("\n"),
-    schema: AnomalyReportSchema
+    schema: AnomalyReportSchema,
   });
 
   return result.toTextStreamResponse(); // envia o objeto como texto fragmentado
