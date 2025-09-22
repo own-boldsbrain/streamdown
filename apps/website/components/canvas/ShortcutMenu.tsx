@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   Command,
   CommandDialog,
@@ -8,7 +7,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "../ui/command";
 
 type Id =
   | "suggest-edits"
