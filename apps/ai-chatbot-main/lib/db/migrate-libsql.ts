@@ -1,32 +1,34 @@
 /**
  * Script de migração avançado para LibSQL
- * 
+ *
  * Este script executa migrações no banco de dados LibSQL (Turso)
  * Ele pode utilizar diretamente os esquemas Drizzle ou SQL bruto
- * 
+ *
  * Uso:
  *   pnpm tsx lib/db/migrate-libsql.ts
  */
 
 import { createClient } from "@libsql/client";
+import * as dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/libsql";
 import { migrate } from "drizzle-orm/libsql/migrator";
-import * as schema from "./schema";
-import * as dotenv from "dotenv";
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
+import * as schema from "./schema";
 
 // Carrega variáveis de ambiente do .env.local se existir
 dotenv.config({ path: ".env.local" });
 dotenv.config(); // Fallback para .env
 
 // Configuração do banco de dados
-const dbUrl = process.env.LIBSQL_DB_URL || process.env.LIBSQL_URL || "file:./dev.db";
-const dbToken = process.env.LIBSQL_DB_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN;
+const dbUrl =
+  process.env.LIBSQL_DB_URL || process.env.LIBSQL_URL || "file:./dev.db";
+const dbToken =
+  process.env.LIBSQL_DB_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN;
 const useDrizzleMigrate = process.env.USE_DRIZZLE_MIGRATE === "1";
 
 // Caminho absoluto para garantir que o arquivo dev.db seja criado no local correto
-const absoluteDbPath = dbUrl.startsWith("file:") 
+const absoluteDbPath = dbUrl.startsWith("file:")
   ? path.resolve(process.cwd(), dbUrl.replace("file:", ""))
   : null;
 
@@ -35,7 +37,7 @@ console.log("🔄 Configuração da migração:");
 console.log(`   URL do banco de dados: ${dbUrl}`);
 if (absoluteDbPath) {
   console.log(`   Caminho absoluto do arquivo: ${absoluteDbPath}`);
-  
+
   // Verifica se o diretório existe
   const dbDir = path.dirname(absoluteDbPath);
   if (!fs.existsSync(dbDir)) {
@@ -43,8 +45,12 @@ if (absoluteDbPath) {
     fs.mkdirSync(dbDir, { recursive: true });
   }
 }
-console.log(`   Token de autenticação: ${dbToken ? "✓ Configurado" : "✗ Não configurado"}`);
-console.log(`   Modo de migração: ${useDrizzleMigrate ? "Drizzle" : "SQL manual"}`);
+console.log(
+  `   Token de autenticação: ${dbToken ? "✓ Configurado" : "✗ Não configurado"}`
+);
+console.log(
+  `   Modo de migração: ${useDrizzleMigrate ? "Drizzle" : "SQL manual"}`
+);
 
 async function main() {
   console.log("🚀 Iniciando migração do banco de dados LibSQL...");
@@ -60,22 +66,24 @@ async function main() {
     if (useDrizzleMigrate) {
       const db = drizzle(client);
       const migrationsFolder = path.resolve(process.cwd(), "drizzle");
-      
+
       console.log(`   Diretório de migrações: ${migrationsFolder}`);
-      
+
       if (!fs.existsSync(migrationsFolder)) {
         console.error("❌ Erro: Diretório de migrações não encontrado!");
-        console.log("   Execute 'pnpm drizzle-kit generate' para criar os arquivos de migração.");
+        console.log(
+          "   Execute 'pnpm drizzle-kit generate' para criar os arquivos de migração."
+        );
         process.exit(1);
       }
-      
+
       console.log("🔄 Executando migrações com Drizzle...");
       await migrate(db, { migrationsFolder });
-    } 
+    }
     // Método 2: Executar SQL bruto (fallback)
     else {
       console.log("🔄 Executando migrações manuais via SQL...");
-      
+
       // Tabela User
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "User" (
@@ -85,7 +93,7 @@ async function main() {
           created_at TEXT DEFAULT (datetime('now'))
         );
       `);
-      
+
       // Tabela Chat
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Chat" (
@@ -97,7 +105,7 @@ async function main() {
           last_context TEXT
         );
       `);
-      
+
       // Tabela Message
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Message" (
@@ -110,7 +118,7 @@ async function main() {
           FOREIGN KEY (chat_id) REFERENCES Chat(id) ON DELETE CASCADE
         );
       `);
-      
+
       // Tabela Vote
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Vote" (
@@ -122,7 +130,7 @@ async function main() {
           FOREIGN KEY (message_id) REFERENCES Message(id) ON DELETE CASCADE
         );
       `);
-      
+
       // Tabela Document
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Document" (
@@ -135,7 +143,7 @@ async function main() {
           PRIMARY KEY (id, created_at)
         );
       `);
-      
+
       // Tabela Stream
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Stream" (
@@ -145,7 +153,7 @@ async function main() {
           FOREIGN KEY (chat_id) REFERENCES Chat(id) ON DELETE CASCADE
         );
       `);
-      
+
       // Tabela Suggestion
       await client.execute(`
         CREATE TABLE IF NOT EXISTS "Suggestion" (
@@ -165,19 +173,29 @@ async function main() {
     console.log(`   Banco de dados: ${dbUrl}`);
   } catch (error) {
     console.error("❌ Erro durante a migração:", error);
-    
+
     if (error.message && error.message.includes("no such table")) {
       console.log("\n🔍 Erro de tabela não encontrada. Possíveis soluções:");
-      console.log("   1. Verifique se o banco de dados foi inicializado corretamente");
-      console.log("   2. Certifique-se de que o caminho para o arquivo dev.db está correto");
-      console.log("   3. Se estiver usando um banco de dados remoto, verifique as permissões");
+      console.log(
+        "   1. Verifique se o banco de dados foi inicializado corretamente"
+      );
+      console.log(
+        "   2. Certifique-se de que o caminho para o arquivo dev.db está correto"
+      );
+      console.log(
+        "   3. Se estiver usando um banco de dados remoto, verifique as permissões"
+      );
     } else if (error.message && error.message.includes("ENOTFOUND")) {
       console.log("\n🔍 Erro de conexão. Possíveis soluções:");
       console.log("   1. Verifique se a URL do banco de dados está correta");
-      console.log("   2. Certifique-se de que o banco de dados está acessível a partir da sua rede");
-      console.log("   3. Se estiver usando Turso, verifique se o banco de dados foi criado e está ativo");
+      console.log(
+        "   2. Certifique-se de que o banco de dados está acessível a partir da sua rede"
+      );
+      console.log(
+        "   3. Se estiver usando Turso, verifique se o banco de dados foi criado e está ativo"
+      );
     }
-    
+
     process.exit(1);
   } finally {
     client.close();

@@ -71,7 +71,7 @@ export async function createGuestUser() {
     return {
       id: `guest-${timestamp}`,
       email: `guest+${timestamp}@local`,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
   }
 
@@ -83,7 +83,7 @@ export async function createGuestUser() {
       return {
         id: `guest-${timestamp}`,
         email: `guest+${timestamp}@local`,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
     }
     // No fallback allowed, throw appropriate error
@@ -97,7 +97,7 @@ export async function createGuestUser() {
   try {
     // First attempt: Use returning API (PostgreSQL-style)
     try {
-      // @ts-ignore - Drizzle types don't play well with union types
+      // @ts-expect-error - Drizzle types don't play well with union types
       const result = await db
         .insert(user)
         .values({ email, password })
@@ -107,20 +107,23 @@ export async function createGuestUser() {
         return result[0];
       }
 
-      if (result && 'id' in result && 'email' in result) {
+      if (result && "id" in result && "email" in result) {
         return result as { id: number | string; email: string };
       }
     } catch (insertError) {
       // Silently continue to fallback if returning API fails
-      console.warn("Insert with returning failed, trying fallback", insertError);
+      console.warn(
+        "Insert with returning failed, trying fallback",
+        insertError
+      );
     }
 
     // Second attempt: Insert without returning and then select (SQLite-style)
-    // @ts-ignore - Drizzle types don't play well with union types
+    // @ts-expect-error - Drizzle types don't play well with union types
     await db.insert(user).values({ email, password });
-    
+
     // Try to retrieve the inserted user
-    // @ts-ignore - Drizzle types don't play well with union types
+    // @ts-expect-error - Drizzle types don't play well with union types
     const selected = await db
       .select({ id: user.id, email: user.email })
       .from(user)
@@ -136,7 +139,7 @@ export async function createGuestUser() {
   } catch (error) {
     // Final fallback: Check if the user was actually created despite errors
     try {
-      // @ts-ignore - Drizzle types don't play well with union types
+      // @ts-expect-error - Drizzle types don't play well with union types
       const selected = await db
         .select({ id: user.id, email: user.email })
         .from(user)
@@ -150,19 +153,19 @@ export async function createGuestUser() {
       // Both insert and select failed, nothing more we can do
       console.error("Failed to verify guest user creation:", selectError);
     }
-    
+
     // Log the original error and throw a user-friendly message
     console.error("Failed to create guest user:", error);
-    
+
     if (ENABLE_GUEST_USER_FALLBACK) {
       // Last resort fallback: return synthetic user
       return {
         id: `guest-error-${timestamp}`,
         email: `guest+${timestamp}@local`,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
     }
-    
+
     throw new Error("Failed to create guest user.");
   }
 }
@@ -698,7 +701,7 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
       .orderBy(asc(stream.createdAt))
       .execute();
 
-  return streamIds.map(({ id }: { id: string }) => id);
+    return streamIds.map(({ id }: { id: string }) => id);
   } catch (error) {
     return handleDbError(error, "Failed to get stream ids by chat id", []);
   }
