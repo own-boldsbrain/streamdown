@@ -101,7 +101,7 @@ export async function createGuestUser() {
     if (Array.isArray(inserted) && inserted[0]?.id) {
       return inserted[0];
     }
-    if (inserted && inserted.id && inserted.email) {
+    if (inserted?.id && inserted?.email) {
       return inserted;
     }
 
@@ -111,7 +111,7 @@ export async function createGuestUser() {
       .where(eq(user.email, email))
       .limit(1);
 
-    if (selected && selected[0]) {
+    if (selected?.[0]) {
       return selected[0];
     }
 
@@ -521,7 +521,7 @@ export async function deleteMessagesByChatIdAfterTimestamp({
       );
 
     const messageIds = messagesToDelete.map(
-      (currentMessage) => currentMessage.id
+      (currentMessage: { id: string }) => currentMessage.id
     );
 
     if (messageIds.length > 0) {
@@ -656,7 +656,7 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
       .orderBy(asc(stream.createdAt))
       .execute();
 
-    return streamIds.map(({ id }) => id);
+  return streamIds.map(({ id }: { id: string }) => id);
   } catch (error) {
     return handleDbError(error, "Failed to get stream ids by chat id", []);
   }
