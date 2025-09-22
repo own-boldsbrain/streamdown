@@ -268,12 +268,12 @@ function PureMultimodalInput({
       {/* Hidden input for file uploads */}
       <input
         aria-label="Selecionar arquivos para anexar"
-        title="Selecionar arquivos para anexar"
         className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
         multiple
         onChange={handleFileChange}
         ref={fileInputRef}
         tabIndex={-1}
+        title="Selecionar arquivos para anexar"
         type="file"
       />
 
@@ -392,7 +392,7 @@ function PureMultimodalInput({
 
 export const MultimodalInput = memo(
   PureMultimodalInput,
-  (prevProps, nextProps) => {
+  (prevProps, nextProps): boolean => {
     if (prevProps.input !== nextProps.input) {
       return false;
     }
@@ -402,4 +402,71 @@ export const MultimodalInput = memo(
     if (!equal(prevProps.attachments, nextProps.attachments)) {
       return false;
     }
-    if
+    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) {
+      return false;
+    }
+    if (prevProps.selectedModelId !== nextProps.selectedModelId) {
+      return false;
+    }
+    return true;
+  }
+);
+
+function PureModelSelectorCompact({
+  selectedModelId,
+  onModelChange,
+}: {
+  selectedModelId: string;
+  onModelChange?: (modelId: string) => void;
+}) {
+  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
+
+  useEffect(() => {
+    setOptimisticModelId(selectedModelId);
+  }, [selectedModelId]);
+
+  const selectedModel = chatModels.find(
+    (model) => model.id === optimisticModelId
+  );
+
+  return (
+    <PromptInputModelSelect
+      onValueChange={(modelName) => {
+        const model = chatModels.find((m) => m.name === modelName);
+        if (model) {
+          setOptimisticModelId(model.id);
+          onModelChange?.(model.id);
+          startTransition(() => {
+            saveChatModelAsCookie(model.id);
+          });
+        }
+      }}
+      value={selectedModel?.name}
+    >
+      <Trigger
+        className="flex h-8 items-center gap-2 rounded-lg border-0 bg-background px-2 text-foreground shadow-none transition-colors hover:bg-accent focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+        type="button"
+      >
+        <CpuIcon size={16} />
+        <span className="hidden font-medium text-xs sm:block">
+          {selectedModel?.name}
+        </span>
+        <ChevronDownIcon size={16} />
+      </Trigger>
+      <PromptInputModelSelectContent className="min-w-[260px] p-0">
+        <div className="flex flex-col gap-px">
+          {chatModels.map((model) => (
+            <SelectItem key={model.id} value={model.name}>
+              <div className="truncate font-medium text-xs">{model.name}</div>
+              <div className="mt-px truncate text-[10px] text-muted-foreground leading-tight">
+                {model.description}
+              </div>
+            </SelectItem>
+          ))}
+        </div>
+      </PromptInputModelSelectContent>
+    </PromptInputModelSelect>
+  );
+}
+
+const ModelSelectorCompact = memo(PureModelSelectorCompact);

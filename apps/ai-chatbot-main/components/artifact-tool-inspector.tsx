@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Cpu,
   Download,
+  Eye,
   RefreshCw,
   Share2,
   TrendingDown,
@@ -77,8 +78,10 @@ export type ArtifactToolInspectorProps = {
   className?: string;
   showExport?: boolean;
   showShare?: boolean;
+  showView?: boolean;
   onExport?: () => void;
   onShare?: () => void;
+  onView?: () => void;
   onRefresh?: () => void;
 };
 
@@ -163,8 +166,10 @@ export const ArtifactToolInspector = memo<ArtifactToolInspectorProps>(
     className,
     showExport = true,
     showShare = true,
+    showView = true,
     onExport,
     onShare,
+    onView,
     onRefresh,
   }) => {
     const [selectedTimeframe, setSelectedTimeframe] = useState<
@@ -479,6 +484,12 @@ export const ArtifactToolInspector = memo<ArtifactToolInspectorProps>(
               <Button onClick={onShare} size="sm" variant="outline">
                 <Share2 className="mr-2 h-4 w-4" />
                 Compartilhar
+              </Button>
+            )}
+            {showView && (
+              <Button onClick={onView} size="sm" variant="outline">
+                <Eye className="mr-2 h-4 w-4" />
+                Visualizar
               </Button>
             )}
           </div>

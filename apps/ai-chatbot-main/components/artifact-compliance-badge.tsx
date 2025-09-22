@@ -8,6 +8,7 @@ import {
   CheckCircle,
   Clock,
   Download,
+  Eye,
   FileText,
   Shield,
   ShieldCheck,
@@ -59,8 +60,10 @@ export type ArtifactComplianceBadgeProps = {
   className?: string;
   showExport?: boolean;
   showDownload?: boolean;
+  showView?: boolean;
   onExport?: () => void;
   onDownload?: (certificateId: string) => void;
+  onView?: () => void;
   isPremiumUser?: boolean;
 };
 
@@ -151,8 +154,10 @@ export const ArtifactComplianceBadge: React.FC<
   className,
   showExport = true,
   showDownload = true,
+  showView = true,
   onExport,
   onDownload,
+  onView,
   isPremiumUser = false,
 }) => {
   // Calculate summary metrics
@@ -350,6 +355,12 @@ export const ArtifactComplianceBadge: React.FC<
             <Button onClick={onExport} size="sm" variant="outline">
               <FileText className="mr-2 h-4 w-4" />
               Exportar Relatório
+            </Button>
+          )}
+          {showView && (
+            <Button onClick={onView} size="sm" variant="outline">
+              <Eye className="mr-2 h-4 w-4" />
+              Visualizar
             </Button>
           )}
         </div>

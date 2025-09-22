@@ -4,19 +4,19 @@ import { motion } from "framer-motion";
 import { memo, useState } from "react";
 import { useMessages } from "@/hooks/use-messages";
 import type { Vote } from "@/lib/db/schema";
-import type { ChatMessage } from "@/lib/types";
 import {
   mockAnomalyReportProps,
   mockComplianceBadgeProps,
   mockRiskGaugeProps,
   mockToolInspectorProps,
 } from "@/lib/mocks";
-import { ArtifactActionModal, type ActionType } from "./artifact-actions-modal";
+import type { ChatMessage } from "@/lib/types";
+import type { UIArtifact } from "./artifact";
+import { type ActionType, ArtifactActionModal } from "./artifact-actions-modal";
 import { ArtifactAnomalyReport } from "./artifact-anomaly-report";
 import { ArtifactComplianceBadge } from "./artifact-compliance-badge";
 import { ArtifactRiskGauge } from "./artifact-risk-gauge";
 import { ArtifactToolInspector } from "./artifact-tool-inspector";
-import type { UIArtifact } from "./artifact";
 import { PreviewMessage, ThinkingMessage } from "./message";
 
 type ArtifactMessagesProps = {
@@ -110,36 +110,35 @@ function PureArtifactMessages({
       <div className="w-full max-w-4xl space-y-8">
         <ArtifactRiskGauge
           {...mockRiskGaugeProps}
-          onExport={(data) => handleArtifactAction("export", "risk", data)}
-          onShare={(data) => handleArtifactAction("share", "risk", data)}
-          onView={(data) => handleArtifactAction("view", "risk", data)}
+          onExport={() => handleArtifactAction("export", "risk")}
+          onShare={() => handleArtifactAction("share", "risk")}
+          onView={() => handleArtifactAction("view", "risk")}
         />
         <ArtifactAnomalyReport
           {...mockAnomalyReportProps}
-          onExport={(data) => handleArtifactAction("export", "anomaly", data)}
-          onShare={(data) => handleArtifactAction("share", "anomaly", data)}
-          onView={(data) => handleArtifactAction("view", "anomaly", data)}
+          onExport={() => handleArtifactAction("export", "anomaly")}
+          onShare={() => handleArtifactAction("share", "anomaly")}
+          onView={() => handleArtifactAction("view", "anomaly")}
         />
         <ArtifactComplianceBadge
           {...mockComplianceBadgeProps}
-          onExport={(data) => handleArtifactAction("export", "compliance", data)}
-          onShare={(data) => handleArtifactAction("share", "compliance", data)}
-          onView={(data) => handleArtifactAction("view", "compliance", data)}
+          onExport={() => handleArtifactAction("export", "compliance")}
+          onView={() => handleArtifactAction("view", "compliance")}
         />
         <ArtifactToolInspector
           {...mockToolInspectorProps}
-          onExport={(data) => handleArtifactAction("export", "tool", data)}
-          onShare={(data) => handleArtifactAction("share", "tool", data)}
-          onView={(data) => handleArtifactAction("view", "tool", data)}
+          onExport={() => handleArtifactAction("export", "tool")}
+          onShare={() => handleArtifactAction("share", "tool")}
+          onView={() => handleArtifactAction("view", "tool")}
         />
       </div>
 
       <ArtifactActionModal
-        isOpen={modalState.isOpen}
-        onClose={closeModal}
         actionType={modalState.actionType}
         artifactType={modalState.artifactType}
         data={modalState.data}
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
       />
 
       <motion.div

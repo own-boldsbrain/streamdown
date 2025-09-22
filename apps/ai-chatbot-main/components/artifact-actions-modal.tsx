@@ -1,10 +1,10 @@
 "use client";
 
+import { CheckCircle, Copy, Download, Eye, Mail, Share2 } from "lucide-react";
 import { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Sheet,
   SheetContent,
@@ -13,14 +13,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Download,
-  Share2,
-  Eye,
-  Copy,
-  Mail,
-  CheckCircle,
-} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 export type ActionType = "export" | "share" | "view";
@@ -82,7 +75,7 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
 
     const handleExport = () => {
       // Simulação de export
-      const filename = `${artifactType}-report-${new Date().toISOString().split('T')[0]}.${exportFormat}`;
+      const filename = `${artifactType}-report-${new Date().toISOString().split("T")[0]}.${exportFormat}`;
       alert(`Exportando ${filename}...`);
       onClose();
     };
@@ -114,7 +107,9 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
 
     const handleViewDetails = () => {
       // Simulação de visualização detalhada
-      alert(`Visualizando detalhes de ${artifactLabel}:\n${JSON.stringify(data, null, 2)}`);
+      alert(
+        `Visualizando detalhes de ${artifactLabel}:\n${JSON.stringify(data, null, 2)}`
+      );
       onClose();
     };
 
@@ -126,11 +121,13 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
               <div className="space-y-2">
                 <Label htmlFor="format">Formato de Exportação</Label>
                 <select
-                  id="format"
-                  value={exportFormat}
-                  onChange={(e) => setExportFormat(e.target.value as typeof exportFormat)}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   aria-label="Formato de Exportação"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  id="format"
+                  onChange={(e) =>
+                    setExportFormat(e.target.value as typeof exportFormat)
+                  }
+                  value={exportFormat}
                 >
                   <option value="pdf">PDF (Recomendado)</option>
                   <option value="csv">CSV (Dados)</option>
@@ -139,7 +136,8 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
               </div>
               <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-950/20">
                 <p className="text-blue-800 text-sm dark:text-blue-200">
-                  O relatório incluirá todos os dados atuais, gráficos e recomendações.
+                  O relatório incluirá todos os dados atuais, gráficos e
+                  recomendações.
                 </p>
               </div>
             </div>
@@ -151,11 +149,13 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
               <div className="space-y-2">
                 <Label htmlFor="method">Método de Compartilhamento</Label>
                 <select
-                  id="method"
-                  value={shareMethod}
-                  onChange={(e) => setShareMethod(e.target.value as typeof shareMethod)}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   aria-label="Método de Compartilhamento"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  id="method"
+                  onChange={(e) =>
+                    setShareMethod(e.target.value as typeof shareMethod)
+                  }
+                  value={shareMethod}
                 >
                   <option value="email">Email</option>
                   <option value="link">Link</option>
@@ -169,10 +169,10 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
                   <Label htmlFor="email">Email do Destinatário</Label>
                   <Input
                     id="email"
-                    type="email"
-                    placeholder="email@empresa.com"
-                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder="email@empresa.com"
+                    type="email"
+                    value={email}
                   />
                 </div>
               )}
@@ -181,19 +181,19 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
                 <Label htmlFor="message">Mensagem (Opcional)</Label>
                 <Textarea
                   id="message"
-                  placeholder="Adicione uma mensagem personalizada..."
-                  value={message}
                   onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Adicione uma mensagem personalizada..."
                   rows={3}
+                  value={message}
                 />
               </div>
 
-                <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 dark:bg-green-950/20">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <p className="text-green-800 text-sm dark:text-green-200">
-                    Link copiado para a área de transferência!
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 dark:bg-green-950/20">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <p className="text-green-800 text-sm dark:text-green-200">
+                  Link copiado para a área de transferência!
+                </p>
+              </div>
             </div>
           );
 
@@ -208,7 +208,9 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
               </div>
               <div className="rounded-lg bg-purple-50 p-3 dark:bg-purple-950/20">
                 <p className="text-purple-800 text-sm dark:text-purple-200">
-                  Esta visualização mostra os dados brutos do artefato. Para uma análise mais detalhada, considere exportar o relatório completo.
+                  Esta visualização mostra os dados brutos do artefato. Para uma
+                  análise mais detalhada, considere exportar o relatório
+                  completo.
                 </p>
               </div>
             </div>
@@ -236,16 +238,14 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
     };
 
     return (
-      <Sheet open={isOpen} onOpenChange={onClose}>
+      <Sheet onOpenChange={onClose} open={isOpen}>
         <SheetContent className="sm:max-w-md">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
               <Icon className={cn("h-5 w-5", config.color)} />
               {config.title}
             </SheetTitle>
-            <SheetDescription>
-              {config.description}
-            </SheetDescription>
+            <SheetDescription>{config.description}</SheetDescription>
           </SheetHeader>
 
           <div className="py-4">
@@ -260,7 +260,7 @@ export const ArtifactActionModal = memo<ArtifactActionModalProps>(
           </div>
 
           <SheetFooter>
-            <Button variant="outline" onClick={onClose}>
+            <Button onClick={onClose} variant="outline">
               Cancelar
             </Button>
             <Button onClick={handleAction}>

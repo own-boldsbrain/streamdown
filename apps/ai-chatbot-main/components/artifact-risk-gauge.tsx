@@ -186,8 +186,10 @@ export const ArtifactRiskGauge = memo<ArtifactRiskGaugeProps>(
     className,
     showExport = true,
     showShare = true,
+    showView = true,
     onExport,
     onShare,
+    onView,
     onRefresh,
     isPremiumUser = false,
   }) => {
