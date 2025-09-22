@@ -222,7 +222,7 @@ export type TranscriptionModelV1CallResponse = {
 // Utility Types
 export type Tool<TParameters = any, TResult = any> = {
   description?: string;
-  parameters: TParameters;
+  parameters: Record<string, unknown> | { safeParse?: (data: unknown) => unknown };
   execute: (args: TParameters) => Promise<TResult> | TResult;
 };
 

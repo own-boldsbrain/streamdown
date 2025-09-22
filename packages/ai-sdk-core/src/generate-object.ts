@@ -1,10 +1,9 @@
-import { z } from "zod";
 import type { LanguageModelV1 } from "./types.js";
 
 // Generate Object Options
-export type GenerateObjectOptions<T = any> = {
+export type GenerateObjectOptions<T = unknown> = {
   model: LanguageModelV1;
-  schema: z.ZodSchema<T> | Record<string, any>;
+  schema: Record<string, unknown> | { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { message: string } } };
   schemaName?: string;
   schemaDescription?: string;
   prompt?: string;
@@ -25,7 +24,7 @@ export type GenerateObjectOptions<T = any> = {
   abortSignal?: AbortSignal;
 };
 
-export type GenerateObjectResult<T = any> = {
+export type GenerateObjectResult<T = unknown> = {
   object: T;
   finishReason: "stop" | "length" | "content-filter" | "error" | "other";
   usage: {
@@ -43,7 +42,7 @@ export type GenerateObjectResult<T = any> = {
 /**
  * Generate structured data from a language model.
  */
-export async function generateObject<T = any>(
+export async function generateObject<T = unknown>(
   options: GenerateObjectOptions<T>
 ): Promise<GenerateObjectResult<T>> {
   const {
@@ -73,23 +72,23 @@ export async function generateObject<T = any>(
 
   if (prompt && messages.length === 0) {
     finalMessages = [
-      { role: "user", content: [{ type: "text", text: prompt }] },
+      { role: "user", content: [{ type: "text", text: prompt }], name: undefined, toolCallId: undefined, toolCalls: undefined },
     ];
   }
 
   // Add system message if provided
   if (system) {
     finalMessages = [
-      { role: "system", content: [{ type: "text", text: system }] },
+      { role: "system", content: [{ type: "text", text: system }], name: undefined, toolCallId: undefined, toolCalls: undefined },
       ...finalMessages,
     ];
   }
 
   // Prepare schema for the model
-  let schemaObject: any;
-  let mode: any;
+  let schemaObject: unknown;
+  let mode: { type: "object-json"; schema: unknown; schemaName?: string; schemaDescription?: string };
 
-  if (schema instanceof z.ZodSchema) {
+  if (schema && typeof schema === "object" && "_def" in schema) {
     // Handle Zod schema
     schemaObject = schema._def;
     mode = {
@@ -136,19 +135,21 @@ export async function generateObject<T = any>(
     }
 
     // Validate with schema if it's a Zod schema
-    if (schema instanceof z.ZodSchema) {
+    if (schema && typeof schema === "object" && "safeParse" in schema && typeof schema.safeParse === "function") {
       const validationResult = schema.safeParse(parsedObject);
-      if (!validationResult.success) {
-        throw new Error(
-          `Schema validation failed: ${validationResult.error.message}`
-        );
+      if (validationResult && typeof validationResult === "object" && "success" in validationResult) {
+        if (!validationResult.success) {
+          throw new Error(
+            `Schema validation failed: ${validationResult.error?.message || "Unknown validation error"}`
+          );
+        }
+        parsedObject = validationResult.data;
       }
-      parsedObject = validationResult.data;
     }
 
     return {
       object: parsedObject,
-      finishReason: response.finishReason,
+      finishReason: response.finishReason === "tool-calls" ? "other" : response.finishReason,
       usage: {
         promptTokens: response.usage.promptTokens,
         completionTokens: response.usage.completionTokens,

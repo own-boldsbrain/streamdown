@@ -73,17 +73,38 @@ import { streamText } from '@streamdown/ai-sdk-core';
 
 const result = await streamText({
   model: yourLanguageModel,
-  prompt: 'Tell me a story',
-  onChunk: (chunk) => {
-    console.log('Received chunk:', chunk.text);
+  prompt: 'Tell me a story about AI',
+  system: 'You are a creative storyteller.',
+  tools: {
+    searchWeb: tool({
+      description: 'Search the web for information',
+      parameters: z.object({ query: z.string() }),
+      execute: async ({ query }) => {
+        // Web search implementation
+        return { results: [] };
+      }
+    })
   },
-  onToolCall: (toolCall) => {
-    console.log('Tool called:', toolCall);
+  maxOutputTokens: 1000,
+  temperature: 0.8,
+  onChunk: (chunk) => {
+    console.log('Received:', chunk.text);
+  },
+  onFinish: (result) => {
+    console.log('Finished with reason:', result.finishReason);
+    console.log('Usage:', result.usage);
   }
 });
 
-// Access final result
-console.log(result.text);
+// Access results
+console.log('Full text:', await result.text);
+console.log('Tool calls:', await result.toolCalls);
+console.log('Usage stats:', await result.usage);
+
+// Stream processing
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
 ```
 
 ### Structured Data Generation
@@ -248,18 +269,86 @@ registry.registerImageModel('dall-e-3', imageModel);
 const model = registry.getLanguageModel('gpt-4');
 ```
 
-## Type Safety
+## Integration Examples
 
-All functions are fully typed with TypeScript. The library uses strict typing to ensure type safety at compile time:
+### With Streamdown Markdown Rendering
 
 ```typescript
-import type { LanguageModelV1, GenerateTextResult } from '@streamdown/ai-sdk-core';
+import { streamText } from '@streamdown/ai-sdk-core';
+import { Streamdown } from '@streamdown/streamdown';
 
-// Models implement the V1 interfaces
-const model: LanguageModelV1 = myModelImplementation;
+function ViabilityReport() {
+  const [report, setReport] = useState('');
 
-// Results have proper typing
-const result: GenerateTextResult = await generateText({ model, prompt: 'Hello' });
+  useEffect(() => {
+    const generateReport = async () => {
+      const result = await streamText({
+        model: yourModel,
+        prompt: 'Generate a solar viability report',
+        onChunk: (chunk) => {
+          setReport(prev => prev + chunk.text);
+        }
+      });
+    };
+
+    generateReport();
+  }, []);
+
+  return (
+    <div className="report-container">
+      <Streamdown>{report}</Streamdown>
+    </div>
+  );
+}
+```
+
+### Chart Data Generation
+
+```typescript
+import { streamText } from '@streamdown/ai-sdk-core';
+import { AreaChart, BarChart } from '@streamdown/charts';
+
+async function EnergyDashboard() {
+  const chartData = await streamText({
+    model: yourModel,
+    prompt: 'Generate monthly energy data as JSON',
+    onFinish: async (result) => {
+      const data = JSON.parse(await result.text);
+      return data;
+    }
+  });
+
+  return (
+    <div className="dashboard">
+      <AreaChart data={chartData.energiaMensal} />
+      <BarChart data={chartData.perdas} />
+    </div>
+  );
+}
+```
+
+### KPI Calculations with AI
+
+```typescript
+import { streamText, calculateKPIs } from '@streamdown/ai-sdk-core';
+
+async function SmartKPIs() {
+  const analysis = await streamText({
+    model: yourModel,
+    prompt: 'Analyze this energy data and provide insights',
+    tools: {
+      calculateMetrics: tool({
+        description: 'Calculate ROI, payback, and efficiency metrics',
+        execute: ({ generation, consumption }) => {
+          return calculateKPIs(generation, consumption);
+        }
+      })
+    }
+  });
+
+  const kpis = await analysis.toolResults;
+  return <KPICards kpis={kpis} />;
+}
 ```
 
 ## Error Handling

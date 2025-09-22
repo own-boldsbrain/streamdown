@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { Tool, JSONSchema, ProviderRegistry } from './types.js';
+import type { z } from "zod";
+import type { JSONSchema, ProviderRegistry, Tool } from "./types.js";
 
 // Tool Helper
 export type ToolFn<TParameters = any, TResult = any> = {
@@ -17,7 +17,7 @@ export function tool<TParameters = any, TResult = any>(
   return {
     description: toolDefinition.description,
     parameters: toolDefinition.parameters,
-    execute: toolDefinition.execute
+    execute: toolDefinition.execute,
   };
 }
 
@@ -46,8 +46,8 @@ export function createProviderRegistry(
   return {
     languageModel: (modelId: string) => {
       // Simple implementation - in real usage, this would parse provider:model format
-      const [provider, ...modelParts] = modelId.split(':');
-      const actualModelId = modelParts.join(':');
+      const [provider, ...modelParts] = modelId.split(":");
+      const actualModelId = modelParts.join(":");
 
       const providerRegistry = providers[provider];
       if (!providerRegistry) {
@@ -58,8 +58,8 @@ export function createProviderRegistry(
     },
 
     textEmbeddingModel: (modelId: string) => {
-      const [provider, ...modelParts] = modelId.split(':');
-      const actualModelId = modelParts.join(':');
+      const [provider, ...modelParts] = modelId.split(":");
+      const actualModelId = modelParts.join(":");
 
       const providerRegistry = providers[provider];
       if (!providerRegistry) {
@@ -70,8 +70,8 @@ export function createProviderRegistry(
     },
 
     imageModel: (modelId: string) => {
-      const [provider, ...modelParts] = modelId.split(':');
-      const actualModelId = modelParts.join(':');
+      const [provider, ...modelParts] = modelId.split(":");
+      const actualModelId = modelParts.join(":");
 
       const providerRegistry = providers[provider];
       if (!providerRegistry?.imageModel) {
@@ -82,8 +82,8 @@ export function createProviderRegistry(
     },
 
     speechModel: (modelId: string) => {
-      const [provider, ...modelParts] = modelId.split(':');
-      const actualModelId = modelParts.join(':');
+      const [provider, ...modelParts] = modelId.split(":");
+      const actualModelId = modelParts.join(":");
 
       const providerRegistry = providers[provider];
       if (!providerRegistry?.speechModel) {
@@ -94,8 +94,8 @@ export function createProviderRegistry(
     },
 
     transcriptionModel: (modelId: string) => {
-      const [provider, ...modelParts] = modelId.split(':');
-      const actualModelId = modelParts.join(':');
+      const [provider, ...modelParts] = modelId.split(":");
+      const actualModelId = modelParts.join(":");
 
       const providerRegistry = providers[provider];
       if (!providerRegistry?.transcriptionModel) {
@@ -103,7 +103,7 @@ export function createProviderRegistry(
       }
 
       return providerRegistry.transcriptionModel(actualModelId);
-    }
+    },
   };
 }
 
@@ -113,7 +113,7 @@ export function createProviderRegistry(
  */
 export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) {
-    throw new Error('Vectors must have the same length');
+    throw new Error("Vectors must have the same length");
   }
 
   let dotProduct = 0;
@@ -149,7 +149,7 @@ export function simulateReadableStream<T>(
   return new ReadableStream({
     async start(controller) {
       if (delay > 0) {
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
 
       for (let i = 0; i < values.length; i++) {
@@ -157,12 +157,12 @@ export function simulateReadableStream<T>(
 
         const chunkDelayMs = chunkDelay[i] || 0;
         if (chunkDelayMs > 0) {
-          await new Promise(resolve => setTimeout(resolve, chunkDelayMs));
+          await new Promise((resolve) => setTimeout(resolve, chunkDelayMs));
         }
       }
 
       controller.close();
-    }
+    },
   });
 }
 
@@ -179,7 +179,7 @@ export function wrapLanguageModel(
   return {
     ...model,
     doGenerate: (options: any) => middleware({ ...options, model }),
-    doStream: (options: any) => middleware({ ...options, model, stream: true })
+    doStream: (options: any) => middleware({ ...options, model, stream: true }),
   };
 }
 
@@ -200,9 +200,13 @@ export function extractReasoningMiddleware(options: any) {
 export function simulateStreamingMiddleware(options: any) {
   return {
     stream: simulateReadableStream([
-      { type: 'text-delta', textDelta: 'Simulated streaming response' },
-      { type: 'finish', finishReason: 'stop', usage: { promptTokens: 10, completionTokens: 20 } }
-    ])
+      { type: "text-delta", textDelta: "Simulated streaming response" },
+      {
+        type: "finish",
+        finishReason: "stop",
+        usage: { promptTokens: 10, completionTokens: 20 },
+      },
+    ]),
   };
 }
 
@@ -238,9 +242,9 @@ export function smoothStream(
       async transform(chunk, controller) {
         controller.enqueue(chunk);
         if (delay > 0) {
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise((resolve) => setTimeout(resolve, delay));
         }
-      }
+      },
     })
   );
 }
@@ -256,7 +260,7 @@ export function generateId(): string {
 /**
  * Creates an ID generator.
  */
-export function createIdGenerator(prefix = ''): () => string {
+export function createIdGenerator(prefix = ""): () => string {
   let counter = 0;
   return () => `${prefix}${counter++}`;
 }

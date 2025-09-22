@@ -89,14 +89,14 @@ export async function streamObject<T = any>(
 
   if (prompt && messages.length === 0) {
     finalMessages = [
-      { role: "user", content: [{ type: "text", text: prompt }] },
+      { role: "user", content: [{ type: "text", text: prompt }], name: undefined, toolCallId: undefined, toolCalls: undefined },
     ];
   }
 
   // Add system message if provided
   if (system) {
     finalMessages = [
-      { role: "system", content: [{ type: "text", text: system }] },
+      { role: "system", content: [{ type: "text", text: system }], name: undefined, toolCallId: undefined, toolCalls: undefined },
       ...finalMessages,
     ];
   }

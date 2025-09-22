@@ -1,4 +1,8 @@
-import { ImageModelV1, SpeechModelV1, TranscriptionModelV1 } from './types.js';
+import type {
+  ImageModelV1,
+  SpeechModelV1,
+  TranscriptionModelV1,
+} from "./types.js";
 
 // Experimental Image Generation
 export type ExperimentalGenerateImageOptions = {
@@ -24,7 +28,16 @@ export type ExperimentalGenerateImageResult = {
 export async function experimental_generateImage(
   options: ExperimentalGenerateImageOptions
 ): Promise<ExperimentalGenerateImageResult> {
-  const { model, prompt, n = 1, size, aspectRatio, seed, providerOptions, abortSignal } = options;
+  const {
+    model,
+    prompt,
+    n = 1,
+    size,
+    aspectRatio,
+    seed,
+    providerOptions,
+    abortSignal,
+  } = options;
 
   try {
     const response = await model.doGenerate({
@@ -34,13 +47,13 @@ export async function experimental_generateImage(
       aspectRatio,
       seed,
       providerOptions,
-      abortSignal
+      abortSignal,
     });
 
     return {
-      images: response.images.map(img => ({
-        url: img.uri
-      }))
+      images: response.images.map((img) => ({
+        url: img.uri,
+      })),
     };
   } catch (error) {
     throw new Error(`Image generation failed: ${error}`);
@@ -76,12 +89,12 @@ export async function experimental_generateSpeech(
       voice,
       speed,
       providerOptions,
-      abortSignal
+      abortSignal,
     });
 
     return {
       speech: response.speech,
-      mimeType: response.mimeType
+      mimeType: response.mimeType,
     };
   } catch (error) {
     throw new Error(`Speech generation failed: ${error}`);
@@ -109,7 +122,15 @@ export type ExperimentalTranscribeResult = {
 export async function experimental_transcribe(
   options: ExperimentalTranscribeOptions
 ): Promise<ExperimentalTranscribeResult> {
-  const { model, audio, mimeType, language, prompt, providerOptions, abortSignal } = options;
+  const {
+    model,
+    audio,
+    mimeType,
+    language,
+    prompt,
+    providerOptions,
+    abortSignal,
+  } = options;
 
   try {
     const response = await model.doTranscribe({
@@ -118,11 +139,11 @@ export async function experimental_transcribe(
       language,
       prompt,
       providerOptions,
-      abortSignal
+      abortSignal,
     });
 
     return {
-      text: response.text
+      text: response.text,
     };
   } catch (error) {
     throw new Error(`Transcription failed: ${error}`);
