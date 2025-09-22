@@ -112,5 +112,15 @@
     "typescript": "^5.6.3",
     "ultracite": "5.3.9"
   },
+  "pnpm": {
+    "overrides": {
+      "@next/swc-*": "15.5.2",
+      "next": "15.5.2",
+      "@opentelemetry/api-logs": "0.19.0"
+    }
+  },
+  "overrides": {
+    "@next/swc-*": "15.5.2"
+  },
   "packageManager": "pnpm@9.12.3"
 }
