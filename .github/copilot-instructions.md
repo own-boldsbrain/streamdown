@@ -41,6 +41,34 @@ O Streamdown é uma biblioteca de renderização Markdown otimizada para streami
 
 ## Casos de Uso Especiais
 
+### Utilização dos Gradientes Yello
+
+```tsx
+// Exemplos de uso dos gradientes da marca Yello
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+// Variantes de botões
+<Button variant="yello-gradient">Botão com Degradê</Button>
+<Button variant="yello-stroke">Botão com Stroke</Button>
+<Button variant="yello-animated">Botão Animado</Button>
+
+// Variantes de cards
+<Card variant="yello-stroke">Conteúdo do card</Card>
+<Card variant="yello-animated">Conteúdo do card</Card>
+
+// Variantes de inputs
+<Input variant="yello-stroke" placeholder="Input com stroke" />
+<Input variant="yello-animated" placeholder="Input animado" />
+
+// Variantes de badges
+<Badge variant="yello-gradient">Badge</Badge>
+<Badge variant="yello-stroke">Badge</Badge>
+<Badge variant="yello-animated">Badge</Badge>
+```
+
 ### Processamento de Markdown Incompleto
 
 ```tsx
