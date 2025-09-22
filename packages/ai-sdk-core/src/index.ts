@@ -11,6 +11,10 @@ export {
 export { generateObject } from "./generate-object.js";
 // Core functions
 export { generateText } from "./generate-text.js";
+// Providers
+export { mockProvider, openai } from "./providers.js";
+// Registry
+export { getModel, listAvailableModels, providerRegistry } from "./registry.js";
 export { streamObject } from "./stream-object.js";
 export { streamText } from "./stream-text.js";
 // Core types (minimal export to avoid barrel file issues)
