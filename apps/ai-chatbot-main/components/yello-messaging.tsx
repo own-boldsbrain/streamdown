@@ -2,11 +2,17 @@
  * YelloMessage - Componente para exibir mensagens no estilo da Yello Solar Hub com o tom "Marrento Certo"
  */
 
-import * as React from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import type * as React from "react";
+import type { ButtonProps } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { YelloButton } from "@/components/yello-ui";
 import { cn } from "@/lib/utils";
-import { type ButtonProps } from "@/components/ui/button";
 
 type YelloMessageProps = React.HTMLAttributes<HTMLDivElement> & {
   title: string;
@@ -33,33 +39,38 @@ export function YelloMessage({
     primary: {
       title: "text-yello-primary font-bold",
       border: "border-yello-primary/20",
-      button: "bg-yello-primary text-background"
+      button: "bg-yello-primary text-background",
     },
     alert: {
       title: "text-red-500 font-bold",
       border: "border-red-200",
-      button: "bg-red-500 text-white"
+      button: "bg-red-500 text-white",
     },
     success: {
       title: "text-emerald-600 font-bold",
       border: "border-emerald-200",
-      button: "bg-emerald-600 text-white"
+      button: "bg-emerald-600 text-white",
     },
     info: {
       title: "text-blue-600 font-bold",
       border: "border-blue-200",
-      button: "bg-blue-600 text-white"
-    }
+      button: "bg-blue-600 text-white",
+    },
   };
 
   return (
-    <Card 
-      variant="glass" 
+    <Card
       className={cn("overflow-hidden", className)}
+      variant="glass"
       {...props}
     >
       <CardHeader className="pb-2">
-        <CardTitle className={cn("flex items-center gap-2 text-xl", variantStyles[variant].title)}>
+        <CardTitle
+          className={cn(
+            "flex items-center gap-2 text-xl",
+            variantStyles[variant].title
+          )}
+        >
           {icon && <span className="text-inherit">{icon}</span>}
           {title}
         </CardTitle>
@@ -70,8 +81,8 @@ export function YelloMessage({
       {buttonText && (
         <CardFooter>
           <YelloButton
-            onClick={buttonAction}
             className="w-full font-medium"
+            onClick={buttonAction}
             {...buttonProps}
           >
             {buttonText}
@@ -82,14 +93,14 @@ export function YelloMessage({
   );
 }
 
-export function ComplianceMessage({ 
+export function ComplianceMessage({
   isCompliant,
   nextReviewDate,
   ...props
-}: { 
+}: {
   isCompliant: boolean;
   nextReviewDate?: string;
-} & Omit<YelloMessageProps, 'title' | 'message' | 'variant'>) {
+} & Omit<YelloMessageProps, "title" | "message" | "variant">) {
   return (
     <YelloMessage
       icon={isCompliant ? "✅" : "⚠️"}
@@ -122,9 +133,9 @@ export function WhatsAppPreviewMessage({
   className?: string;
 }) {
   return (
-    <div 
+    <div
       className={cn(
-        "rounded-lg bg-[#DCF8C6] p-4 text-[#303030] border border-[#25D366]/20",
+        "rounded-lg border border-[#25D366]/20 bg-[#DCF8C6] p-4 text-[#303030]",
         className
       )}
       {...props}
@@ -132,15 +143,12 @@ export function WhatsAppPreviewMessage({
       <div className="space-y-3">
         <p className="font-bold">{header}</p>
         <p className="whitespace-pre-line">{body}</p>
-        <div className="border border-[#25D366]/30 rounded-md py-2 px-3 bg-white/50 text-center">
-          <a 
-            className="text-[#075E54] font-medium" 
-            href={ctaUrl}
-          >
+        <div className="rounded-md border border-[#25D366]/30 bg-white/50 px-3 py-2 text-center">
+          <a className="font-medium text-[#075E54]" href={ctaUrl}>
             {ctaText}
           </a>
         </div>
-        <p className="text-xs text-[#303030]/70">{footer}</p>
+        <p className="text-[#303030]/70 text-xs">{footer}</p>
       </div>
     </div>
   );
@@ -158,40 +166,40 @@ export function PreSizingCard({
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <Card
-      variant="glass"
       className={cn("overflow-hidden", className)}
+      variant="glass"
       {...props}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-yello-accent">
+        <CardTitle className="font-bold text-xl text-yello-accent">
           Tamanho do kit: {kWp} kWp
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p className="font-medium">Payback: ~{paybackAnos} anos. Sem firula.</p>
-          <div className="flex justify-between items-center mt-4">
+          <p className="font-medium">
+            Payback: ~{paybackAnos} anos. Sem firula.
+          </p>
+          <div className="mt-4 flex items-center justify-between">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Potência</p>
+              <p className="text-muted-foreground text-sm">Potência</p>
               <p className="font-bold text-lg">{kWp} kWp</p>
             </div>
-            <div className="h-10 border-r border-border"></div>
+            <div className="h-10 border-border border-r" />
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Retorno</p>
+              <p className="text-muted-foreground text-sm">Retorno</p>
               <p className="font-bold text-lg">~{paybackAnos} anos</p>
             </div>
-            <div className="h-10 border-r border-border"></div>
+            <div className="h-10 border-border border-r" />
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">Economia</p>
+              <p className="text-muted-foreground text-sm">Economia</p>
               <p className="font-bold text-lg">💸</p>
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter>
-        <YelloButton className="w-full">
-          Ver detalhes
-        </YelloButton>
+        <YelloButton className="w-full">Ver detalhes</YelloButton>
       </CardFooter>
     </Card>
   );

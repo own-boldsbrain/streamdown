@@ -1,4 +1,11 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { YelloButton } from "@/components/yello-ui";
 import { cn } from "@/lib/utils";
 
@@ -24,27 +31,29 @@ export function AnomalyReport({
   onViewRecommendation = () => {},
 }: AnomalyReportProps) {
   return (
-    <Card variant="glass" className={cn("overflow-hidden", className)}>
+    <Card className={cn("overflow-hidden", className)} variant="glass">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-yello-accent">{title}</CardTitle>
+        <CardTitle className="font-bold text-xl text-yello-accent">
+          {title}
+        </CardTitle>
         <CardDescription>
-          {faixaHoraria 
+          {faixaHoraria
             ? `Picos em ${faixaHoraria}. Dá pra domar com ajuste fininho.`
-            : subtitle
-          }
+            : subtitle}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-2">
-          <p className="text-sm text-foreground/90">
-            {description || "Analisamos seus dados e identificamos padrões que podem ser otimizados para melhorar sua economia."}
+          <p className="text-foreground/90 text-sm">
+            {description ||
+              "Analisamos seus dados e identificamos padrões que podem ser otimizados para melhorar sua economia."}
           </p>
         </div>
       </CardContent>
       <CardFooter>
-        <YelloButton 
-          onClick={onViewRecommendation}
+        <YelloButton
           className="w-full font-medium"
+          onClick={onViewRecommendation}
         >
           Ver recomendação
         </YelloButton>
