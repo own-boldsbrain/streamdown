@@ -65,68 +65,62 @@ export async function createUser(email: string, password: string) {
 
 export async function createGuestUser() {
   try {
-    // Early return se NO-DB estiver habilitado
+    if (ALLOW_GUEST_NO_DB) {
       const ts = Date.now();
       return { id: `guest-${ts}`, email: `guest.${ts}@local` };
     }
 
     const db = getDb();
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
-      // Fallback mínimo quando não há DB, mas fallback está ativo
       const ts = Date.now();
       return { id: `guest-${ts}`, email: `guest.${ts}@local` };
+    }
+    if (!db) {
+      throw new Error("Database unavailable");
     }
 
     const email = `guest+${Date.now()}@local`;
     const password = generateHashedPassword(generateUUID());
 
-    // Tente INSERT com RETURNING (Postgres) — se não houver, caia p/ SELECT
-    let result: any;
-
+    let inserted: any = null;
     try {
-      // Caso Postgres (returning []):
-      // @ts-expect-error: alguns drivers não têm returning tipado
-      result = await db.insert(user).values({ email, password }).returning({
-        id: user.id,
-        email: user.email,
-      });
+      const maybePromise = (db as any)
+        .insert(user)
+        .values({ email, password })
+        .returning?.({ id: user.id, email: user.email });
+      inserted =
+        maybePromise instanceof Promise ? await maybePromise : maybePromise;
     } catch (err) {
-      // Alguns drivers (sqlite/libsql) não suportam returning do builder da mesma forma
       console.warn(
-        "Failed to use returning in insert, falling back to select:",
+        "Insert returning unsupported; falling back to select:",
         err
       );
     }
 
-    if (Array.isArray(result) && result.length > 0 && result[0]?.id) {
-      // Se veio array, retorne o primeiro
-      return result[0];
+    if (Array.isArray(inserted) && inserted[0]?.id) {
+      return inserted[0];
+    }
+    if (inserted && inserted.id && inserted.email) {
+      return inserted;
     }
 
-    if (result && result.id && result.email) {
-      // Se veio objeto único com id/email
-      return result;
-    }
-
-    // Fallback universal: selecione pelo e-mail recém-criado
-    const selected = await db
+    const selected = await (db as any)
       .select({ id: user.id, email: user.email })
       .from(user)
       .where(eq(user.email, email))
       .limit(1);
 
-    if (selected?.[0]) return selected[0];
+    if (selected && selected[0]) {
+      return selected[0];
+    }
 
-    // Último recurso: crie um usuário efêmero
     const ts = Date.now();
     return { id: `guest-${ts}`, email: `guest.${ts}@local` };
   } catch (error) {
-    return handleDbError(
-      error,
-      "Failed to create guest user",
-      // Fallback se handleDbError retornar
-      { id: `guest-${Date.now()}`, email: "guest.fallback@local" }
-    );
+    return handleDbError(error, "Failed to create guest user", {
+      id: `guest-${Date.now()}`,
+      email: "guest.fallback@local",
+    });
   }
 }
 
