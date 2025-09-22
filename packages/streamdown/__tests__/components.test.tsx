@@ -261,30 +261,43 @@ describe("Markdown Components", () => {
     });
     it("should render mermaid block with Mermaid and copy button", async () => {
       const { waitFor } = await import("@testing-library/react");
+      const { act } = await import("@testing-library/react");
       const Code = components.code!;
-      const { container } = render(
-        <Code
-          className="language-mermaid"
-          node={
-            {
-              position: {
-                start: { line: 1, column: 1 },
-                end: { line: 2, column: 10 },
-              },
-            } as any
-          }
-        >
-          {"graph TD; A-->B;"}
-        </Code>
-      );
+      
+      let container: HTMLElement;
+      
+      await act(async () => {
+        const result = render(
+          <Code
+            className="language-mermaid"
+            node={
+              {
+                position: {
+                  start: { line: 1, column: 1 },
+                  end: { line: 2, column: 10 },
+                },
+              } as any
+            }
+          >
+            {"graph TD; A-->B;"}
+          </Code>
+        );
+        container = result.container;
+        
+        // Esperar qualquer atualização assíncrona
+        await new Promise(resolve => setTimeout(resolve, 0));
+      });
+      
       const mermaidBlock = container.querySelector(
         '[data-streamdown="mermaid-block"]'
       );
       expect(mermaidBlock).toBeTruthy();
+      
       // Wait for Mermaid chart to finish loading
       await waitFor(() => {
         expect(mermaidBlock?.textContent).not.toContain("Loading diagram...");
       });
+      
       // Copy button should be present
       const copyButton = mermaidBlock?.querySelector("button");
       expect(copyButton).toBeTruthy();
@@ -322,12 +335,15 @@ describe("Markdown Components", () => {
 
     it("should render thead with correct classes", () => {
       const THead = components.thead!;
+      const Table = components.table!;
       const { container } = render(
-        <THead node={null as any}>
-          <tr>
-            <th>Header</th>
-          </tr>
-        </THead>
+        <Table node={null as any}>
+          <THead node={null as any}>
+            <tr>
+              <th>Header</th>
+            </tr>
+          </THead>
+        </Table>
       );
       const thead = container.querySelector("thead");
       expect(thead).toBeTruthy();
@@ -336,12 +352,15 @@ describe("Markdown Components", () => {
 
     it("should render tbody with correct classes", () => {
       const TBody = components.tbody!;
+      const Table = components.table!;
       const { container } = render(
-        <TBody node={null as any}>
-          <tr>
-            <td>Cell</td>
-          </tr>
-        </TBody>
+        <Table node={null as any}>
+          <TBody node={null as any}>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </TBody>
+        </Table>
       );
       const tbody = container.querySelector("tbody");
       expect(tbody).toBeTruthy();
@@ -352,10 +371,16 @@ describe("Markdown Components", () => {
 
     it("should render tr with correct classes", () => {
       const TR = components.tr!;
+      const Table = components.table!;
+      const TBody = components.tbody!;
       const { container } = render(
-        <TR node={null as any}>
-          <td>Cell</td>
-        </TR>
+        <Table node={null as any}>
+          <TBody node={null as any}>
+            <TR node={null as any}>
+              <td>Cell</td>
+            </TR>
+          </TBody>
+        </Table>
       );
       const tr = container.querySelector("tr");
       expect(tr).toBeTruthy();
@@ -365,7 +390,18 @@ describe("Markdown Components", () => {
 
     it("should render th with correct classes", () => {
       const TH = components.th!;
-      const { container } = render(<TH node={null as any}>Header</TH>);
+      const Table = components.table!;
+      const THead = components.thead!;
+      const TR = components.tr!;
+      const { container } = render(
+        <Table node={null as any}>
+          <THead node={null as any}>
+            <TR node={null as any}>
+              <TH node={null as any}>Header</TH>
+            </TR>
+          </THead>
+        </Table>
+      );
       const th = container.querySelector("th");
       expect(th).toBeTruthy();
       expect(th?.className).toContain("whitespace-nowrap");
@@ -378,7 +414,18 @@ describe("Markdown Components", () => {
 
     it("should render td with correct classes", () => {
       const TD = components.td!;
-      const { container } = render(<TD node={null as any}>Cell</TD>);
+      const Table = components.table!;
+      const TBody = components.tbody!;
+      const TR = components.tr!;
+      const { container } = render(
+        <Table node={null as any}>
+          <TBody node={null as any}>
+            <TR node={null as any}>
+              <TD node={null as any}>Cell</TD>
+            </TR>
+          </TBody>
+        </Table>
+      );
       const td = container.querySelector("td");
       expect(td).toBeTruthy();
       expect(td?.className).toContain("px-4");

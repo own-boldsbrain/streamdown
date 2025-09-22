@@ -21,8 +21,15 @@ describe("Mermaid", () => {
     mockRender.mockClear();
   });
 
-  it("renders without crashing", () => {
+  it("renders without crashing", async () => {
+    const { act } = await import("@testing-library/react");
+    
     const { container } = render(<Mermaid chart="graph TD; A-->B" />);
+    
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    
     expect(container.firstChild).toBeDefined();
   });
 
@@ -36,6 +43,7 @@ describe("Mermaid", () => {
   });
 
   it("initializes with custom config", async () => {
+    const { act } = await import("@testing-library/react");
     const customConfig: MermaidConfig = {
       theme: "dark",
       themeVariables: {
@@ -45,11 +53,15 @@ describe("Mermaid", () => {
       fontFamily: "Arial, sans-serif",
     } as MermaidConfig;
 
-    render(<Mermaid chart="graph TD; A-->B" config={customConfig} />);
+    act(() => {
+      render(<Mermaid chart="graph TD; A-->B" config={customConfig} />);
+    });
 
     // Wait for initialization
-    await vi.waitFor(() => {
-      expect(mockInitialize).toHaveBeenCalled();
+    await act(async () => {
+      await vi.waitFor(() => {
+        expect(mockInitialize).toHaveBeenCalled();
+      });
     });
 
     // Check that initialize was called with the custom config
@@ -60,11 +72,17 @@ describe("Mermaid", () => {
   });
 
   it("initializes with default config when none provided", async () => {
-    render(<Mermaid chart="graph TD; A-->B" />);
+    const { act } = await import("@testing-library/react");
+    
+    act(() => {
+      render(<Mermaid chart="graph TD; A-->B" />);
+    });
 
     // Wait for initialization
-    await vi.waitFor(() => {
-      expect(mockInitialize).toHaveBeenCalled();
+    await act(async () => {
+      await vi.waitFor(() => {
+        expect(mockInitialize).toHaveBeenCalled();
+      });
     });
 
     // Check that initialize was called with default config
@@ -74,14 +92,20 @@ describe("Mermaid", () => {
     expect(initializeCall.fontFamily).toBe("monospace");
   });
 
-  it("accepts different config values", () => {
+  it("accepts different config values", async () => {
+    const { act } = await import("@testing-library/react");
     const config1: MermaidConfig = {
       theme: "forest",
     } as MermaidConfig;
 
-    const { rerender } = render(
-      <Mermaid chart="graph TD; A-->B" config={config1} />
-    );
+    let rerenderFn: (ui: React.ReactElement) => void;
+    
+    act(() => {
+      const { rerender } = render(
+        <Mermaid chart="graph TD; A-->B" config={config1} />
+      );
+      rerenderFn = rerender;
+    });
 
     // Should render without error
     expect(mockRender).toBeDefined();
@@ -92,13 +116,16 @@ describe("Mermaid", () => {
     } as MermaidConfig;
 
     // Should be able to rerender with different config
-    rerender(<Mermaid chart="graph TD; A-->B" config={config2} />);
+    act(() => {
+      rerenderFn(<Mermaid chart="graph TD; A-->B" config={config2} />);
+    });
 
     // Should still render without error
     expect(mockRender).toBeDefined();
   });
 
-  it("handles complex config objects with functions", () => {
+  it("handles complex config objects with functions", async () => {
+    const { act } = await import("@testing-library/react");
     const config: MermaidConfig = {
       theme: "dark",
       themeVariables: {
@@ -107,31 +134,42 @@ describe("Mermaid", () => {
       },
       fontFamily: "Arial",
     } as MermaidConfig;
-
+    
     const { container } = render(
       <Mermaid chart="graph TD; A-->B" config={config} />
     );
 
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+
     // Should render without error even with complex config
-    expect(container.firstChild).toBeTruthy();
+    expect(container.querySelector('div[aria-label="Mermaid chart"]')).toBeTruthy();
   });
 
   it("supports multiple components with different configs", async () => {
     const config1: MermaidConfig = { theme: "forest" } as MermaidConfig;
     const config2: MermaidConfig = { theme: "dark" } as MermaidConfig;
+    const { act } = await import("@testing-library/react");
 
     // Render first component
     const { rerender } = render(
       <Mermaid chart="graph TD; A-->B" config={config1} />
     );
 
-    await vi.waitFor(() => expect(mockInitialize).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await vi.waitFor(() => expect(mockInitialize).toHaveBeenCalledTimes(1));
+    });
     expect(mockInitialize.mock.calls[0][0].theme).toBe("forest");
 
     // Render second component with different config
-    rerender(<Mermaid chart="graph TD; X-->Y" config={config2} />);
+    act(() => {
+      rerender(<Mermaid chart="graph TD; X-->Y" config={config2} />);
+    });
 
-    await vi.waitFor(() => expect(mockInitialize).toHaveBeenCalledTimes(2));
+    await act(async () => {
+      await vi.waitFor(() => expect(mockInitialize).toHaveBeenCalledTimes(2));
+    });
     expect(mockInitialize.mock.calls[1][0].theme).toBe("dark");
   });
 });
