@@ -20,8 +20,11 @@ const NUM_OF_BARS = 40;
 const MIN_BAR_HEIGHT = 5;
 const MAX_BAR_HEIGHT = 80;
 const BAR_WIDTH = 4;
-const BAR_GAP = 2;
-const ANIMATION_SPEED = 300; // ms
+const DEFAULT_VOLUME = 0.7;
+const DEFAULT_MAX_DURATION = 100;
+const SKIP_SECONDS = 10;
+const ANIMATION_BAR_THRESHOLD = 5;
+const ANIMATION_SCALE_FACTOR = 0.2;
 
 type AudioWaveformProps = {
   url: string;
@@ -51,7 +54,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(0.7);
+  const [volume, setVolume] = useState(DEFAULT_VOLUME);
   const [isMuted, setIsMuted] = useState(false);
   const [waveformData, setWaveformData] = useState<number[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -64,7 +67,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     // Neste exemplo, estamos gerando dados aleatórios para a forma de onda
     // Em um cenário real, você extrairia esses dados do arquivo de áudio
     const generateRandomWaveform = () => {
-      const data = [];
+      const data: number[] = [];
       for (let i = 0; i < NUM_OF_BARS; i++) {
         // Cria um padrão mais natural para a forma de onda
         const height =
@@ -75,12 +78,14 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     };
 
     setWaveformData(generateRandomWaveform());
-  }, [url]);
+  }, []);
 
   // Configura o áudio quando o componente monta
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) {
+      return;
+    }
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
@@ -94,7 +99,9 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     const handleEnded = () => {
       setIsPlaying(false);
       setCurrentTime(0);
-      if (onEnded) onEnded();
+      if (onEnded) {
+        onEnded();
+      }
     };
 
     // Adiciona event listeners
@@ -112,23 +119,29 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [onEnded, volume, url]);
+  }, [onEnded, volume]);
 
   // Controle de reprodução
   const togglePlayPause = () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) {
+      return;
+    }
 
     if (isPlaying) {
       audio.pause();
       cancelAnimationFrame(animationRef.current || 0);
       setIsPlaying(false);
-      if (onPause) onPause();
+      if (onPause) {
+        onPause();
+      }
     } else {
       audio.play();
       animationRef.current = requestAnimationFrame(updateTime);
       setIsPlaying(true);
-      if (onPlay) onPlay();
+      if (onPlay) {
+        onPlay();
+      }
     }
   };
 
@@ -177,7 +190,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     if (audioRef.current) {
       audioRef.current.currentTime = Math.max(
         0,
-        audioRef.current.currentTime - 10
+        audioRef.current.currentTime - SKIP_SECONDS
       );
     }
   };
@@ -186,14 +199,16 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
     if (audioRef.current) {
       audioRef.current.currentTime = Math.min(
         audioRef.current.duration,
-        audioRef.current.currentTime + 10
+        audioRef.current.currentTime + SKIP_SECONDS
       );
     }
   };
 
   // Formata o tempo em MM:SS
   const formatTime = (time: number) => {
-    if (isNaN(time)) return "00:00";
+    if (Number.isNaN(time)) {
+      return "00:00";
+    }
 
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -204,6 +219,20 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
   const activeBarIndex = Math.floor(
     (currentTime / duration) * waveformData.length
   );
+
+  // Estilos CSS para a visualização de ondas
+  const getWaveformBarStyle = (height: number, index: number, isCompact: boolean) => {
+    return {
+      height: `${height}%`,
+      width: `${BAR_WIDTH}px`,
+      minHeight: `${MIN_BAR_HEIGHT}px`,
+      maxHeight: isCompact ? `${MAX_BAR_HEIGHT / 2}px` : `${MAX_BAR_HEIGHT}px`,
+      transform:
+        isPlaying && Math.abs(index - activeBarIndex) < ANIMATION_BAR_THRESHOLD
+          ? `scaleY(${1 + Math.random() * ANIMATION_SCALE_FACTOR})`
+          : "scaleY(1)",
+    };
+  };
 
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -231,18 +260,8 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
                 "rounded-t-sm transition-all duration-300 ease-in-out",
                 index <= activeBarIndex ? activeColor : waveColor
               )}
-              key={index}
-              style={{
-                height: `${height}%`,
-                width: BAR_WIDTH,
-                minHeight: MIN_BAR_HEIGHT,
-                maxHeight: compact ? MAX_BAR_HEIGHT / 2 : MAX_BAR_HEIGHT,
-                // Efeito de animação para barras próximas à barra ativa
-                transform:
-                  isPlaying && Math.abs(index - activeBarIndex) < 5
-                    ? `scaleY(${1 + Math.random() * 0.2})`
-                    : "scaleY(1)",
-              }}
+              key={`waveform-bar-${index}`}
+              style={getWaveformBarStyle(height, index, compact)}
             />
           ))}
         </div>
@@ -257,7 +276,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
             <Slider
               className="flex-1"
               disabled={!isLoaded}
-              max={duration || 100}
+              max={duration || DEFAULT_MAX_DURATION}
               min={0}
               onValueChange={handleSeek}
               step={0.1}
@@ -334,7 +353,9 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
         </div>
 
         {/* Audio Element (hidden) */}
-        <audio preload="metadata" ref={audioRef} src={url} />
+        <audio preload="metadata" ref={audioRef} src={url}>
+          <track kind="captions" label="Português" src="" />
+        </audio>
       </CardContent>
     </Card>
   );
