@@ -61,7 +61,7 @@ export default function GenerateTextDemo() {
             {generatedText}
           </pre>
 
-          <h2 className="font-semibold text-xl">Rendered with Streamdown:</h2>
+                    <h2 className="font-semibold text-xl">Rendered with Streamdown:</h2>
           <div className="rounded border p-4">
             <Streamdown>{generatedText}</Streamdown>
           </div>
