@@ -1,5 +1,9 @@
 import { DownloadIcon } from "lucide-react";
-import type { DetailedHTMLProps, ImgHTMLAttributes, KeyboardEvent } from "react";
+import type {
+  DetailedHTMLProps,
+  ImgHTMLAttributes,
+  KeyboardEvent,
+} from "react";
 import type { ExtraProps } from "react-markdown";
 import { cn, save } from "./utils";
 
@@ -69,7 +73,9 @@ export const ImageComponent = ({
 
   // Verifica se estamos em um ambiente inline (dentro de um parágrafo)
   // Detectamos isso verificando a posição do nó no markdown
-  const isInParagraph = node?.position?.start.line === node?.position?.end.line && node?.position !== undefined;
+  const isInParagraph =
+    node?.position?.start.line === node?.position?.end.line &&
+    node?.position !== undefined;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -81,7 +87,7 @@ export const ImageComponent = ({
   if (isInParagraph) {
     return (
       <span
-        className="group relative inline-block my-1"
+        className="group relative my-1 inline-block"
         data-streamdown="image-inline-wrapper"
       >
         {/** biome-ignore lint/nursery/useImageSize: "unknown size" */}
