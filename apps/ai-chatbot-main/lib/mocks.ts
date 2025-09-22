@@ -4,6 +4,7 @@
  * Eles são usados para desenvolvimento, testes e demonstração dos componentes de UI.
  */
 
+import { subDays } from "date-fns";
 import type {
   AnomalyData,
   ArtifactAnomalyReportProps,
@@ -20,7 +21,6 @@ import type {
   ArtifactToolInspectorProps,
   ToolCall,
 } from "@/components/artifact-tool-inspector";
-import { subDays } from "date-fns";
 
 // --- Constantes para Magic Numbers ---
 const DAYS_AGO_90 = 90;
@@ -104,7 +104,7 @@ const mockAnomalies: AnomalyData[] = [
     description: 'Queda na usina "Sol do Sertão".',
     detectedAt: subDays(new Date(), DAYS_AGO_1),
     confidence: 0.95,
-    impact: { cost: 50000, efficiency: -40, risk: 90 },
+    impact: { cost: 50_000, efficiency: -40, risk: 90 },
     recommendations: [
       "Verificar conexão do inversor principal.",
       "Inspecionar painéis solares na área afetada.",

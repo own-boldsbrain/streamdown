@@ -1,10 +1,21 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import equal from "fast-deep-equal";
 import { motion } from "framer-motion";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useMessages } from "@/hooks/use-messages";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
+import {
+  mockAnomalyReportProps,
+  mockComplianceBadgeProps,
+  mockRiskGaugeProps,
+  mockToolInspectorProps,
+} from "@/lib/mocks";
+import { ArtifactActionModal, type ActionType } from "./artifact-actions-modal";
+import { ArtifactAnomalyReport } from "./artifact-anomaly-report";
+import { ArtifactComplianceBadge } from "./artifact-compliance-badge";
+import { ArtifactRiskGauge } from "./artifact-risk-gauge";
+import { ArtifactToolInspector } from "./artifact-tool-inspector";
 import type { UIArtifact } from "./artifact";
 import { PreviewMessage, ThinkingMessage } from "./message";
 
@@ -38,6 +49,34 @@ function PureArtifactMessages({
     status,
   });
 
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    actionType: ActionType;
+    artifactType: "risk" | "anomaly" | "compliance" | "tool";
+    data?: Record<string, unknown>;
+  }>({
+    isOpen: false,
+    actionType: "view",
+    artifactType: "risk",
+  });
+
+  const handleArtifactAction = (
+    actionType: ActionType,
+    artifactType: "risk" | "anomaly" | "compliance" | "tool",
+    data?: Record<string, unknown>
+  ) => {
+    setModalState({
+      isOpen: true,
+      actionType,
+      artifactType,
+      data,
+    });
+  };
+
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
+
   return (
     <div
       className="flex h-full flex-col items-center gap-4 overflow-y-scroll px-4 pt-20"
@@ -66,6 +105,42 @@ function PureArtifactMessages({
       {status === "submitted" &&
         messages.length > 0 &&
         messages.at(-1)?.role === "user" && <ThinkingMessage />}
+
+      {/* Renderiza os artefatos aqui para demonstração */}
+      <div className="w-full max-w-4xl space-y-8">
+        <ArtifactRiskGauge
+          {...mockRiskGaugeProps}
+          onExport={(data) => handleArtifactAction("export", "risk", data)}
+          onShare={(data) => handleArtifactAction("share", "risk", data)}
+          onView={(data) => handleArtifactAction("view", "risk", data)}
+        />
+        <ArtifactAnomalyReport
+          {...mockAnomalyReportProps}
+          onExport={(data) => handleArtifactAction("export", "anomaly", data)}
+          onShare={(data) => handleArtifactAction("share", "anomaly", data)}
+          onView={(data) => handleArtifactAction("view", "anomaly", data)}
+        />
+        <ArtifactComplianceBadge
+          {...mockComplianceBadgeProps}
+          onExport={(data) => handleArtifactAction("export", "compliance", data)}
+          onShare={(data) => handleArtifactAction("share", "compliance", data)}
+          onView={(data) => handleArtifactAction("view", "compliance", data)}
+        />
+        <ArtifactToolInspector
+          {...mockToolInspectorProps}
+          onExport={(data) => handleArtifactAction("export", "tool", data)}
+          onShare={(data) => handleArtifactAction("share", "tool", data)}
+          onView={(data) => handleArtifactAction("view", "tool", data)}
+        />
+      </div>
+
+      <ArtifactActionModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        actionType={modalState.actionType}
+        artifactType={modalState.artifactType}
+        data={modalState.data}
+      />
 
       <motion.div
         className="min-h-[24px] min-w-[24px] shrink-0"

@@ -10,6 +10,7 @@ import {
   Clock,
   Crown,
   Download,
+  Eye,
   Gauge,
   RefreshCw,
   Share2,
@@ -66,8 +67,10 @@ export type ArtifactRiskGaugeProps = {
   className?: string;
   showExport?: boolean;
   showShare?: boolean;
+  showView?: boolean;
   onExport?: () => void;
   onShare?: () => void;
+  onView?: () => void;
   onRefresh?: () => void;
   isPremiumUser?: boolean;
 };
@@ -460,6 +463,12 @@ export const ArtifactRiskGauge = memo<ArtifactRiskGaugeProps>(
               <Button onClick={onShare} size="sm" variant="outline">
                 <Share2 className="mr-2 h-4 w-4" />
                 Compartilhar
+              </Button>
+            )}
+            {showView && (
+              <Button onClick={onView} size="sm" variant="outline">
+                <Eye className="mr-2 h-4 w-4" />
+                Visualizar
               </Button>
             )}
           </div>

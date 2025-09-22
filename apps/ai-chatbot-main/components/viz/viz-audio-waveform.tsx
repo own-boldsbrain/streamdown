@@ -243,10 +243,13 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
           {waveformData.map((height, index) => {
             // Calculando o estilo da barra
             const isActive = index <= activeBarIndex;
-            const shouldAnimate = isPlaying && Math.abs(index - activeBarIndex) < ANIMATION_BAR_THRESHOLD;
-            
+            const shouldAnimate =
+              isPlaying &&
+              Math.abs(index - activeBarIndex) < ANIMATION_BAR_THRESHOLD;
+
             return (
               <div
+                aria-hidden="true"
                 className={cn(
                   "rounded-t-sm transition-all duration-300 ease-in-out",
                   isActive ? activeColor : waveColor,
@@ -254,8 +257,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
                   compact ? "max-h-40" : "max-h-80"
                 )}
                 key={`waveform-${height.toString().substring(0, 4)}-${index % waveformData.length}`}
-                aria-hidden="true"
-                style={{ 
+                style={{
                   height: `${height}%`,
                   width: `${BAR_WIDTH}px`,
                 }}
