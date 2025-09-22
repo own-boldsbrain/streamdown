@@ -1,7 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { YelloBorder, YelloButton, YelloCard } from "@/components/yello-ui";
 
 export default function YelloComponentsDemo() {
@@ -54,13 +61,17 @@ export default function YelloComponentsDemo() {
           <Card variant="default">
             <CardHeader>
               <CardTitle>Card Padrão</CardTitle>
-              <CardDescription>Card com estilo padrão do sistema</CardDescription>
+              <CardDescription>
+                Card com estilo padrão do sistema
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <p>Este é um exemplo do componente Card com estilo padrão.</p>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="mr-2">Cancelar</Button>
+              <Button className="mr-2" variant="outline">
+                Cancelar
+              </Button>
               <Button>Confirmar</Button>
             </CardFooter>
           </Card>
@@ -68,13 +79,20 @@ export default function YelloComponentsDemo() {
           <Card variant="glass">
             <CardHeader>
               <CardTitle>Card com Glass Effect</CardTitle>
-              <CardDescription>Usando a variante glass do Yello Solar Hub</CardDescription>
+              <CardDescription>
+                Usando a variante glass do Yello Solar Hub
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Este é um exemplo do componente Card com efeito glass e bordas em degradê.</p>
+              <p>
+                Este é um exemplo do componente Card com efeito glass e bordas
+                em degradê.
+              </p>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="mr-2">Cancelar</Button>
+              <Button className="mr-2" variant="outline">
+                Cancelar
+              </Button>
               <YelloButton>Confirmar</YelloButton>
             </CardFooter>
           </Card>
