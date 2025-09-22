@@ -3,7 +3,8 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { DUMMY_PASSWORD } from "@/lib/constants";
-import { createGuestUser, getUser } from "@/lib/db/queries";
+// Import dinâmico de createGuestUser será feito dentro do authorize do provider guest.
+import { getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -69,16 +70,25 @@ export const {
       id: "guest",
       credentials: {},
       async authorize() {
+        // NO-DB early return: não carrega nem executa código que acessa DB
+        if (process.env.ALLOW_GUEST_NO_DB === "1") {
+          console.info("Operating in NO-DB mode with ALLOW_GUEST_NO_DB=1");
+          const ts = Date.now();
+          return { id: `guest-${ts}`, email: `guest.${ts}@local`, type: "guest", ephemeral: true };
+        }
+
+        // Caminho com DB: import dinâmico para evitar carga em NO-DB
         try {
-          const guestUser = await createGuestUser(); // Não desestruturas como array
+          const { createGuestUser } = await import("@/lib/db/queries");
+          const guestUser = await createGuestUser();
           return { ...guestUser, type: "guest" };
         } catch (e) {
-          if (process.env.ALLOW_GUEST_NO_DB === "1") {
+          if (process.env.ENABLE_GUEST_USER_FALLBACK === "true") {
             console.error("DB Error with fallback enabled:", e);
             const ts = Date.now();
             return { id: `guest-${ts}`, email: `guest.${ts}@local`, type: "guest", ephemeral: true };
           }
-          throw e;
+            throw e;
         }
       },
     }),

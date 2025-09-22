@@ -76,7 +76,8 @@ export async function createGuestUser() {
       return { id: `guest-${ts}`, email: `guest.${ts}@local` };
     }
     if (!db) {
-      throw new Error("Database unavailable");
+      // Modo estrito: sem fallback e sem instância de DB
+      throw new Error("NO_DB_MODE");
     }
 
     const email = `guest+${Date.now()}@local`;

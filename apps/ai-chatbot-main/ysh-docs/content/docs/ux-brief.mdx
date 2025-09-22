@@ -1,0 +1,228 @@
+---
+title: UX Brief - AP2
+description: UX * **WhatsApp (homologação):** "Papelada na rede. ⏳ Prazo médio {{prazo_dias}}. Se a concessionária travar, eu empurro."trategy + UX Wr* **E-mail (boletim):** "{{geracao_kWh}} kWh no mês, conta caiu ~{{economia_pct}}%. ROI no trilho."ting no t  * Sub: "Picos em {{faixa_horaria}}. Dá pra domar com ajuste fininho."m Marrento * **ProtocolTimeline:** "Protocolo {{protocolo_id}} — status {{status}}. Deixa comigo."erto da Yello Solar Hub
+---* **Body:** "Conta média {{conta_mes}}. Com {{kit_nome}} tua fatura cai ~{{economia_pct}}% e payback ~{{payback_anos}} anos. Quer o PDF detalhado?"
+# UX* **Body:** "Protocolo {{protocolo_id}} enviado. Prazo médio {{prazo_dias}}. Qualquer pepino, eu corto."BRIEF* **Subject:** "Teu sol rendeu {{geracao_kWh}} kWh — conta caiu ~{{economia_pct}}%"(AP2 — Auto Portal Fotovoltaico)
+
+- **Problema:** lead entra curioso e some antes do "fechou/instala". Gargalos: confiança técnica/financeira e trâmites (homologação, ART, logística).
+- **Objetivo de negócio:** aumentar **taxa de proposta aceita** e **comissionamento concluído**; reduzir **TMA de homologação**.
+- **Persona base:** decisor(a) pragmático(a), quer **número claro, obra limpa, SLA sério**.
+- **Tom YSH:** direto, com ironia leve. "Falo a real, entrego o ROI e carrego nas costas a parte chata".
+
+---
+
+## RÉGUA / CADÊNCIA OMNICANAL (por fase)
+
+### PRE (Planejamento)
+
+**Gatilhos & Canais**
+
+- Lead criado (form/app/chat) → **E-mail + WhatsApp** (bem-vindo + próximo passo)
+- Consumo enviado → **App UI** (AnomalyReport + RiskGauge) e **WhatsApp** (resumo com CTA simular)
+- Pré-sizing pronto → **App UI** (PreSizingCard + GenerationChart), **E-mail** (proposta preliminar)
+
+**Mensagens-chave**
+
+- **Banner app (descoberta):** "Quer conta baixa? Eu desço o kWh e subo teu humor. 💥"
+- **WhatsApp (lead novo):**
+  Header: "Chegou no hub certo. ⚡"
+  Body: "Me manda {{conta_mes}} e CEP. Eu giro o modelo e te devolvo ROI sem novela."
+  CTA: "Simular agora"
+- **Toast (consumo anômalo):** "Padrão fora da curva. Calma — eu explico e ajusto."
+
+### ONGOING (Execução)
+
+**Gatilhos & Canais**
+
+- Projeto técnico gerado → **App UI** (SingleLineDiagram + TechSpecs), **E-mail** (ART packet)
+- Homologação protocolada → **WhatsApp** (status+prazo), **App** (ProtocolTimeline)
+- Logística agendada → **SMS curto** (janela e contato), **App** (Calendar + CrewCard)
+- Comissão/ativa → **E-mail** (certificado), **App** (CommissioningCert)
+
+**Mensagens-chave**
+
+- **WhatsApp (homologação):** "Papelada na rede. ⏳ Prazo médio {{prazo\_dias}}. Se a concessionária travar, eu empurro."
+- **SMS (instalação):** "Instala {{data}} {{janela}} — equipe {{equipe}}. Dúvidas: {{fone}}. SAIR p/ descad."
+- **Toast (engenharia):** "Projeto fechado. Sem gambiarra, só número."
+
+### POST (Operação)
+
+**Gatilhos & Canais**
+
+- Telemetria ok → **App** (PerformanceKPIs), **E-mail** (boletim mensal)
+- Anomalia detectada → **App** (AnomalyList), **WhatsApp** (ação rápida)
+- Upsell viável (BESS/EV) → **App** (UpsellBoard), **WhatsApp** (pitch com ROI)
+- Créditos de carbono prontos → **E-mail** (MRVReport), **App** (CreditsLedger)
+
+**Mensagens-chave**
+
+- **WhatsApp (anomalia):** "Gerou menos hoje. Nada de pânico — provável sombra/poeira. Quer que eu acione limpeza?"
+- **E-mail (boletim):** "{{geracao\_kWh}} kWh no mês, conta caiu \~{{economia\_pct}}%. ROI no trilho."
+
+---
+
+## BIBLIOTECA DE MICROCOPY (por artifact)
+
+### PRE
+
+- **AnomalyReport (card título):** "Consumo torto, eu desentorto."
+
+  - Sub: "Picos em {{faixa\_horaria}}. Dá pra domar com ajuste fininho."
+  - CTA: "Ver recomendação"
+
+- **RiskGauge (legendas):**
+  Baixo: "Suave. Pode tocar." | Médio: "Atenção esperta." | Alto: "Para tudo. Vamos revisar."
+- **PreSizingCard:** "Tamanho do kit: {{kWp}} kWp. Payback: \~{{anos}} anos. Sem firula."
+- **GenerationChart (tooltip):** "{{mes}}: {{kWh}} kWh — segue o baile."
+
+### ONGOING
+
+- **SingleLineDiagram (header):** "Esquema elétrico sem mistério."
+- **ARTPacket (sub):** "Assinado e na régua. Eng. resp.: {{crea}}."
+- **ProtocolTimeline:** "Protocolo {{protocolo\_id}} — status {{status}}. Deixa comigo."
+- **CrewCard:** "Time {{equipe}} no local. Segurança em primeiro, gambiarra em último."
+
+### POST
+
+- **PerformanceKPIs (blocos):**
+  PR: "Sistema no capricho" | Disponibilidade: "Ligado e rendendo" | CO₂: "{{tCO2}} t evitadas"
+- **UpsellBoard:** "BESS/EV? ROI fecha em {{anos}} anos. Quer que eu modele?"
+- **CreditsLedger:** "Crédito verde na mão. Transparente e vendável."
+
+---
+
+## GUIA DE VOZ & ESTILO (YSH)
+
+- **Princípios:** curto, claro, confiante, útil. Ironia leve, nunca arrogância.
+- **Frases modelo:**
+  "Eu mexo no que dói, reduzo no que pesa."
+  "ROI na mesa. Se não fizer sentido, eu falo."
+  "Homologação? Chata. Por isso eu cuido."
+- **Do/Don't**
+  Do: "Prazo {{dias}}. Se atrasar, aviso."
+  Don't: "Devido a fatores externos, o prazo pode variar…"
+
+---
+
+## MENSAGERIA (templates prontos)
+
+### WhatsApp (PRE → simulação)
+
+- **Header:** "Simulação pronta. ☀️"
+- **Body:** "Conta média {{conta\_mes}}. Com {{kit\_nome}} tua fatura cai \~{{economia\_pct}}% e payback \~{{payback\_anos}} anos. Quer o PDF detalhado?"
+- **CTA URL:** "Abrir proposta" → `{{link}}`
+- **Footer (opt-out):** "Responda SAIR para parar."
+
+### WhatsApp (ONGOING → homologação)
+
+- **Header:** "Concessionária em jogo. ⚙️"
+- **Body:** "Protocolo {{protocolo\_id}} enviado. Prazo médio {{prazo\_dias}}. Qualquer pepino, eu corto."
+- **CTA:** "Acompanhar status" → `{{link_status}}`
+- **Footer:** "SAIR p/ descad."
+
+### E-mail (POST → boletim mensal)
+
+- **Subject:** "Teu sol rendeu {{geracao\_kWh}} kWh — conta caiu \~{{economia\_pct}}%"
+- **Preheader:** "PR {{pr}} | CO₂ evitado {{tCO2}} t | Tudo no trilho."
+
+### SMS (instalação)
+
+- "Instala {{data}} {{janela}} — equipe {{equipe}}. Dúvidas: {{fone}}. SAIR p/ descad."
+
+### Telegram (ação rápida)
+
+- **Texto:** "Anomalia leve detectada. Quer que eu agende limpeza/inspeção?"
+- **Keyboard:** \["Agendar limpeza", "Abrir gráfico", "Falar com humano"]
+
+---
+
+## ESTRATÉGIA DE CONVERSA (AI-first)
+
+- **Arquitetura de turnos:**
+
+  1. **Reconhece fase** (PRE/ONGOING/POST)
+  2. **Mostra artifact certo** (ui_hints)
+  3. **Propõe 1–2 ações** (CTA curto)
+  4. **Confirma/age** (stream + estado)
+
+- **Fails bons:** explica, conserta, registra ticket.
+  Ex.: "Deu ruim no upload da conta. Me manda foto nítida ou digita o valor que eu fecho."
+
+---
+
+## A11Y & LGPD (checks práticos)
+
+- **A11y:** ícones com `aria-label`, toasts com `aria-live=polite`, foco visível; contraste ≥ 4.5:1.
+- **LGPD:** finalidade explícita ("uso pra dimensionar o sistema"), opt-out claro (WA/SMS), link de privacidade em e-mail e propostas.
+
+---
+
+## INSTRUMENTAÇÃO (eventos)
+
+- `lead_created {lead_id, channel}`
+- `consumption_uploaded {lead_id, kWh_medio}`
+- `anomaly_detected {lead_id, score}`
+- `pre_sizing_ready {lead_id, kWp, payback_anos}`
+- `proposal_sent {lead_id, proposta_id}`
+- `contract_signed {lead_id, contrato_id}`
+- `homologation_submitted {lead_id, protocolo_id}`
+- `install_scheduled {lead_id, data, janela}`
+- `commissioned {lead_id, inverters, pr}`
+- `anomaly_post {site_id, tipo, severidade}`
+- `upsell_offer {site_id, tipo, roi_anos}`
+- `carbon_mrv_ready {site_id, tCO2}`
+
+---
+
+## EXPERIMENTOS (A/B rápidos)
+
+1. **WhatsApp PRE:** incluir payback no body vs. só % economia.
+2. **E-mail mensal:** subject com número primeiro vs. benefício primeiro.
+3. **UI PRE:** RiskGauge no topo vs. AnomalyReport no topo.
+4. **POST:** CTA "Agendar limpeza" (default) vs. "Abrir checklist".
+
+---
+
+## QA CHECKLIST (conteúdo)
+
+- ✅ Claro & curto
+- ✅ CTA único por mensagem
+- ✅ Estado vazio/erro coberto
+- ✅ Tom "Marrento Certo" consistente
+- ✅ Opt-out onde precisa
+- ✅ Placeholders testados (sem `{{chave}}` sobrando)
+- ✅ A11y + LGPD ok
+
+---
+
+## Snippets prontos (cola no teu repo)
+
+### WhatsApp (PRE – simulação)
+
+```json
+{
+  "header": "Simulação pronta. ☀️",
+  "body": "Conta {{conta_mes}}. {{kit_nome}} derruba ~{{economia_pct}}% e paga em ~{{payback_anos}} anos. Quer o PDF?",
+  "footer": "Responda SAIR para parar.",
+  "cta": { "text": "Abrir proposta", "url": "{{link}}" }
+}
+```
+
+### App UI — AnomalyReport
+
+```json
+{
+  "titulo": "Consumo torto, eu desentorto.",
+  "sub": "Picos em {{faixa_horaria}}; ganho fácil ajustando.",
+  "cta": "Ver recomendação"
+}
+```
+
+### E-mail (POST – boletim)
+
+```json
+{
+  "subject": "Rendeu {{geracao_kWh}} kWh — conta caiu ~{{economia_pct}}%",
+  "preheader": "PR {{pr}} | CO₂ {{tCO2}} t | Tudo no trilho."
+}
+```
