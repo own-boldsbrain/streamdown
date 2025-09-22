@@ -38,9 +38,16 @@ import { generateHashedPassword } from "./utils";
 // use the Drizzle adapter for Auth.js / NextAuth
 // https://authjs.dev/reference/adapter/drizzle
 
+// Check if we're using Turso as the DB provider
+const isTursoEnabled = process.env.DB_PROVIDER === "turso";
+
+// Initialize the Postgres client if not using Turso
 // biome-ignore lint: Forbidden non-null assertion.
-const client = postgres(process.env.POSTGRES_URL!);
-const db = drizzle(client);
+const client = !isTursoEnabled ? postgres(process.env.POSTGRES_URL!) : null;
+const db = !isTursoEnabled ? drizzle(client!) : null;
+
+// Enable guest user fallback for non-critical flows
+const ENABLE_GUEST_USER_FALLBACK = process.env.ENABLE_GUEST_USER_FALLBACK === "true";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
