@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "../ui/slider";
 import { cn } from "@/lib/utils";
 
 // Constantes para configurações do TTS Player

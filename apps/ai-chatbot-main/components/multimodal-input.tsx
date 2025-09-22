@@ -29,6 +29,7 @@ import { AnalyticsMessageMetrics } from "./analytics-message-metrics";
 import { ChatAttachmentButton } from "./chat-attachment-button";
 import { ChatDragDropZone } from "./chat-drag-drop-zone";
 import { ChatStreamingProgress } from "./chat-streaming-progress";
+import { ChatStopButton } from "./chat-stop-button";
 import { Context } from "./elements/context";
 import {
   PromptInput,
@@ -39,18 +40,14 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "./elements/prompt-input";
-import {
-  ArrowUpIcon,
-  ChevronDownIcon,
-  CpuIcon,
-  PaperclipIcon,
-  StopIcon,
-} from "./icons";
+import { ArrowUpIcon, ChevronDownIcon, CpuIcon } from "./icons";
 import { MonetizationMessageLimitBanner } from "./monetization-message-limit-banner";
 import { PreviewAttachment } from "./preview-attachment";
-import { SuggestedActions } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
+
+const DESKTOP_WIDTH_PX = 768;
+const DEFAULT_LIMIT = 100;
 
 function PureMultimodalInput({
   chatId,
@@ -158,7 +155,7 @@ function PureMultimodalInput({
     resetHeight();
     setInput("");
 
-    if (width && width > 768) {
+    if (width && width > DESKTOP_WIDTH_PX) {
       textareaRef.current?.focus();
     }
   }, [
@@ -228,8 +225,8 @@ function PureMultimodalInput({
           ...currentAttachments,
           ...successfullyUploadedAttachments,
         ]);
-      } catch (error) {
-        console.error("Error uploading files!", error);
+      } catch (_error) {
+        toast.error("Failed to upload file, please try again!");
       } finally {
         setUploadQueue([]);
       }
@@ -239,21 +236,15 @@ function PureMultimodalInput({
 
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      <AnalyticsMessageMetrics
-        chatId={chatId}
-        messages={messages as any}
-        status={status}
-      />
+      <AnalyticsMessageMetrics chatId={chatId} messages={messages} status={status} />
 
       <MonetizationMessageLimitBanner
         className="-mt-1"
-        limit={100}
+        limit={DEFAULT_LIMIT}
         onUpgrade={() => {
-          if (typeof window !== "undefined" && window.analyticsTracker) {
-            window.analyticsTracker.trackConversion?.("upgrade_initiated", {
-              source: "message_limit_banner",
-            });
-          }
+          window?.analyticsTracker?.trackConversion?.("upgrade_initiated", {
+            source: "message_limit_banner",
+          });
         }}
         used={usage?.requests ?? 0}
       />
@@ -261,10 +252,11 @@ function PureMultimodalInput({
       {/* Drag & Drop zone above input */}
       <ChatDragDropZone
         className="hidden md:block"
-        onFilesDropped={async (files) => {
-          // simulate click on hidden input
+        onFilesDropped={(files) => {
           const dt = new DataTransfer();
-          files.forEach((f) => dt.items.add(f));
+          for (const f of files) {
+            dt.items.add(f);
+          }
           if (fileInputRef.current) {
             fileInputRef.current.files = dt.files;
             const ev = new Event("change", { bubbles: true });
@@ -348,7 +340,7 @@ function PureMultimodalInput({
           </PromptInputTools>
 
           {status === "submitted" ? (
-            <StopButton setMessages={setMessages} stop={stop} />
+            <ChatStopButton setMessages={setMessages} stop={stop} />
           ) : (
             <PromptInputSubmit
               className="size-8 rounded-full bg-primary text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
@@ -392,35 +384,6 @@ export const MultimodalInput = memo(
     return true;
   }
 );
-
-function PureAttachmentsButton({
-  fileInputRef,
-  status,
-  selectedModelId,
-}: {
-  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  status: UseChatHelpers<ChatMessage>["status"];
-  selectedModelId: string;
-}) {
-  const isReasoningModel = selectedModelId === "chat-model-reasoning";
-
-  return (
-    <Button
-      className="aspect-square h-8 rounded-lg p-1 transition-colors hover:bg-accent"
-      data-testid="attachments-button"
-      disabled={status !== "ready" || isReasoningModel}
-      onClick={(event) => {
-        event.preventDefault();
-        fileInputRef.current?.click();
-      }}
-      variant="ghost"
-    >
-      <PaperclipIcon size={14} style={{ width: 14, height: 14 }} />
-    </Button>
-  );
-}
-
-const AttachmentsButton = memo(PureAttachmentsButton);
 
 function PureModelSelectorCompact({
   selectedModelId,
@@ -480,27 +443,3 @@ function PureModelSelectorCompact({
 }
 
 const ModelSelectorCompact = memo(PureModelSelectorCompact);
-
-function PureStopButton({
-  stop,
-  setMessages,
-}: {
-  stop: () => void;
-  setMessages: UseChatHelpers<ChatMessage>["setMessages"];
-}) {
-  return (
-    <Button
-      className="size-7 rounded-full bg-foreground p-1 text-background transition-colors duration-200 hover:bg-foreground/90 disabled:bg-muted disabled:text-muted-foreground"
-      data-testid="stop-button"
-      onClick={(event) => {
-        event.preventDefault();
-        stop();
-        setMessages((messages) => messages);
-      }}
-    >
-      <StopIcon size={14} />
-    </Button>
-  );
-}
-
-const StopButton = memo(PureStopButton);
