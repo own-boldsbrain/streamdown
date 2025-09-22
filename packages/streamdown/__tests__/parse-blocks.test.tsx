@@ -205,4 +205,91 @@ def hello_world():
     expect(blocks[3]).toContain("```python");
     expect(blocks[3]).toContain('print("Hello, world!")');
   });
+
+  it("should handle LaTeX environments with multiple blocks", () => {
+    const markdown = `$$
+\\begin{align}
+a &= b + c \\\\
+&= d + e + f
+\\end{align}
+$$`;
+
+    const blocks = parseMarkdownIntoBlocks(markdown);
+    expect(blocks.length).toBe(1);
+    expect(blocks[0]).toContain("\\begin{align}");
+    expect(blocks[0]).toContain("\\end{align}");
+    expect(blocks[0].trim().startsWith("$$")).toBe(true);
+    expect(blocks[0].trim().endsWith("$$")).toBe(true);
+  });
+
+  it("should handle cases where LaTeX content is split across multiple blocks", () => {
+    // Este teste simula quando o lexer quebra o conteúdo LaTeX em vários blocos
+    const markdown = `$$
+\\begin{pmatrix}
+a & b & c \\\\
+d & e & f \\\\
+g & h & i
+\\end{pmatrix}
+$$`;
+
+    const blocks = parseMarkdownIntoBlocks(markdown);
+    expect(blocks.length).toBe(1);
+    expect(blocks[0]).toContain("\\begin{pmatrix}");
+    expect(blocks[0]).toContain("\\end{pmatrix}");
+    expect(blocks[0]).toMatch(/a\s*&\s*b\s*&\s*c/);
+    expect(blocks[0]).toMatch(/d\s*&\s*e\s*&\s*f/);
+    expect(blocks[0]).toMatch(/g\s*&\s*h\s*&\s*i/);
+  });
+
+  it("should merge math blocks that contain special LaTeX commands", () => {
+    const markdown = `$$
+\\sqrt{x} + \\frac{1}{2} = \\mathbf{y}
+$$`;
+
+    const blocks = parseMarkdownIntoBlocks(markdown);
+    expect(blocks.length).toBe(1);
+    expect(blocks[0]).toContain("\\sqrt{x}");
+    expect(blocks[0]).toContain("\\frac{1}{2}");
+    expect(blocks[0]).toContain("\\mathbf{y}");
+  });
+
+  it("should handle incomplete LaTeX environments by merging blocks", () => {
+    // Este teste simula quando temos um ambiente LaTeX incompleto
+    const markdown = `$$
+\\begin{cases}
+x = 1, & \\text{if } y > 0 \\\\
+x = 0, & \\text{otherwise}
+\\end{cases}
+$$`;
+
+    const blocks = parseMarkdownIntoBlocks(markdown);
+    expect(blocks.length).toBe(1);
+    expect(blocks[0]).toContain("\\begin{cases}");
+    expect(blocks[0]).toContain("\\end{cases}");
+    expect(blocks[0]).toContain("\\text{if }");
+    expect(blocks[0]).toContain("\\text{otherwise}");
+  });
+
+  it("should handle standalone math delimiter blocks correctly", () => {
+    // Testa o caso específico de um bloco contendo apenas $$
+    const markdown = `Texto antes
+
+$$
+
+x^2 + y^2 = z^2
+
+$$
+
+Texto depois`;
+
+    const blocks = parseMarkdownIntoBlocks(markdown);
+    
+    // Esperamos 3 blocos: texto antes, bloco de matemática, texto depois
+    expect(blocks.length).toBe(3);
+    
+    const mathBlock = blocks.find(block => block.includes("x^2 + y^2 = z^2"));
+    expect(mathBlock).toBeDefined();
+    expect(mathBlock?.trim().startsWith("$$")).toBe(true);
+    expect(mathBlock?.trim().endsWith("$$")).toBe(true);
+  });
 });
