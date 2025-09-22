@@ -86,14 +86,17 @@ export async function createGuestUser() {
       });
     } catch (err) {
       // Alguns drivers (sqlite/libsql) não suportam returning do builder da mesma forma
-      console.warn("Failed to use returning in insert, falling back to select:", err);
+      console.warn(
+        "Failed to use returning in insert, falling back to select:",
+        err
+      );
     }
 
     // Se veio array, retorne o primeiro
     if (Array.isArray(result) && result.length > 0 && result[0]?.id) {
       return result[0];
     }
-    
+
     // Se veio objeto único com id/email
     if (result && result.id && result.email) {
       return result;
@@ -112,9 +115,11 @@ export async function createGuestUser() {
     const ts = Date.now();
     return { id: `guest-${ts}`, email: `guest.${ts}@local` };
   } catch (error) {
-    return handleDbError(error, "Failed to create guest user", 
+    return handleDbError(
+      error,
+      "Failed to create guest user",
       // Fallback se handleDbError retornar
-      { id: `guest-${Date.now()}`, email: `guest.fallback@local` }
+      { id: `guest-${Date.now()}`, email: "guest.fallback@local" }
     );
   }
 }

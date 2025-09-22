@@ -1,9 +1,9 @@
 import "server-only";
 import { ChatSDKError } from "../errors";
 import { generateUUID } from "../utils";
+import { getLibSqlDb } from "./libsql";
 import { getPostgresDb } from "./postgres";
 import { getTursoDb } from "./turso";
-import { getLibSqlDb } from "./libsql";
 
 // Check which database driver we should use
 const DB_DRIVER = process.env.DB_DRIVER || "postgres";
@@ -26,7 +26,8 @@ export function getDb() {
 
     if (DB_DRIVER === "libsql") {
       return getLibSqlDb();
-    } else if (DB_DRIVER === "turso") {
+    }
+    if (DB_DRIVER === "turso") {
       return getTursoDb();
     }
     return getPostgresDb();
