@@ -1,15 +1,15 @@
 "use client";
 
-import { LifeBuoy } from "lucide-react";
 import { memo, useState } from "react";
+import { LifeBuoy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -29,13 +29,16 @@ const MonetizationPremiumSupport = memo(
     return (
       <>
         <div className={cn("flex items-center justify-center", className)}>
-          <Button onClick={() => setIsOpen(true)} variant="yello-stroke">
+          <Button
+            variant="outline"
+            onClick={() => setIsOpen(true)}
+          >
             <LifeBuoy className="mr-2 h-4 w-4" />
             Premium Support
           </Button>
         </div>
 
-        <Dialog onOpenChange={setIsOpen} open={isOpen}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Premium Support</DialogTitle>
@@ -54,7 +57,7 @@ const MonetizationPremiumSupport = memo(
                   );
                   setIsOpen(false);
                 }}
-                variant="yello-gradient"
+                variant="default"
               >
                 Contact Support
               </Button>

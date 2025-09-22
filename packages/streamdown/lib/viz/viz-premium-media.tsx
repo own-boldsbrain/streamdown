@@ -1,20 +1,20 @@
 "use client";
 
+import {
+  AlertCircle,
+  Download,
+  FileText,
+  Maximize,
+  Music,
+  Pause,
+  Play,
+  Video,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../utils";
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Download,
-  FileText,
-  Video,
-  Music,
-  AlertCircle,
-} from "lucide-react";
 
 // Constantes para números mágicos
 const PROGRESS_BAR_MAX_WIDTH_PERCENT = 100;
@@ -23,7 +23,8 @@ const PROGRESS_BAR_MAX_WIDTH_PERCENT = 100;
 type MediaType = "video" | "audio" | "pdf";
 
 // Interface para propriedades do componente
-interface VizPremiumMediaProps extends Omit<HTMLAttributes<HTMLDivElement>, "onError"> {
+interface VizPremiumMediaProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "onError"> {
   src: string;
   type: MediaType;
   title?: string;
@@ -44,21 +45,26 @@ const mediaClasses = {
   audio: "w-full",
   pdfContainer: "flex flex-col items-center justify-center min-h-[400px] p-8",
   pdfViewer: "w-full h-full min-h-[600px] border rounded",
-  controls: "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4",
+  controls:
+    "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4",
   controlsBar: "flex items-center justify-between text-white",
-  playButton: "p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors",
+  playButton:
+    "p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors",
   volumeButton: "p-2 rounded-full hover:bg-white/20 transition-colors",
   downloadButton: "p-2 rounded-full hover:bg-white/20 transition-colors",
   progressBar: "flex-1 mx-4 h-1 bg-white/30 rounded-full cursor-pointer",
   progressFill: "h-full bg-white rounded-full transition-all",
   timeDisplay: "text-sm font-mono",
-  errorContainer: "flex flex-col items-center justify-center min-h-[200px] p-8 text-center",
+  errorContainer:
+    "flex flex-col items-center justify-center min-h-[200px] p-8 text-center",
   errorIcon: "h-12 w-12 text-red-500 mb-4",
   errorTitle: "text-lg font-semibold text-red-500 mb-2",
   errorMessage: "text-muted-foreground",
   loadingContainer: "flex items-center justify-center min-h-[200px]",
-  loadingSpinner: "h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent",
-  title: "absolute top-4 left-4 text-white text-lg font-semibold drop-shadow-lg",
+  loadingSpinner:
+    "h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent",
+  title:
+    "absolute top-4 left-4 text-white text-lg font-semibold drop-shadow-lg",
 };
 
 const VizPremiumMedia = memo(
@@ -124,18 +130,21 @@ const VizPremiumMedia = memo(
     }, [isMuted]);
 
     // Controle de progresso
-    const handleProgressClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-      if (!mediaRef.current) {
-        return;
-      }
+    const handleProgressClick = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!mediaRef.current) {
+          return;
+        }
 
-      const rect = e.currentTarget.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      const newTime = percent * duration;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        const newTime = percent * duration;
 
-      mediaRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }, [duration]);
+        mediaRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+      },
+      [duration]
+    );
 
     // Toggle fullscreen
     const toggleFullscreen = useCallback(() => {
@@ -217,18 +226,18 @@ const VizPremiumMedia = memo(
         case "video":
           return (
             <video
-              ref={mediaRef as React.RefObject<HTMLVideoElement>}
-              src={src}
-              poster={poster}
               autoPlay={autoPlay}
               className={mediaClasses.video}
-              onLoadedMetadata={handleLoadedMetadata}
-              onTimeUpdate={handleTimeUpdate}
-              onPlay={handlePlay}
-              onPause={handlePause}
-              onVolumeChange={handleVolumeChange}
               onError={handleError}
+              onLoadedMetadata={handleLoadedMetadata}
               onLoadStart={onLoadStart}
+              onPause={handlePause}
+              onPlay={handlePlay}
+              onTimeUpdate={handleTimeUpdate}
+              onVolumeChange={handleVolumeChange}
+              poster={poster}
+              ref={mediaRef as React.RefObject<HTMLVideoElement>}
+              src={src}
             />
           );
 
@@ -236,17 +245,17 @@ const VizPremiumMedia = memo(
           return (
             <div className="p-8">
               <audio
-                ref={mediaRef as React.RefObject<HTMLAudioElement>}
-                src={src}
                 autoPlay={autoPlay}
                 className={mediaClasses.audio}
-                onLoadedMetadata={handleLoadedMetadata}
-                onTimeUpdate={handleTimeUpdate}
-                onPlay={handlePlay}
-                onPause={handlePause}
-                onVolumeChange={handleVolumeChange}
                 onError={handleError}
+                onLoadedMetadata={handleLoadedMetadata}
                 onLoadStart={onLoadStart}
+                onPause={handlePause}
+                onPlay={handlePlay}
+                onTimeUpdate={handleTimeUpdate}
+                onVolumeChange={handleVolumeChange}
+                ref={mediaRef as React.RefObject<HTMLAudioElement>}
+                src={src}
               />
             </div>
           );
@@ -254,16 +263,17 @@ const VizPremiumMedia = memo(
         case "pdf":
           return (
             <div className={mediaClasses.pdfContainer}>
-              <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Visualizador PDF</h3>
-              <p className="text-muted-foreground text-center mb-4">
-                Para visualizar este PDF, faça o download ou abra em um visualizador externo.
+              <FileText className="mb-4 h-16 w-16 text-muted-foreground" />
+              <h3 className="mb-2 font-semibold text-lg">Visualizador PDF</h3>
+              <p className="mb-4 text-center text-muted-foreground">
+                Para visualizar este PDF, faça o download ou abra em um
+                visualizador externo.
               </p>
               <button
+                className="rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
                 onClick={handleDownload}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
-                <Download className="h-4 w-4 inline mr-2" />
+                <Download className="mr-2 inline h-4 w-4" />
                 Download PDF
               </button>
             </div>
@@ -273,7 +283,9 @@ const VizPremiumMedia = memo(
           return (
             <div className={mediaClasses.errorContainer}>
               <AlertCircle className={mediaClasses.errorIcon} />
-              <h3 className={mediaClasses.errorTitle}>Tipo de mídia não suportado</h3>
+              <h3 className={mediaClasses.errorTitle}>
+                Tipo de mídia não suportado
+              </h3>
               <p className={mediaClasses.errorMessage}>
                 O tipo "{type}" não é suportado por este componente.
               </p>
@@ -293,9 +305,10 @@ const VizPremiumMedia = memo(
           <div className={mediaClasses.controlsBar}>
             <div className="flex items-center gap-2">
               <button
-                onClick={togglePlayPause}
-                className={mediaClasses.playButton}
+                type="button"
                 aria-label={isPlaying ? "Pausar" : "Reproduzir"}
+                className={mediaClasses.playButton}
+                onClick={togglePlayPause}
               >
                 {isPlaying ? (
                   <Pause className="h-6 w-6" />
@@ -305,9 +318,9 @@ const VizPremiumMedia = memo(
               </button>
 
               <button
-                onClick={toggleMute}
-                className={mediaClasses.volumeButton}
                 aria-label={isMuted ? "Ativar som" : "Desativar som"}
+                className={mediaClasses.volumeButton}
+                onClick={toggleMute}
               >
                 {isMuted ? (
                   <VolumeX className="h-5 w-5" />
@@ -321,19 +334,26 @@ const VizPremiumMedia = memo(
               </div>
             </div>
 
-            <div className={mediaClasses.progressBar} onClick={handleProgressClick}>
+            <button
+              type="button"
+              className={mediaClasses.progressBar}
+              onClick={handleProgressClick}
+              aria-label="Barra de progresso"
+            >
               <div
                 className={mediaClasses.progressFill}
-                style={{ width: `${(currentTime / duration) * 100}%` }}
+                style={{
+                  width: `${(currentTime / duration) * PROGRESS_BAR_MAX_WIDTH_PERCENT}%`,
+                }}
               />
-            </div>
+            </button>
 
             <div className="flex items-center gap-2">
               {downloadable && (
                 <button
-                  onClick={handleDownload}
-                  className={mediaClasses.downloadButton}
                   aria-label="Download"
+                  className={mediaClasses.downloadButton}
+                  onClick={handleDownload}
                 >
                   <Download className="h-5 w-5" />
                 </button>
@@ -341,9 +361,9 @@ const VizPremiumMedia = memo(
 
               {type === "video" && (
                 <button
-                  onClick={toggleFullscreen}
-                  className={mediaClasses.volumeButton}
                   aria-label="Tela cheia"
+                  className={mediaClasses.volumeButton}
+                  onClick={toggleFullscreen}
                 >
                   <Maximize className="h-5 w-5" />
                 </button>
@@ -383,8 +403,8 @@ const VizPremiumMedia = memo(
     return (
       <div
         className={cn(mediaClasses.container, className)}
-        ref={containerRef}
         data-testid="viz-premium-media"
+        ref={containerRef}
         {...props}
       >
         {title && (

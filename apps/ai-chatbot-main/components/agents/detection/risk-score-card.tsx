@@ -40,6 +40,19 @@ const getScoreColor = (score: number): string => {
   return "text-red-500 dark:text-red-400";
 };
 
+const getProgressColor = (score: number): string => {
+  if (score <= LOW_RISK_THRESHOLD) {
+    return "bg-green-500";
+  }
+  if (score <= MODERATE_RISK_THRESHOLD) {
+    return "bg-blue-500";
+  }
+  if (score <= HIGH_RISK_THRESHOLD) {
+    return "bg-yellow-500";
+  }
+  return "bg-red-500";
+};
+
 const getRiskIcon = (score: number) => {
   if (score <= LOW_RISK_THRESHOLD) {
     return <ShieldCheck className="h-5 w-5 text-green-500" />;
@@ -105,18 +118,7 @@ export function RiskScoreCard({
 
         <div className="mb-6 w-full">
           <Progress
-            className={cn("h-2", {
-              "bg-gray-200 [&>div]:bg-green-500":
-                overallScore <= LOW_RISK_THRESHOLD,
-              "bg-gray-200 [&>div]:bg-blue-500":
-                overallScore > LOW_RISK_THRESHOLD &&
-                overallScore <= MODERATE_RISK_THRESHOLD,
-              "bg-gray-200 [&>div]:bg-yellow-500":
-                overallScore > MODERATE_RISK_THRESHOLD &&
-                overallScore <= HIGH_RISK_THRESHOLD,
-              "bg-gray-200 [&>div]:bg-red-500":
-                overallScore > HIGH_RISK_THRESHOLD,
-            })}
+            className={`h-2 [&>div]:${getProgressColor(overallScore)}`}
             max={100}
             value={overallScore}
           />
@@ -131,18 +133,7 @@ export function RiskScoreCard({
               <span className="text-sm">{formatCategoryName(category)}</span>
               <div className="flex items-center">
                 <Progress
-                  className={cn("mr-2 h-1.5 w-24", {
-                    "bg-gray-200 [&>div]:bg-green-500":
-                      score <= LOW_RISK_THRESHOLD,
-                    "bg-gray-200 [&>div]:bg-blue-500":
-                      score > LOW_RISK_THRESHOLD &&
-                      score <= MODERATE_RISK_THRESHOLD,
-                    "bg-gray-200 [&>div]:bg-yellow-500":
-                      score > MODERATE_RISK_THRESHOLD &&
-                      score <= HIGH_RISK_THRESHOLD,
-                    "bg-gray-200 [&>div]:bg-red-500":
-                      score > HIGH_RISK_THRESHOLD,
-                  })}
+                  className={`mr-2 h-1.5 w-24 [&>div]:${getProgressColor(score)}`}
                   max={100}
                   value={score}
                 />
@@ -163,98 +154,6 @@ export function RiskScoreCard({
                   className="flex items-start text-sm"
                   key={`rec-${recommendation.substring(0, MAX_RECOMMENDATION_KEY_LENGTH)}`}
                 >
-                  <Check className="mt-0.5 mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
-                  <span>{recommendation}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-const formatCategoryName = (name: string) => {
-  return name
-    .replace(/_/g, " ")
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-};
-
-export function RiskScoreCard({
-  systemId,
-  overallScore,
-  breakdown,
-  recommendations = [],
-}: RiskScoreProps) {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Score de Risco</CardTitle>
-          <Badge className="text-xs" variant="outline">
-            Sistema {systemId}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center">
-            {getRiskIcon(overallScore)}
-            <span
-              className={`ml-2 font-bold text-2xl ${getScoreColor(overallScore)}`}
-            >
-              {overallScore}
-            </span>
-            <span className="ml-1 text-muted-foreground text-sm">/100</span>
-          </div>
-          <div className="text-sm">
-            {overallScore <= 25 && "Risco Baixo"}
-            {overallScore > 25 && overallScore <= 50 && "Risco Moderado Baixo"}
-            {overallScore > 50 && overallScore <= 75 && "Risco Moderado Alto"}
-            {overallScore > 75 && "Risco Alto"}
-          </div>
-        </div>
-
-        <div className="mb-6 w-full">
-          <Progress
-            className="h-2"
-            indicatorClassName={getProgressColor(overallScore)}
-            max={100}
-            value={overallScore}
-          />
-        </div>
-
-        <div className="mb-6 space-y-3">
-          <h4 className="mb-2 font-medium text-sm">
-            Detalhamento por Categoria
-          </h4>
-          {Object.entries(breakdown).map(([category, score]) => (
-            <div className="flex items-center justify-between" key={category}>
-              <span className="text-sm">{formatCategoryName(category)}</span>
-              <div className="flex items-center">
-                <Progress
-                  className="mr-2 h-1.5 w-24"
-                  indicatorClassName={getProgressColor(score)}
-                  max={100}
-                  value={score}
-                />
-                <span className="w-8 text-right font-medium text-sm">
-                  {score}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {recommendations.length > 0 && (
-          <div>
-            <h4 className="mb-2 font-medium text-sm">Recomendações</h4>
-            <ul className="space-y-1">
-              {recommendations.map((recommendation, index) => (
-                <li className="flex items-start text-sm" key={index}>
                   <Check className="mt-0.5 mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
                   <span>{recommendation}</span>
                 </li>
