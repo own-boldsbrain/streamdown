@@ -3,13 +3,23 @@
 import { type ComponentProps, memo } from "react";
 import { Streamdown } from "streamdown";
 import { AnomalyReport } from "@/components/agents/detection/AnomalyReport";
+import { RiskScoreReport } from "@/components/agents/detection/RiskScoreReport";
+import { ConsumptionPatternsReport } from "@/components/agents/detection/ConsumptionPatternsReport";
+import { ComplianceStatusReport } from "@/components/agents/detection/ComplianceStatusReport";
+import { ConsumptionValidationReport } from "@/components/agents/analysis/ConsumptionValidationReport";
+import { FinancingSimulationReport } from "@/components/agents/analysis/FinancingSimulationReport";
 import { cn } from "@/lib/utils";
 
-const agentComponents: { [key: string]: React.ComponentType<any> } = {
+const agentComponents: Record<string, React.ComponentType<any>> = {
   anomaly_report: AnomalyReport,
+  risk_score: RiskScoreReport,
+  consumption_patterns: ConsumptionPatternsReport,
+  compliance_status: ComplianceStatusReport,
+  consumption_validation: ConsumptionValidationReport,
+  financing_simulation: FinancingSimulationReport,
   // Adicione outros componentes de agente aqui
-  // risk_score: RiskScoreReport,
-  // consumption_patterns: ConsumptionPatternsReport,
+  // site_assessment: SiteAssessmentReport,
+  // preliminary_sizing: PreliminarySizingReport,
 };
 
 const tryParseJson = (jsonString: string) => {
