@@ -2,6 +2,12 @@ import { Calendar, Target, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Constantes para threshold de confiança
+const HIGH_CONFIDENCE_THRESHOLD = 0.8;
+const MEDIUM_CONFIDENCE_THRESHOLD = 0.6;
+const PERCENTAGE_MULTIPLIER = 100;
+const MAX_KEY_LENGTH = 20;
+
 type Pattern = {
   pattern_type: string;
   description: string;
@@ -17,8 +23,12 @@ type ConsumptionPatternsData = {
 };
 
 const getConfidenceColor = (confidence: number) => {
-  if (confidence >= 0.8) return "bg-green-500";
-  if (confidence >= 0.6) return "bg-yellow-500";
+  if (confidence >= HIGH_CONFIDENCE_THRESHOLD) {
+    return "bg-green-500";
+  }
+  if (confidence >= MEDIUM_CONFIDENCE_THRESHOLD) {
+    return "bg-yellow-500";
+  }
   return "bg-red-500";
 };
 
@@ -53,10 +63,10 @@ export const ConsumptionPatternsReport = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {patterns_identified.map((pattern, index) => (
+          {patterns_identified.map((pattern) => (
             <div
               className="flex items-start justify-between rounded-lg border p-4"
-              key={`${pattern.pattern_type}-${index}`}
+              key={`${pattern.pattern_type}-${pattern.description.substring(0, MAX_KEY_LENGTH)}`}
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
@@ -74,7 +84,7 @@ export const ConsumptionPatternsReport = ({
               <Badge
                 className={`${getConfidenceColor(pattern.confidence)} text-white`}
               >
-                {(pattern.confidence * 100).toFixed(0)}% confiança
+                {(pattern.confidence * PERCENTAGE_MULTIPLIER).toFixed(0)}% confiança
               </Badge>
             </div>
           ))}
@@ -86,10 +96,10 @@ export const ConsumptionPatternsReport = ({
               Insights e Recomendações
             </h4>
             <ul className="space-y-2">
-              {insights.map((insight, index) => (
+              {insights.map((insight) => (
                 <li
                   className="flex items-start gap-2 text-sm"
-                  key={`insight-${index}`}
+                  key={`insight-${insight.substring(0, MAX_KEY_LENGTH)}`}
                 >
                   <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{insight}</span>

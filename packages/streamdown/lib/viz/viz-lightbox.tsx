@@ -19,6 +19,9 @@ const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
 const ROTATION_STEP = 90;
 const FULL_CIRCLE_DEGREES = 360;
+const ROTATION_90_DEGREES = 90;
+const ROTATION_180_DEGREES = 180;
+const ROTATION_270_DEGREES = 270;
 
 // Tipos para controlar o modo de exibição e estado
 type ViewMode = "contain" | "cover" | "fill" | "custom";
@@ -40,6 +43,10 @@ const lightboxClasses = {
   imageWrapper:
     "relative flex items-center justify-center h-full w-full transition-transform duration-300",
   image: "max-h-full max-w-full transition-all duration-300 ease-in-out",
+  imageRotated: "rotate-0 scale-100",
+  imageRotated90: "rotate-90 scale-100",
+  imageRotated180: "rotate-180 scale-100",
+  imageRotated270: "rotate-270 scale-100",
   controls:
     "absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 rounded-full bg-black/60 text-white",
   button: "p-2 rounded-full hover:bg-white/20 transition-colors",
@@ -95,22 +102,27 @@ const VizLightbox = memo(
 
     // Função para rotacionar no sentido anti-horário
     const handleRotateCounterclockwise = useCallback(() => {
-      setRotation((prev) => (prev - ROTATION_STEP + FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES);
+      setRotation(
+        (prev) =>
+          (prev - ROTATION_STEP + FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES
+      );
     }, []);
 
     // Função para alternar modo de tela cheia
     const handleToggleFullscreen = useCallback(() => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {
+        return;
+      }
 
       if (isFullscreen) {
         if (document.exitFullscreen) {
-          document.exitFullscreen().catch((err) => {
-            console.error(`Erro ao sair da tela cheia: ${err.message}`);
+          document.exitFullscreen().catch(() => {
+            // Silenciar erro de tela cheia
           });
         }
       } else if (containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen().catch((err) => {
-          console.error(`Erro ao entrar em tela cheia: ${err.message}`);
+        containerRef.current.requestFullscreen().catch(() => {
+          // Silenciar erro de tela cheia
         });
       }
     }, [isFullscreen]);
@@ -134,7 +146,9 @@ const VizLightbox = memo(
 
     // Detectar teclas para navegação
     useEffect(() => {
-      if (!isOpen) return;
+      if (!isOpen) {
+        return;
+      }
 
       const handleKeyDown = (e: KeyboardEvent) => {
         switch (e.key) {
@@ -192,7 +206,9 @@ const VizLightbox = memo(
     }, []);
 
     // Se o lightbox não estiver aberto, não renderizamos nada
-    if (!isOpen) return null;
+    if (!isOpen) {
+      return null;
+    }
 
     return (
       <div
@@ -201,12 +217,21 @@ const VizLightbox = memo(
         className={lightboxClasses.backdrop}
         data-testid="viz-lightbox"
         onClick={handleClose}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            handleClose();
+          }
+        }}
         role="dialog"
+        tabIndex={-1}
       >
         <div
           className={cn(lightboxClasses.container, className)}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
           ref={containerRef}
+          role="button"
+          tabIndex={0}
           {...props}
         >
           <div className={lightboxClasses.imageWrapper}>
@@ -214,13 +239,17 @@ const VizLightbox = memo(
               alt={alt}
               className={cn(
                 lightboxClasses.image,
-                viewMode !== "custom" && viewModeStyles[viewMode]
+                viewMode !== "custom" && viewModeStyles[viewMode],
+                rotation === 0 && lightboxClasses.imageRotated,
+                rotation === ROTATION_90_DEGREES && lightboxClasses.imageRotated90,
+                rotation === ROTATION_180_DEGREES && lightboxClasses.imageRotated180,
+                rotation === ROTATION_270_DEGREES && lightboxClasses.imageRotated270
               )}
+              height={400}
               ref={imageRef}
               src={src}
-              style={{
-                transform: `rotate(${rotation}deg) scale(${zoom})`,
-              }}
+              style={{ transform: `scale(${zoom})` }}
+              width={600}
             />
           </div>
 
@@ -282,6 +311,7 @@ const VizLightbox = memo(
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
+                <title>Alternar modo de visualização</title>
                 <rect height="18" rx="2" width="18" x="3" y="3" />
                 <circle cx="12" cy="12" r="5" />
               </svg>
