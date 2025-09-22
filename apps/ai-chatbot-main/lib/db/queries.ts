@@ -64,29 +64,60 @@ export async function createUser(email: string, password: string) {
 }
 
 export async function createGuestUser() {
+  // Check for NO-DB mode with guest allowance
+  if (ALLOW_GUEST_NO_DB) {
+    // Return a synthetic guest user for NO-DB mode
+    const timestamp = Date.now();
+    return {
+      id: `guest-${timestamp}`,
+      email: `guest+${timestamp}@local`,
+      createdAt: new Date()
+    };
+  }
+
   const db = getDb();
   if (!db) {
+    if (ENABLE_GUEST_USER_FALLBACK) {
+      // Return a fallback guest user when fallback is enabled
+      const timestamp = Date.now();
+      return {
+        id: `guest-${timestamp}`,
+        email: `guest+${timestamp}@local`,
+        createdAt: new Date()
+      };
+    }
+    // No fallback allowed, throw appropriate error
     throw new Error("NO_DB_MODE");
   }
 
-  const email = `guest+${Date.now()}@local`;
+  const timestamp = Date.now();
+  const email = `guest+${timestamp}@local`;
   const password = generateHashedPassword(generateUUID());
 
   try {
-    const result = await db
-      .insert(user)
-      .values({ email, password })
-      .returning({ id: user.id, email: user.email });
+    // First attempt: Use returning API (PostgreSQL-style)
+    try {
+      const result = await db
+        .insert(user)
+        .values({ email, password })
+        .returning({ id: user.id, email: user.email });
 
-    if (Array.isArray(result) && result[0]?.id) {
-      return result[0];
+      if (Array.isArray(result) && result[0]?.id) {
+        return result[0];
+      }
+
+      if (result && 'id' in result && 'email' in result) {
+        return result as { id: number | string; email: string };
+      }
+    } catch (insertError) {
+      // Silently continue to fallback if returning API fails
+      console.warn("Insert with returning failed, trying fallback", insertError);
     }
 
-    if (result && 'id' in result && 'email' in result) {
-      return result as { id: number; email: string };
-    }
-
-    // Fallback for drivers that don't support returning
+    // Second attempt: Insert without returning and then select (SQLite-style)
+    await db.insert(user).values({ email, password });
+    
+    // Try to retrieve the inserted user
     const selected = await db
       .select({ id: user.id, email: user.email })
       .from(user)
@@ -97,20 +128,37 @@ export async function createGuestUser() {
       return selected[0];
     }
 
+    // If we got here, something went wrong but we didn't get an error
     throw new Error("Failed to create guest user and verify insertion.");
   } catch (error) {
-    // Fallback for drivers that don't support returning
-    const selected = await db
-      .select({ id: user.id, email: user.email })
-      .from(user)
-      .where(eq(user.email, email))
-      .limit(1);
+    // Final fallback: Check if the user was actually created despite errors
+    try {
+      const selected = await db
+        .select({ id: user.id, email: user.email })
+        .from(user)
+        .where(eq(user.email, email))
+        .limit(1);
 
-    if (selected?.[0]) {
-      return selected[0];
+      if (selected?.[0]) {
+        return selected[0];
+      }
+    } catch (selectError) {
+      // Both insert and select failed, nothing more we can do
+      console.error("Failed to verify guest user creation:", selectError);
     }
     
+    // Log the original error and throw a user-friendly message
     console.error("Failed to create guest user:", error);
+    
+    if (ENABLE_GUEST_USER_FALLBACK) {
+      // Last resort fallback: return synthetic user
+      return {
+        id: `guest-error-${timestamp}`,
+        email: `guest+${timestamp}@local`,
+        createdAt: new Date()
+      };
+    }
+    
     throw new Error("Failed to create guest user.");
   }
 }
