@@ -2,12 +2,12 @@
 
 import { type ComponentProps, memo } from "react";
 import { Streamdown } from "streamdown";
-import { AnomalyReport } from "@/components/agents/detection/AnomalyReport";
-import { RiskScoreReport } from "@/components/agents/detection/RiskScoreReport";
-import { ConsumptionPatternsReport } from "@/components/agents/detection/ConsumptionPatternsReport";
-import { ComplianceStatusReport } from "@/components/agents/detection/ComplianceStatusReport";
 import { ConsumptionValidationReport } from "@/components/agents/analysis/ConsumptionValidationReport";
 import { FinancingSimulationReport } from "@/components/agents/analysis/FinancingSimulationReport";
+import { AnomalyReport } from "@/components/agents/detection/AnomalyReport";
+import { ComplianceStatusReport } from "@/components/agents/detection/ComplianceStatusReport";
+import { ConsumptionPatternsReport } from "@/components/agents/detection/ConsumptionPatternsReport";
+import { RiskScoreReport } from "@/components/agents/detection/RiskScoreReport";
 import { cn } from "@/lib/utils";
 
 const agentComponents: Record<string, React.ComponentType<any>> = {

@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { AlertTriangle, Shield, TrendingUp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 type RiskScoreData = {
   risk_score: {
@@ -18,8 +18,10 @@ type RiskScoreData = {
 };
 
 const getRiskLevel = (score: number) => {
-  if (score >= 80) return { level: "high", color: "bg-red-500", text: "Alto Risco" };
-  if (score >= 60) return { level: "medium", color: "bg-yellow-500", text: "Risco Médio" };
+  if (score >= 80)
+    return { level: "high", color: "bg-red-500", text: "Alto Risco" };
+  if (score >= 60)
+    return { level: "medium", color: "bg-yellow-500", text: "Risco Médio" };
   return { level: "low", color: "bg-green-500", text: "Baixo Risco" };
 };
 
@@ -30,60 +32,61 @@ const getRiskIcon = (score: number) => {
 };
 
 export const RiskScoreReport = ({ data }: { data: RiskScoreData }) => {
-  const { system_id, overall_score, breakdown, recommendations } = data.risk_score;
+  const { system_id, overall_score, breakdown, recommendations } =
+    data.risk_score;
   const riskLevel = getRiskLevel(overall_score);
 
   return (
     <Card className="w-full max-w-2xl border-border/50 shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-bold text-foreground">
+        <CardTitle className="font-bold text-foreground text-lg">
           Avaliação de Risco do Sistema
         </CardTitle>
-        <Badge variant="outline" className="text-sm">
+        <Badge className="text-sm" variant="outline">
           ID do Sistema: {system_id}
         </Badge>
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Score Geral de Risco</span>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="font-medium text-sm">Score Geral de Risco</span>
             <div className="flex items-center gap-2">
               {getRiskIcon(overall_score)}
-              <span className="text-2xl font-bold">{overall_score}</span>
+              <span className="font-bold text-2xl">{overall_score}</span>
             </div>
           </div>
-          <Progress value={overall_score} className="h-2" />
-          <div className="flex items-center justify-between mt-2">
-            <span className="text-xs text-muted-foreground">0</span>
+          <Progress className="h-2" value={overall_score} />
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-muted-foreground text-xs">0</span>
             <Badge className={`${riskLevel.color} text-white`}>
               {riskLevel.text}
             </Badge>
-            <span className="text-xs text-muted-foreground">100</span>
+            <span className="text-muted-foreground text-xs">100</span>
           </div>
         </div>
 
         <div className="space-y-4">
           <h4 className="font-semibold text-sm">Detalhamento por Categoria</h4>
           {Object.entries(breakdown).map(([category, score]) => (
-            <div key={category} className="space-y-2">
+            <div className="space-y-2" key={category}>
               <div className="flex justify-between text-sm">
                 <span className="capitalize">
                   {category.replace(/_/g, " ")}
                 </span>
                 <span className="font-medium">{score}</span>
               </div>
-              <Progress value={score} className="h-1" />
+              <Progress className="h-1" value={score} />
             </div>
           ))}
         </div>
 
         {recommendations.length > 0 && (
           <div className="mt-6">
-            <h4 className="font-semibold text-sm mb-3">Recomendações</h4>
+            <h4 className="mb-3 font-semibold text-sm">Recomendações</h4>
             <ul className="space-y-2">
               {recommendations.map((rec, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2 text-sm" key={index}>
+                  <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{rec}</span>
                 </li>
               ))}

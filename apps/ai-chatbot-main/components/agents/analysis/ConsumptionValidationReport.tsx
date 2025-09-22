@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertTriangle, CheckCircle, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertTriangle, TrendingUp } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type ConsumptionValidationData = {
   consumption_validation: {
@@ -42,7 +42,11 @@ const getQualityColor = (score: number) => {
   return "bg-red-500";
 };
 
-export const ConsumptionValidationReport = ({ data }: { data: ConsumptionValidationData }) => {
+export const ConsumptionValidationReport = ({
+  data,
+}: {
+  data: ConsumptionValidationData;
+}) => {
   const {
     system_id,
     validation_status,
@@ -50,26 +54,26 @@ export const ConsumptionValidationReport = ({ data }: { data: ConsumptionValidat
     average_monthly_consumption,
     seasonal_variation,
     data_quality_score,
-    recommendations
+    recommendations,
   } = data.consumption_validation;
 
   return (
     <Card className="w-full max-w-2xl border-border/50 shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-bold text-foreground">
+        <CardTitle className="font-bold text-foreground text-lg">
           Validação de Consumo
         </CardTitle>
-        <Badge variant="outline" className="text-sm">
+        <Badge className="text-sm" variant="outline">
           ID do Sistema: {system_id}
         </Badge>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {getStatusIcon(validation_status)}
             <div>
               <p className="font-semibold">Status da Validação</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Histórico de {consumption_history_months} meses
               </p>
             </div>
@@ -77,32 +81,38 @@ export const ConsumptionValidationReport = ({ data }: { data: ConsumptionValidat
           {getStatusBadge(validation_status)}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="p-4 rounded-lg border">
-            <div className="flex items-center gap-2 mb-2">
+        <div className="mb-6 grid grid-cols-2 gap-4">
+          <div className="rounded-lg border p-4">
+            <div className="mb-2 flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-blue-500" />
-              <span className="text-sm font-medium">Consumo Médio</span>
+              <span className="font-medium text-sm">Consumo Médio</span>
             </div>
-            <p className="text-2xl font-bold">{average_monthly_consumption.toFixed(1)} kWh</p>
-            <p className="text-xs text-muted-foreground">por mês</p>
+            <p className="font-bold text-2xl">
+              {average_monthly_consumption.toFixed(1)} kWh
+            </p>
+            <p className="text-muted-foreground text-xs">por mês</p>
           </div>
 
-          <div className="p-4 rounded-lg border">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="rounded-lg border p-4">
+            <div className="mb-2 flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-orange-500" />
-              <span className="text-sm font-medium">Variação Sazonal</span>
+              <span className="font-medium text-sm">Variação Sazonal</span>
             </div>
-            <p className="text-2xl font-bold">{(seasonal_variation * 100).toFixed(1)}%</p>
-            <p className="text-xs text-muted-foreground">coeficiente</p>
+            <p className="font-bold text-2xl">
+              {(seasonal_variation * 100).toFixed(1)}%
+            </p>
+            <p className="text-muted-foreground text-xs">coeficiente</p>
           </div>
         </div>
 
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Qualidade dos Dados</span>
-            <span className="text-sm font-bold">{(data_quality_score * 100).toFixed(0)}%</span>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="font-medium text-sm">Qualidade dos Dados</span>
+            <span className="font-bold text-sm">
+              {(data_quality_score * 100).toFixed(0)}%
+            </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="h-2 w-full rounded-full bg-gray-200">
             <div
               className={`h-2 rounded-full ${getQualityColor(data_quality_score)}`}
               style={{ width: `${data_quality_score * 100}%` }}
@@ -112,11 +122,14 @@ export const ConsumptionValidationReport = ({ data }: { data: ConsumptionValidat
 
         {recommendations.length > 0 && (
           <div>
-            <h4 className="font-semibold text-sm mb-3">Recomendações</h4>
+            <h4 className="mb-3 font-semibold text-sm">Recomendações</h4>
             <ul className="space-y-2">
               {recommendations.map((rec, index) => (
-                <li key={`rec-${index}`} className="flex items-start gap-2 text-sm">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                <li
+                  className="flex items-start gap-2 text-sm"
+                  key={`rec-${index}`}
+                >
+                  <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{rec}</span>
                 </li>
               ))}

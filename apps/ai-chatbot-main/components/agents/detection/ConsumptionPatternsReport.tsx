@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, Target, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calendar, Target } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Pattern = {
   pattern_type: string;
@@ -33,16 +33,21 @@ const getPatternIcon = (patternType: string) => {
   }
 };
 
-export const ConsumptionPatternsReport = ({ data }: { data: ConsumptionPatternsData }) => {
-  const { system_id, patterns_identified, insights } = data.consumption_patterns;
+export const ConsumptionPatternsReport = ({
+  data,
+}: {
+  data: ConsumptionPatternsData;
+}) => {
+  const { system_id, patterns_identified, insights } =
+    data.consumption_patterns;
 
   return (
     <Card className="w-full max-w-2xl border-border/50 shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-bold text-foreground">
+        <CardTitle className="font-bold text-foreground text-lg">
           Padrões de Consumo Identificados
         </CardTitle>
-        <Badge variant="outline" className="text-sm">
+        <Badge className="text-sm" variant="outline">
           ID do Sistema: {system_id}
         </Badge>
       </CardHeader>
@@ -50,8 +55,8 @@ export const ConsumptionPatternsReport = ({ data }: { data: ConsumptionPatternsD
         <div className="space-y-4">
           {patterns_identified.map((pattern, index) => (
             <div
-              key={`${pattern.pattern_type}-${index}`}
               className="flex items-start justify-between rounded-lg border p-4"
+              key={`${pattern.pattern_type}-${index}`}
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
@@ -61,12 +66,14 @@ export const ConsumptionPatternsReport = ({ data }: { data: ConsumptionPatternsD
                   <p className="font-semibold capitalize">
                     {pattern.pattern_type.replace(/_/g, " ")}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="mt-1 text-muted-foreground text-sm">
                     {pattern.description}
                   </p>
                 </div>
               </div>
-              <Badge className={`${getConfidenceColor(pattern.confidence)} text-white`}>
+              <Badge
+                className={`${getConfidenceColor(pattern.confidence)} text-white`}
+              >
                 {(pattern.confidence * 100).toFixed(0)}% confiança
               </Badge>
             </div>
@@ -75,11 +82,16 @@ export const ConsumptionPatternsReport = ({ data }: { data: ConsumptionPatternsD
 
         {insights.length > 0 && (
           <div className="mt-6">
-            <h4 className="font-semibold text-sm mb-3">Insights e Recomendações</h4>
+            <h4 className="mb-3 font-semibold text-sm">
+              Insights e Recomendações
+            </h4>
             <ul className="space-y-2">
               {insights.map((insight, index) => (
-                <li key={`insight-${index}`} className="flex items-start gap-2 text-sm">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                <li
+                  className="flex items-start gap-2 text-sm"
+                  key={`insight-${index}`}
+                >
+                  <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                   <span>{insight}</span>
                 </li>
               ))}
