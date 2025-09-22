@@ -30,6 +30,8 @@ O Streamdown é uma biblioteca de renderização Markdown otimizada para streami
 - Sistema baseado em utilitários CSS (`cn` usando Tailwind)
 - Componentes com atributos `data-*` para testabilidade (`data-streamdown`, `data-code-block`, etc.)
 - Integração com dark/light mode via contexto `ShikiThemeContext`
+- Gradientes da marca Yello disponíveis como variantes de componentes (`yello-gradient`, `yello-stroke`, `yello-animated`)
+- Utilitários para aplicar gradientes em `components/ui/yello-styles/gradients.ts`
 
 ### Performance
 
