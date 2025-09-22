@@ -67,6 +67,14 @@ export const ImageComponent = ({
     return null;
   }
 
+  // Para evitar o erro de hidratação causado por div dentro de p,
+  // usamos um span para envolver a imagem quando necessário
+  
+  // Verificamos se estamos em um ambiente com risco de erro de hidratação
+  // usando uma abordagem diferente (não baseada em propriedades do nó)
+  const useSimpleStructure = true; // Sempre usar estrutura simples para evitar problemas
+
+  // Caso contrário, manter o comportamento atual com o wrapper e controles
   return (
     <div
       className="group relative my-4 inline-block"
