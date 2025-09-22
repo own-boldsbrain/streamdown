@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseMarkdownIntoBlocks } from "../lib/parse-blocks";
 
 describe("parseMarkdownIntoBlocks", () => {
@@ -83,9 +83,11 @@ $$
 Texto após a equação.`;
 
     const blocks = parseMarkdownIntoBlocks(markdown);
-    
+
     // Deve combinar os blocos com $$ em um único bloco
-    const mathBlockIndex = blocks.findIndex(block => block.includes("\\begin{pmatrix}"));
+    const mathBlockIndex = blocks.findIndex((block) =>
+      block.includes("\\begin{pmatrix}")
+    );
     expect(mathBlockIndex).not.toBe(-1);
     expect(blocks[mathBlockIndex]).toContain("\\begin{pmatrix}");
     expect(blocks[mathBlockIndex]).toContain("\\end{pmatrix}");
@@ -106,13 +108,15 @@ $$
 Texto após a equação.`;
 
     const blocks = parseMarkdownIntoBlocks(markdown);
-    
+
     // Encontra o bloco com a matriz
-    const mathBlockIndex = blocks.findIndex(block => block.includes("\\begin{matrix}"));
+    const mathBlockIndex = blocks.findIndex((block) =>
+      block.includes("\\begin{matrix}")
+    );
     expect(mathBlockIndex).not.toBe(-1);
     expect(blocks[mathBlockIndex]).toContain("\\begin{matrix}");
     expect(blocks[mathBlockIndex]).toContain("\\end{matrix}");
-    
+
     // Verifica se o bloco está bem formado (começa e termina com $$)
     expect(blocks[mathBlockIndex].trim().startsWith("$$")).toBe(true);
     expect(blocks[mathBlockIndex].trim().endsWith("$$")).toBe(true);
@@ -132,11 +136,11 @@ x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
 $$`;
 
     const blocks = parseMarkdownIntoBlocks(markdown);
-    
+
     // Verifica se os blocos matemáticos estão separados corretamente
-    const mathBlocks = blocks.filter(block => block.includes("$$"));
+    const mathBlocks = blocks.filter((block) => block.includes("$$"));
     expect(mathBlocks.length).toBe(2);
-    
+
     expect(mathBlocks[0]).toContain("a^2 + b^2 = c^2");
     expect(mathBlocks[1]).toContain("x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}");
   });
@@ -154,15 +158,17 @@ $$
 Texto após a equação.`;
 
     const blocks = parseMarkdownIntoBlocks(markdown);
-    
+
     // Verifica se o bloco matemático está completo
-    const mathBlockIndex = blocks.findIndex(block => block.includes("\\begin{pmatrix}"));
+    const mathBlockIndex = blocks.findIndex((block) =>
+      block.includes("\\begin{pmatrix}")
+    );
     expect(mathBlockIndex).not.toBe(-1);
-    
+
     const mathBlock = blocks[mathBlockIndex];
     expect(mathBlock).toContain("\\begin{pmatrix}");
     expect(mathBlock).toContain("\\end{pmatrix}");
-    
+
     // Verifica se começa e termina com $$
     const trimmedBlock = mathBlock.trim();
     expect(trimmedBlock.startsWith("$$")).toBe(true);
