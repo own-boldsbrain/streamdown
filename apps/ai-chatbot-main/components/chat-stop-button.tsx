@@ -2,35 +2,37 @@
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { memo } from "react";
-import type { ChatMessage } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { StopIcon } from "./icons";
+import type { ChatMessage } from "@/lib/types";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export type ChatStopButtonProps = {
   stop: () => void;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   className?: string;
+  onStop?: () => void;
 };
 
 function PureChatStopButton({
   stop,
   setMessages,
   className,
+  onStop,
 }: ChatStopButtonProps) {
   return (
     <Button
-      className={cn(
-        "size-7 rounded-full bg-foreground p-1 text-background transition-colors duration-200 hover:bg-foreground/90 disabled:bg-muted disabled:text-muted-foreground",
-        className
-      )}
+      className={cn("size-7 rounded-full p-1", className)}
       data-testid="stop-button"
       onClick={(event) => {
         event.preventDefault();
         stop();
         setMessages((messages) => messages);
+        onStop?.();
       }}
       type="button"
+      variant="default"
+      size="icon"
     >
       <StopIcon size={14} />
     </Button>

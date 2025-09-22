@@ -8,20 +8,15 @@ import {
   AlertTriangle,
   BarChart3,
   CheckCircle,
-  Clock,
   Cpu,
-  Database,
-  DollarSign,
   Download,
-  Network,
   RefreshCw,
   Share2,
   TrendingDown,
   TrendingUp,
   XCircle,
-  Zap,
 } from "lucide-react";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -260,7 +255,7 @@ export const ArtifactToolInspector = memo<ArtifactToolInspectorProps>(
       totalTokens,
     ]);
 
-    const formatCurrency = (amount: number) => {
+    const formatCurrencyInner = (amount: number) => {
       return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "USD",
@@ -423,7 +418,7 @@ export const ArtifactToolInspector = memo<ArtifactToolInspectorProps>(
                           {formatDuration(call.duration)}
                         </p>
                         <p className="text-muted-foreground text-xs">
-                          {formatCurrency(call.cost / CENTS_TO_DOLLARS)}
+                          {formatCurrencyInner(call.cost / CENTS_TO_DOLLARS)}
                         </p>
                       </div>
                       {call.model && (

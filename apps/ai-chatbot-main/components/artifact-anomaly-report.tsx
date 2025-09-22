@@ -431,8 +431,12 @@ export const ArtifactAnomalyReport = memo<ArtifactAnomalyReportProps>(
     };
 
     const getSortLabel = (option: "severity" | "date" | "impact") => {
-      if (option === "severity") return "Severidade";
-      if (option === "date") return "Data";
+      if (option === "severity") {
+        return "Severidade";
+      }
+      if (option === "date") {
+        return "Data";
+      }
       return "Impacto";
     };
 
