@@ -100,7 +100,7 @@ export function SpeechControls({
       <button
         aria-label={playLabel}
         className={cn(
-          "inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50".split(" ").sort().join(" "),
+          "inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
           isPlaying ? "bg-accent text-accent-foreground" : ""
         )}
         disabled={!isTextAvailable}
@@ -114,7 +114,7 @@ export function SpeechControls({
 
       <button
         aria-label="Parar"
-        className="inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50".split(" ").sort().join(" ")
+        className="inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         disabled={isStopDisabled}
         onClick={onStop}
         title="Parar"
@@ -143,7 +143,7 @@ export function SettingControl({
     <div className="flex items-center gap-2">
       <label 
         className={cn(
-          "font-medium text-sm".split(" ").sort().join(" "),
+          "text-sm font-medium",
           compact ? "sr-only" : ""
         )}
         htmlFor={id}
@@ -152,7 +152,7 @@ export function SettingControl({
       </label>
       <input
         aria-label={`Ajustar ${label.toLowerCase()}`}
-        className="h-2 w-24 appearance-none rounded-md bg-border [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground".split(" ").sort().join(" ")
+        className="h-2 w-24 appearance-none rounded-md bg-border [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground"
         id={id}
         max={max}
         min={min}
@@ -162,7 +162,7 @@ export function SettingControl({
         type="range"
         value={value}
       />
-      <span className="text-muted-foreground text-xs".split(" ").sort().join(" ") aria-hidden="true">
+      <span className="text-xs text-muted-foreground" aria-hidden="true">
         {formatValue(value)}
       </span>
     </div>

@@ -101,8 +101,7 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
         return code;
       }
 
-      const lines = code.split(
-\n);
+      const lines = code.split('\n');
       return lines
         .map((line, index) => {
           const lineNumber = index + 1;
@@ -112,8 +111,7 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
           let processedLine = line;
 
           if (showLineNumbers) {
-            processedLine = `${lineNumber.toString().padStart(LINE_NUMBER_PADDING, 
-)} | ${line}`;
+            processedLine = `${lineNumber.toString().padStart(LINE_NUMBER_PADDING, ' ')} | ${line}`;
           }
 
           if (isHighlighted || isSelected) {
@@ -131,8 +129,7 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
 
           return `<span class="block w-full">${processedLine}</span>`;
         })
-        .join(
-\n);
+        .join('\n');
     }, [
       code,
       highlightLines,
@@ -149,12 +146,12 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
 
       const handleClick = (event: Event) => {
         const target = event.target as HTMLElement;
-        const lineElement = target.closest([data - line]) as HTMLElement;
+        const lineElement = target.closest('[data-line]') as HTMLElement;
 
         if (lineElement) {
-          const lineNumber = Number.parseInt(lineElement.dataset.line || 0, 10);
-          const lines = code.split(\n);
-          const content = lines[lineNumber - 1] || ';;;
+          const lineNumber = Number.parseInt(lineElement.dataset.line || "0", 10);
+          const lines = code.split('\n');
+          const content = lines[lineNumber - 1] || '';
 
           if (lineNumber > 0) {
             handleLineClick(lineNumber, content);
@@ -162,10 +159,10 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
         }
       };
 
-      const codeElement = document.querySelector([data - code - block]);
+      const codeElement = document.querySelector('[data-code-block]');
       if (codeElement) {
-        codeElement.addEventListener(click, handleClick);
-        return () => codeElement.removeEventListener(click, handleClick);
+        codeElement.addEventListener('click', handleClick);
+        return () => codeElement.removeEventListener('click', handleClick);
       }
     }, [code, enableLineLinking, handleLineClick, onLineClick]);
 

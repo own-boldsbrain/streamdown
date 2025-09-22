@@ -15,21 +15,28 @@ import {
 } from "./mock-data";
 
 import VizAudioWaveform from "./viz-audio-waveform";
-import VizCallout from "./viz-callout";
+import VizCallout, { type CalloutType } from "./viz-callout";
 import VizDataTable from "./viz-data-table";
 import VizLightbox from "./viz-lightbox";
 import VizMermaidDiagram from "./viz-mermaid-diagram";
-import VizPremiumMedia from "./viz-premium-media";
+import VizPremiumMedia, { type MediaType } from "./viz-premium-media";
+import type { FC, ReactNode } from "react";
 
 // Componentes auxiliares para a página de teste
-const TestCard = ({ title, children }) => (
+const TestCard: FC<{ title: string; children: ReactNode }> = ({
+  title,
+  children,
+}) => (
   <div className="mb-8 rounded-lg border p-4 shadow-sm">
     <h2 className="mb-4 font-semibold text-xl">{title}</h2>
     <div className="space-y-6">{children}</div>
   </div>
 );
 
-const ComponentExample = ({ title, children }) => (
+const ComponentExample: FC<{ title: string; children: ReactNode }> = ({
+  title,
+  children,
+}) => (
   <div className="rounded-md border p-4">
     <h3 className="mb-2 font-medium text-lg">{title}</h3>
     <div>{children}</div>
@@ -38,12 +45,24 @@ const ComponentExample = ({ title, children }) => (
 
 export default function VizTestPage() {
   // Estados para controlar a seleção de exemplos
-  const [selectedAudio, setSelectedAudio] = useState("standard");
-  const [selectedDiagram, setSelectedDiagram] = useState("flowchart");
-  const [selectedTable, setSelectedTable] = useState("users");
-  const [selectedCallout, setSelectedCallout] = useState("note");
-  const [selectedLightbox, setSelectedLightbox] = useState("simple");
-  const [selectedMedia, setSelectedMedia] = useState("video");
+  const [selectedAudio, setSelectedAudio] = useState<
+    keyof typeof audioWaveformMocks
+  >("standard");
+  const [selectedDiagram, setSelectedDiagram] = useState<
+    keyof typeof mermaidDiagramMocks
+  >("flowchart");
+  const [selectedTable, setSelectedTable] = useState<
+    keyof typeof dataTableMocks
+  >("users");
+  const [selectedCallout, setSelectedCallout] = useState<
+    keyof typeof calloutMocks
+  >("note");
+  const [selectedLightbox, setSelectedLightbox] = useState<
+    keyof typeof lightboxMocks
+  >("simple");
+  const [selectedMedia, setSelectedMedia] = useState<
+    keyof typeof premiumMediaMocks
+  >("video");
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   return (
@@ -61,47 +80,66 @@ export default function VizTestPage() {
       {/* VizAudioWaveform */}
       <TestCard title="VizAudioWaveform">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">
+          <label htmlFor="audio-select" className="mb-2 block font-medium">
             Selecione um exemplo:
           </label>
           <select
+            id="audio-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedAudio(e.target.value)}
+            onChange={(e) =>
+              setSelectedAudio(e.target.value as keyof typeof audioWaveformMocks)
+            }
             value={selectedAudio}
           >
             {Object.keys(audioWaveformMocks).map((key) => (
               <option key={key} value={key}>
-                {audioWaveformMocks[key].title}
+                {audioWaveformMocks[key as keyof typeof audioWaveformMocks].title}
               </option>
             ))}
           </select>
         </div>
 
-        <ComponentExample title={audioWaveformMocks[selectedAudio].title}>
-          <VizAudioWaveform {...audioWaveformMocks[selectedAudio]} />
+        <ComponentExample
+          title={audioWaveformMocks[selectedAudio].title}
+        >
+          <VizAudioWaveform
+            {...audioWaveformMocks[selectedAudio]}
+            audioSrc={audioWaveformMocks[selectedAudio].src}
+          />
         </ComponentExample>
       </TestCard>
 
       {/* VizMermaidDiagram */}
       <TestCard title="VizMermaidDiagram">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">
+          <label htmlFor="diagram-select" className="mb-2 block font-medium">
             Selecione um diagrama:
           </label>
           <select
+            id="diagram-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedDiagram(e.target.value)}
+            onChange={(e) =>
+              setSelectedDiagram(
+                e.target.value as keyof typeof mermaidDiagramMocks,
+              )
+            }
             value={selectedDiagram}
           >
             {Object.keys(mermaidDiagramMocks).map((key) => (
               <option key={key} value={key}>
-                {mermaidDiagramMocks[key].title}
+                {
+                  mermaidDiagramMocks[
+                    key as keyof typeof mermaidDiagramMocks
+                  ].title
+                }
               </option>
             ))}
           </select>
         </div>
 
-        <ComponentExample title={mermaidDiagramMocks[selectedDiagram].title}>
+        <ComponentExample
+          title={mermaidDiagramMocks[selectedDiagram].title}
+        >
           <VizMermaidDiagram {...mermaidDiagramMocks[selectedDiagram]} />
         </ComponentExample>
       </TestCard>
@@ -109,43 +147,56 @@ export default function VizTestPage() {
       {/* VizDataTable */}
       <TestCard title="VizDataTable">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">
+          <label htmlFor="table-select" className="mb-2 block font-medium">
             Selecione uma tabela:
           </label>
           <select
+            id="table-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedTable(e.target.value)}
+            onChange={(e) =>
+              setSelectedTable(e.target.value as keyof typeof dataTableMocks)
+            }
             value={selectedTable}
           >
             {Object.keys(dataTableMocks).map((key) => (
               <option key={key} value={key}>
-                {dataTableMocks[key].title}
+                {dataTableMocks[key as keyof typeof dataTableMocks].title}
               </option>
             ))}
           </select>
         </div>
 
-        <ComponentExample title={dataTableMocks[selectedTable].title}>
-          <VizDataTable {...dataTableMocks[selectedTable]} />
+        <ComponentExample
+          title={dataTableMocks[selectedTable].title}
+        >
+          <VizDataTable
+            {...(dataTableMocks[selectedTable] as any)}
+          />
         </ComponentExample>
       </TestCard>
 
       {/* VizCallout */}
       <TestCard title="VizCallout">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">
+          <label htmlFor="callout-select" className="mb-2 block font-medium">
             Selecione um callout:
           </label>
           <select
+            id="callout-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedCallout(e.target.value)}
+            onChange={(e) =>
+              setSelectedCallout(e.target.value as keyof typeof calloutMocks)
+            }
             value={selectedCallout}
           >
-            {Object.keys(calloutMocks).map((key) => (
-              <option key={key} value={key}>
-                {calloutMocks[key].title || `Tipo: ${calloutMocks[key].type}`}
-              </option>
-            ))}
+            {Object.keys(calloutMocks).map((key) => {
+              const mock = calloutMocks[key as keyof typeof calloutMocks];
+              return (
+                <option key={key} value={key}>
+                  {mock.title || `Tipo: ${mock.type}`}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -155,32 +206,43 @@ export default function VizTestPage() {
             `Tipo: ${calloutMocks[selectedCallout].type}`
           }
         >
-          <VizCallout {...calloutMocks[selectedCallout]} />
+          <VizCallout
+            type={calloutMocks[selectedCallout].type as CalloutType}
+            title={calloutMocks[selectedCallout].title}
+          >
+            {calloutMocks[selectedCallout].children}
+          </VizCallout>
         </ComponentExample>
       </TestCard>
 
       {/* VizLightbox */}
       <TestCard title="VizLightbox">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">
+          <label htmlFor="lightbox-select" className="mb-2 block font-medium">
             Selecione uma imagem:
           </label>
           <select
+            id="lightbox-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedLightbox(e.target.value)}
+            onChange={(e) =>
+              setSelectedLightbox(e.target.value as keyof typeof lightboxMocks)
+            }
             value={selectedLightbox}
           >
             {Object.keys(lightboxMocks).map((key) => (
               <option key={key} value={key}>
-                {lightboxMocks[key].title}
+                {lightboxMocks[key as keyof typeof lightboxMocks].title}
               </option>
             ))}
           </select>
         </div>
 
-        <ComponentExample title={lightboxMocks[selectedLightbox].title}>
+        <ComponentExample
+          title={lightboxMocks[selectedLightbox].title}
+        >
           <div>
             <button
+              type="button"
               className="mb-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               onClick={() => setLightboxOpen(true)}
             >
@@ -196,9 +258,12 @@ export default function VizTestPage() {
             )}
 
             <div className="mt-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt={lightboxMocks[selectedLightbox].alt}
                 className="h-auto max-h-60 max-w-full object-contain"
+                width={300}
+                height={200}
                 src={lightboxMocks[selectedLightbox].src}
               />
             </div>
@@ -209,22 +274,32 @@ export default function VizTestPage() {
       {/* VizPremiumMedia */}
       <TestCard title="VizPremiumMedia">
         <div className="mb-4">
-          <label className="mb-2 block font-medium">Selecione uma mídia:</label>
+          <label htmlFor="media-select" className="mb-2 block font-medium">
+            Selecione uma mídia:
+          </label>
           <select
+            id="media-select"
             className="w-full max-w-md rounded border p-2"
-            onChange={(e) => setSelectedMedia(e.target.value)}
+            onChange={(e) =>
+              setSelectedMedia(e.target.value as keyof typeof premiumMediaMocks)
+            }
             value={selectedMedia}
           >
             {Object.keys(premiumMediaMocks).map((key) => (
               <option key={key} value={key}>
-                {premiumMediaMocks[key].title}
+                {premiumMediaMocks[key as keyof typeof premiumMediaMocks].title}
               </option>
             ))}
           </select>
         </div>
 
-        <ComponentExample title={premiumMediaMocks[selectedMedia].title}>
-          <VizPremiumMedia {...premiumMediaMocks[selectedMedia]} />
+        <ComponentExample
+          title={premiumMediaMocks[selectedMedia].title}
+        >
+          <VizPremiumMedia
+            {...premiumMediaMocks[selectedMedia]}
+            type={premiumMediaMocks[selectedMedia].type as MediaType}
+          />
         </ComponentExample>
       </TestCard>
 

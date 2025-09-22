@@ -1,6 +1,10 @@
-/**
- * Mock data para testes visuais dos componentes de visualização do Streamdown
- */
+// Constantes para repetições de texto no conteúdo longo
+const REPEAT_INTRO = 50;
+const REPEAT_HISTORY = 40;
+const REPEAT_STATE_OF_ART = 60;
+const REPEAT_ETHICS = 35;
+const REPEAT_FUTURE = 45;
+const REPEAT_CONCLUSION = 20;
 
 // Dados para VizAudioWaveform
 export const audioWaveformMocks = {
@@ -313,4 +317,524 @@ export const allMocks = {
   callout: calloutMocks,
   lightbox: lightboxMocks,
   premiumMedia: premiumMediaMocks
+};
+
+// Dados para VizCitations
+export const citationsMocks = {
+  // Citações simples
+  simple: {
+    citations: [
+      {
+        id: "cit-1",
+        text: "Segundo Smith (2023), a inteligência artificial está revolucionando diversos setores da economia.",
+        sourceId: "src-1",
+        type: "inline" as const,
+        position: { start: 10, end: 25 }
+      },
+      {
+        id: "cit-2",
+        text: "Como demonstrado por Johnson et al. (2022), os algoritmos de aprendizado profundo superam os métodos tradicionais em tarefas de classificação.",
+        sourceId: "src-2",
+        type: "footnote" as const,
+        position: { start: 50, end: 75 }
+      }
+    ],
+    sources: [
+      {
+        id: "src-1",
+        title: "Inteligência Artificial: O Futuro da Tecnologia",
+        authors: ["John Smith"],
+        year: 2023,
+        journal: "Journal of Technology Studies",
+        doi: "10.1234/jts.2023.001",
+        url: "https://example.com/smith2023",
+        reliability: "high" as const,
+        relevance: 0.95,
+        accessedDate: "2024-01-15"
+      },
+      {
+        id: "src-2",
+        title: "Deep Learning vs Traditional Methods: A Comparative Study",
+        authors: ["Jane Johnson", "Mike Davis", "Sarah Wilson"],
+        year: 2022,
+        journal: "AI Research Quarterly",
+        doi: "10.5678/arq.2022.045",
+        url: "https://example.com/johnson2022",
+        reliability: "medium" as const,
+        relevance: 0.88,
+        accessedDate: "2024-01-10"
+      }
+    ]
+  },
+  // Citações múltiplas com mesma fonte
+  multipleSameSource: {
+    citations: [
+      {
+        id: "cit-3",
+        text: "A pesquisa de Brown (2021) indica que...",
+        sourceId: "src-3",
+        type: "inline" as const,
+        position: { start: 0, end: 15 }
+      },
+      {
+        id: "cit-4",
+        text: "Brown (2021) também demonstra que...",
+        sourceId: "src-3",
+        type: "inline" as const,
+        position: { start: 30, end: 45 }
+      },
+      {
+        id: "cit-5",
+        text: "Conforme discutido por Brown (2021),...",
+        sourceId: "src-3",
+        type: "footnote" as const,
+        position: { start: 60, end: 75 }
+      }
+    ],
+    sources: [
+      {
+        id: "src-3",
+        title: "Comprehensive Analysis of Machine Learning Applications",
+        authors: ["David Brown"],
+        year: 2021,
+        journal: "Machine Learning Journal",
+        doi: "10.9012/mlj.2021.078",
+        url: "https://example.com/brown2021",
+        reliability: "high" as const,
+        relevance: 0.92,
+        accessedDate: "2024-01-12"
+      }
+    ]
+  },
+  // Citações com diferentes níveis de confiabilidade
+  reliabilityLevels: {
+    citations: [
+      {
+        id: "cit-6",
+        text: "Fonte confiável: Garcia (2024)...",
+        sourceId: "src-4",
+        type: "inline" as const,
+        position: { start: 0, end: 20 }
+      },
+      {
+        id: "cit-7",
+        text: "Fonte média: Lee (2023)...",
+        sourceId: "src-5",
+        type: "inline" as const,
+        position: { start: 25, end: 40 }
+      },
+      {
+        id: "cit-8",
+        text: "Fonte baixa: Blog pessoal (2022)...",
+        sourceId: "src-6",
+        type: "footnote" as const,
+        position: { start: 45, end: 60 }
+      }
+    ],
+    sources: [
+      {
+        id: "src-4",
+        title: "Peer-Reviewed Study on AI Ethics",
+        authors: ["Maria Garcia"],
+        year: 2024,
+        journal: "Ethics in Computing",
+        doi: "10.3456/eic.2024.012",
+        url: "https://example.com/garcia2024",
+        reliability: "high" as const,
+        relevance: 0.89,
+        accessedDate: "2024-01-14"
+      },
+      {
+        id: "src-5",
+        title: "Industry Report on AI Trends",
+        authors: ["Kevin Lee"],
+        year: 2023,
+        journal: "Tech Industry Report",
+        url: "https://example.com/lee2023",
+        reliability: "medium" as const,
+        relevance: 0.76,
+        accessedDate: "2024-01-13"
+      },
+      {
+        id: "src-6",
+        title: "Personal Blog: My Thoughts on AI",
+        authors: ["Anonymous Blogger"],
+        year: 2022,
+        url: "https://personalblog.example.com/ai-thoughts",
+        reliability: "low" as const,
+        relevance: 0.45,
+        accessedDate: "2024-01-11"
+      }
+    ]
+  }
+};
+
+// Dados para VizSourcesList
+export const sourcesListMocks = {
+  // Lista básica de fontes
+  basic: {
+    sources: [
+      {
+        id: "src-1",
+        title: "Inteligência Artificial: O Futuro da Tecnologia",
+        authors: ["John Smith"],
+        year: 2023,
+        journal: "Journal of Technology Studies",
+        doi: "10.1234/jts.2023.001",
+        url: "https://example.com/smith2023",
+        reliability: "high" as const,
+        relevance: 0.95,
+        accessedDate: "2024-01-15",
+        abstract: "Este artigo explora o impacto da IA em diversos setores tecnológicos e econômicos.",
+        keywords: ["inteligência artificial", "tecnologia", "inovação"]
+      },
+      {
+        id: "src-2",
+        title: "Deep Learning vs Traditional Methods: A Comparative Study",
+        authors: ["Jane Johnson", "Mike Davis", "Sarah Wilson"],
+        year: 2022,
+        journal: "AI Research Quarterly",
+        doi: "10.5678/arq.2022.045",
+        url: "https://example.com/johnson2022",
+        reliability: "medium" as const,
+        relevance: 0.88,
+        accessedDate: "2024-01-10",
+        abstract: "Comparação entre algoritmos de deep learning e métodos tradicionais de machine learning.",
+        keywords: ["deep learning", "machine learning", "comparação"]
+      },
+      {
+        id: "src-3",
+        title: "Comprehensive Analysis of Machine Learning Applications",
+        authors: ["David Brown"],
+        year: 2021,
+        journal: "Machine Learning Journal",
+        doi: "10.9012/mlj.2021.078",
+        url: "https://example.com/brown2021",
+        reliability: "high" as const,
+        relevance: 0.92,
+        accessedDate: "2024-01-12",
+        abstract: "Análise abrangente das aplicações práticas do machine learning em diferentes domínios.",
+        keywords: ["machine learning", "aplicações", "análise"]
+      }
+    ],
+    initialExpanded: false,
+    showFilters: true,
+    showSorting: true
+  },
+  // Lista expandida por padrão
+  expanded: {
+    sources: [
+      {
+        id: "src-4",
+        title: "AI Ethics: Navigating the Moral Landscape",
+        authors: ["Maria Garcia", "Robert Chen"],
+        year: 2024,
+        journal: "Ethics in Computing",
+        doi: "10.3456/eic.2024.012",
+        url: "https://example.com/garcia2024",
+        reliability: "high" as const,
+        relevance: 0.89,
+        accessedDate: "2024-01-14",
+        abstract: "Discussão sobre os dilemas éticos envolvidos no desenvolvimento e aplicação da IA.",
+        keywords: ["ética", "IA", "moral"]
+      },
+      {
+        id: "src-5",
+        title: "Industry Report on AI Trends 2023",
+        authors: ["Kevin Lee"],
+        year: 2023,
+        journal: "Tech Industry Report",
+        url: "https://example.com/lee2023",
+        reliability: "medium" as const,
+        relevance: 0.76,
+        accessedDate: "2024-01-13",
+        abstract: "Relatório anual sobre tendências emergentes em inteligência artificial.",
+        keywords: ["tendências", "indústria", "relatório"]
+      }
+    ],
+    initialExpanded: true,
+    showFilters: true,
+    showSorting: true
+  },
+  // Lista com filtros desabilitados
+  noFilters: {
+    sources: [
+      {
+        id: "src-6",
+        title: "Neural Networks: From Theory to Practice",
+        authors: ["Lisa Wang"],
+        year: 2022,
+        journal: "Neural Computing",
+        doi: "10.7890/nc.2022.034",
+        url: "https://example.com/wang2022",
+        reliability: "high" as const,
+        relevance: 0.91,
+        accessedDate: "2024-01-08",
+        abstract: "Guia prático para implementação de redes neurais em aplicações reais.",
+        keywords: ["redes neurais", "implementação", "prática"]
+      }
+    ],
+    initialExpanded: false,
+    showFilters: false,
+    showSorting: false
+  }
+};
+
+// Dados para VizAttachments
+export const attachmentsMocks = {
+  // Anexos diversos
+  mixed: {
+    attachments: [
+      {
+        id: "att-1",
+        name: "research-paper.pdf",
+        type: "pdf" as const,
+        size: 2_048_576, // 2MB
+        url: "https://example.com/research-paper.pdf",
+        thumbnailUrl: "https://example.com/thumbnails/research-paper.png",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T10:30:00Z",
+        description: "Artigo de pesquisa principal sobre IA"
+      },
+      {
+        id: "att-2",
+        name: "dataset.csv",
+        type: "csv" as const,
+        size: 524_288, // 512KB
+        url: "https://example.com/dataset.csv",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T11:15:00Z",
+        description: "Conjunto de dados usado na análise"
+      },
+      {
+        id: "att-3",
+        name: "presentation-slides.pptx",
+        type: "pptx" as const,
+        size: 15_728_640, // 15MB
+        url: "https://example.com/presentation-slides.pptx",
+        thumbnailUrl: "https://example.com/thumbnails/presentation.png",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T12:00:00Z",
+        description: "Slides da apresentação sobre os resultados"
+      },
+      {
+        id: "att-4",
+        name: "source-code.zip",
+        type: "zip" as const,
+        size: 1_048_576, // 1MB
+        url: "https://example.com/source-code.zip",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T13:45:00Z",
+        description: "Código fonte do projeto de IA"
+      },
+      {
+        id: "att-5",
+        name: "diagram.png",
+        type: "png" as const,
+        size: 307_200, // 300KB
+        url: "https://example.com/diagram.png",
+        thumbnailUrl: "https://example.com/diagram.png",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T14:20:00Z",
+        description: "Diagrama arquitetural do sistema"
+      }
+    ],
+    showThumbnails: true,
+    showDownloadButtons: true,
+    maxPreviewSize: 5_242_880, // 5MB
+  },
+  // Anexos com diferentes status
+  statusVariety: {
+    attachments: [
+      {
+        id: "att-6",
+        name: "processing-document.pdf",
+        type: "pdf" as const,
+        size: 1_024_000, // 1MB
+        url: "https://example.com/processing-document.pdf",
+        status: "processing" as const,
+        uploadedAt: "2024-01-15T15:00:00Z",
+        description: "Documento em processamento"
+      },
+      {
+        id: "att-7",
+        name: "completed-report.docx",
+        type: "docx" as const,
+        size: 2_048_000, // 2MB
+        url: "https://example.com/completed-report.docx",
+        thumbnailUrl: "https://example.com/thumbnails/report.png",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T15:30:00Z",
+        description: "Relatório final concluído"
+      },
+      {
+        id: "att-8",
+        name: "failed-upload.txt",
+        type: "txt" as const,
+        size: 1024, // 1KB
+        status: "error" as const,
+        uploadedAt: "2024-01-15T16:00:00Z",
+        description: "Arquivo com erro no upload"
+      }
+    ],
+    showThumbnails: true,
+    showDownloadButtons: true,
+    maxPreviewSize: 10_485_760, // 10MB
+  },
+  // Anexos sem thumbnails
+  noThumbnails: {
+    attachments: [
+      {
+        id: "att-9",
+        name: "large-dataset.json",
+        type: "json" as const,
+        size: 104_857_600, // 100MB
+        url: "https://example.com/large-dataset.json",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T17:00:00Z",
+        description: "Conjunto de dados grande em formato JSON"
+      },
+      {
+        id: "att-10",
+        name: "configuration.yml",
+        type: "yml" as const,
+        size: 8192, // 8KB
+        url: "https://example.com/configuration.yml",
+        status: "processed" as const,
+        uploadedAt: "2024-01-15T17:30:00Z",
+        description: "Arquivo de configuração YAML"
+      }
+    ],
+    showThumbnails: false,
+    showDownloadButtons: true,
+    maxPreviewSize: 52_428_800, // 50MB
+  }
+};
+
+// Dados para VizExport
+export const exportMocks = {
+  // Exportação básica
+  basic: {
+    content: `# Relatório de Pesquisa sobre IA
+
+## Introdução
+
+A inteligência artificial está revolucionando diversos setores da economia e sociedade.
+
+## Metodologia
+
+Foram analisados dados de múltiplas fontes incluindo artigos científicos e relatórios industriais.
+
+## Resultados
+
+Os algoritmos de aprendizado profundo demonstraram superioridade em tarefas de classificação complexas.
+
+## Conclusão
+
+O futuro da IA é promissor, com aplicações cada vez mais amplas em diferentes domínios.`,
+    title: "Relatório de Pesquisa sobre IA",
+    availableFormats: ["pdf", "markdown", "html", "png"] as const,
+    defaultFormat: "pdf" as const,
+    showPreview: true,
+    allowCustomization: true
+  },
+  // Exportação com metadados ricos
+  richMetadata: {
+    content: `# Análise Comparativa: Deep Learning vs Métodos Tradicionais
+
+## Resumo Executivo
+
+Esta análise compara o desempenho de algoritmos de deep learning com métodos tradicionais de machine learning.
+
+## Dados Coletados
+
+- **Período**: Janeiro 2022 - Dezembro 2023
+- **Amostras**: 10.000 instâncias
+- **Métricas**: Acurácia, Precisão, Recall, F1-Score
+
+## Resultados Principais
+
+| Método | Acurácia | Precisão | Recall | F1-Score |
+|--------|----------|----------|--------|----------|
+| SVM | 0.82 | 0.79 | 0.85 | 0.82 |
+| Random Forest | 0.88 | 0.86 | 0.89 | 0.87 |
+| Neural Network | 0.94 | 0.92 | 0.95 | 0.93 |
+| CNN | 0.96 | 0.94 | 0.97 | 0.95 |
+
+## Discussão
+
+Os modelos de deep learning, particularmente as redes neurais convolucionais, apresentaram os melhores resultados.`,
+    title: "Análise Comparativa: Deep Learning vs Métodos Tradicionais",
+    author: "Dr. Jane Johnson",
+    description: "Estudo comparativo entre algoritmos de deep learning e métodos tradicionais de machine learning",
+    keywords: ["deep learning", "machine learning", "comparação", "algoritmos"],
+    createdDate: "2024-01-15",
+    availableFormats: ["pdf", "markdown", "html", "png", "docx"] as const,
+    defaultFormat: "pdf" as const,
+    showPreview: true,
+    allowCustomization: true
+  },
+  // Exportação simples (apenas markdown)
+  simple: {
+    content: `# Notas Rápidas
+
+- IA está crescendo rapidamente
+- Deep learning é fundamental
+- Aplicações em visão computacional são promissoras
+
+## Próximos Passos
+
+1. Revisar literatura adicional
+2. Implementar protótipo
+3. Validar resultados`,
+    title: "Notas Rápidas sobre IA",
+    availableFormats: ["markdown"] as const,
+    defaultFormat: "markdown" as const,
+    showPreview: false,
+    allowCustomization: false
+  },
+  // Exportação com conteúdo longo
+  longContent: {
+    content: `# Pesquisa Extensiva sobre Inteligência Artificial
+
+## Capítulo 1: Introdução
+
+${"A inteligência artificial (IA) representa uma das tecnologias mais transformadoras do século XXI. ".repeat(REPEAT_INTRO)}
+
+## Capítulo 2: Histórico
+
+${"O desenvolvimento da IA teve início na década de 1950 com os trabalhos pioneiros de Alan Turing. ".repeat(REPEAT_HISTORY)}
+
+## Capítulo 3: Estado da Arte
+
+${"Atualmente, os avanços em deep learning e processamento de linguagem natural estão revolucionando diversos setores. ".repeat(REPEAT_STATE_OF_ART)}
+
+## Capítulo 4: Desafios Éticos
+
+${"Questões éticas relacionadas à IA incluem viés algorítmico, privacidade de dados e impacto no emprego. ".repeat(REPEAT_ETHICS)}
+
+## Capítulo 5: Futuro
+
+${"O futuro da IA promete avanços ainda maiores, com aplicações em medicina, educação e transporte. ".repeat(REPEAT_FUTURE)}
+
+## Conclusão
+
+${"Em resumo, a IA continuará a moldar o futuro da humanidade de maneiras profundas e significativas. ".repeat(REPEAT_CONCLUSION)}`,
+    title: "Pesquisa Extensiva sobre Inteligência Artificial",
+    author: "Dr. Maria Garcia",
+    description: "Análise abrangente do estado atual e futuro da inteligência artificial",
+    availableFormats: ["pdf", "html", "docx"] as const,
+    defaultFormat: "pdf" as const,
+    showPreview: true,
+    allowCustomization: true
+  }
+};
+
+// Atualizar o objeto allMocks para incluir os novos mocks
+export const allMocksUpdated = {
+  ...allMocks,
+  citations: citationsMocks,
+  sourcesList: sourcesListMocks,
+  attachments: attachmentsMocks,
+  export: exportMocks
 };
