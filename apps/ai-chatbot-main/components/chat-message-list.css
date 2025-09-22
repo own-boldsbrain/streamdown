@@ -1,0 +1,8 @@
+/* Virtualized Message List Styles */
+.virtualized-message-list {
+  overflow-anchor: none;
+}
+
+.virtualized-message-list:focus {
+  outline: none;
+}
