@@ -45,7 +45,7 @@ export function useSpeechSynthesis(
 ): UseSpeechSynthesisReturn {
   // Verificar suporte ao navegador
   const [supported, setSupported] = useState<boolean>(false);
-  
+
   // Estado da síntese de voz
   const [speech, setSpeech] = useState<SpeechState>({
     isPlaying: false,
@@ -53,10 +53,10 @@ export function useSpeechSynthesis(
     isEnded: true,
     error: null,
   });
-  
+
   // Lista de vozes disponíveis
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  
+
   // Opções atuais
   const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(
     initialOptions.voice || null
@@ -93,7 +93,7 @@ export function useSpeechSynthesis(
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
-      
+
       // Se não tiver uma voz definida, usar a primeira disponível
       if (!currentVoice && availableVoices.length > 0) {
         setCurrentVoice(availableVoices[0]);
@@ -221,13 +221,13 @@ export function useSpeechSynthesis(
 
   // Função para pausar a fala
   const pause = useCallback(() => {
-    if (!supported || !speech.isPlaying) return;
+    if (!(supported && speech.isPlaying)) return;
     window.speechSynthesis.pause();
   }, [supported, speech.isPlaying]);
 
   // Função para retomar a fala
   const resume = useCallback(() => {
-    if (!supported || !speech.isPaused) return;
+    if (!(supported && speech.isPaused)) return;
     window.speechSynthesis.resume();
   }, [supported, speech.isPaused]);
 

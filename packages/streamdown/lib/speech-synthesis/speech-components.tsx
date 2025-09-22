@@ -41,7 +41,7 @@ export function SpeechStatusIndicator({
   let statusClass = "bg-gray-400";
   let statusState = "stopped";
   let ariaStatusText = "Parado";
-  
+
   if (isPlaying) {
     statusText = "Reproduzindo";
     statusClass = "animate-pulse bg-green-500";
@@ -55,21 +55,17 @@ export function SpeechStatusIndicator({
   }
 
   return (
-    <div 
-      aria-live="polite" 
-      className="flex gap-2 items-center"
+    <div
+      aria-live="polite"
+      className="flex items-center gap-2"
       data-state={statusState}
     >
-      <span className="sr-only">
-        {ariaStatusText}
-      </span>
+      <span className="sr-only">{ariaStatusText}</span>
       <div
-        className={cn("flex h-2 rounded-full w-2", statusClass)}
+        className={cn("flex h-2 w-2 rounded-full", statusClass)}
         data-speech-status
       />
-      <span className="text-muted-foreground text-xs">
-        {statusText}
-      </span>
+      <span className="text-muted-foreground text-xs">{statusText}</span>
     </div>
   );
 }
@@ -87,7 +83,7 @@ export function SpeechControls({
   // Determinar ícone e texto com base no estado
   let playIcon = "▶️";
   let playLabel = "Reproduzir";
-  
+
   if (isPlaying) {
     playIcon = "⏸️";
     playLabel = "Pausar";
@@ -95,16 +91,16 @@ export function SpeechControls({
     playIcon = "▶️";
     playLabel = "Continuar";
   }
-  
+
   const stopIcon = "⏹️";
   const isStopDisabled = !(isPlaying || isPaused);
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <button
         aria-label={playLabel}
         className={cn(
-          "bg-background border border-input disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-medium h-8 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center px-3 rounded-md text-sm transition-colors".split(" ").sort().join(" "),
+          "inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50".split(" ").sort().join(" "),
           isPlaying ? "bg-accent text-accent-foreground" : ""
         )}
         disabled={!isTextAvailable}
@@ -118,7 +114,7 @@ export function SpeechControls({
 
       <button
         aria-label="Parar"
-        className="bg-background border border-input disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-medium h-8 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center px-3 rounded-md text-sm transition-colors".split(" ").sort().join(" ")
+        className="inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50".split(" ").sort().join(" ")
         disabled={isStopDisabled}
         onClick={onStop}
         title="Parar"
@@ -144,7 +140,7 @@ export function SettingControl({
   compact,
 }: SettingsControlProps) {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <label 
         className={cn(
           "font-medium text-sm".split(" ").sort().join(" "),
@@ -156,7 +152,7 @@ export function SettingControl({
       </label>
       <input
         aria-label={`Ajustar ${label.toLowerCase()}`}
-        className="appearance-none bg-border h-2 rounded-md w-24 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:w-3".split(" ").sort().join(" ")
+        className="h-2 w-24 appearance-none rounded-md bg-border [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground".split(" ").sort().join(" ")
         id={id}
         max={max}
         min={min}

@@ -32,14 +32,9 @@ export const StreamdownWithSpeech = memo(
       ref
     ) => {
       return (
-        <div
-          className="relative"
-          data-streamdown-speech
-          dir={dir}
-          ref={ref}
-        >
+        <div className="relative" data-streamdown-speech dir={dir} ref={ref}>
           {enableSpeech && (
-            <div className="absolute right-0 z-10 top-0">
+            <div className="absolute top-0 right-0 z-10">
               <MarkdownSpeech
                 className="mt-2"
                 dir={dir}
@@ -50,10 +45,7 @@ export const StreamdownWithSpeech = memo(
               </MarkdownSpeech>
             </div>
           )}
-          <Streamdown
-            className={className}
-            {...props}
-          >
+          <Streamdown className={className} {...props}>
             {children}
           </Streamdown>
         </div>

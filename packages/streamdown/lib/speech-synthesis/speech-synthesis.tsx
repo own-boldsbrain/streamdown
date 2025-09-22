@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react";
-import { useSpeechSynthesis } from "./use-speech-synthesis";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "../utils";
 import {
-  SpeechStatusIndicator,
-  SpeechControls,
   SettingControl,
+  SpeechControls,
+  SpeechStatusIndicator,
 } from "./speech-ui";
+import { useSpeechSynthesis } from "./use-speech-synthesis";
 
 // Constantes para evitar magic numbers
 const VOLUME_PERCENT_MULTIPLIER = 100;
@@ -34,28 +34,28 @@ export type SpeechSynthesisProps = {
 const cleanMarkdownText = (input: string): string => {
   // Remover links Markdown [texto](url)
   let cleaned = input.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-  
+
   // Remover formatação Markdown comum
   cleaned = cleaned.replace(/(\*\*|__)(.*?)\1/g, "$2"); // Negrito
   cleaned = cleaned.replace(/(\*|_)(.*?)\1/g, "$2"); // Itálico
   cleaned = cleaned.replace(/~~(.*?)~~/g, "$1"); // Tachado
   cleaned = cleaned.replace(/`([^`]+)`/g, "$1"); // Código inline
-  
+
   // Remover blocos de código
   cleaned = cleaned.replace(/```[\s\S]*?```/g, "Bloco de código");
-  
+
   // Remover cabeçalhos mantendo o texto
   cleaned = cleaned.replace(/#{1,6}\s+(.+)/g, "$1");
-  
+
   // Remover tags HTML
   cleaned = cleaned.replace(/<[^>]*>/g, "");
-  
+
   // Remover caracteres especiais Markdown
   cleaned = cleaned.replace(/[#*_~`>]/g, "");
-  
+
   // Substitui múltiplos espaços por um único
   cleaned = cleaned.replace(/\s+/g, " ");
-  
+
   return cleaned.trim();
 };
 
@@ -73,7 +73,7 @@ export function SpeechSynthesis({
 }: SpeechSynthesisProps) {
   // Estado para rastrear o texto processado para leitura
   const [processedText, setProcessedText] = useState<string>("");
-  
+
   // Hook para gerenciar a síntese de voz
   const {
     speech,
@@ -100,13 +100,13 @@ export function SpeechSynthesis({
       setProcessedText("");
       return;
     }
-    
+
     setProcessedText(cleanMarkdownText(text));
   }, [text]);
 
   // Filtra vozes para o idioma atual
-  const filteredVoices = voices.filter(
-    (voice) => voice.lang.startsWith(lang.split("-")[0])
+  const filteredVoices = voices.filter((voice) =>
+    voice.lang.startsWith(lang.split("-")[0])
   );
 
   // Se não há vozes para o idioma atual, usar todas as vozes
@@ -119,7 +119,7 @@ export function SpeechSynthesis({
     } else {
       speak(processedText);
     }
-    
+
     // Focar nos controles para acessibilidade
     if (controlsRef.current) {
       controlsRef.current.focus();
@@ -128,9 +128,7 @@ export function SpeechSynthesis({
 
   // Função para mudar a voz
   const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedVoice = voices.find(
-      (voice) => voice.name === e.target.value
-    );
+    const selectedVoice = voices.find((voice) => voice.name === e.target.value);
     if (selectedVoice) {
       setVoice(selectedVoice);
     }
@@ -141,7 +139,7 @@ export function SpeechSynthesis({
     return (
       <div
         className={cn(
-          "bg-yellow-50 dark:bg-yellow-900 dark:text-yellow-200 p-4 rounded-md text-yellow-800",
+          "rounded-md bg-yellow-50 p-4 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
           className
         )}
         dir={dir}
@@ -155,7 +153,7 @@ export function SpeechSynthesis({
     <section
       aria-label={title}
       className={cn(
-        "bg-muted/40 border border-border my-4 p-4 rounded-md shadow-sm",
+        "my-4 rounded-md border border-border bg-muted/40 p-4 shadow-sm",
         orientation === "vertical" ? "flex flex-col gap-3" : "space-y-3",
         compact ? "text-sm" : "text-base",
         className
@@ -172,46 +170,48 @@ export function SpeechSynthesis({
         )}
       >
         {/* Status da reprodução */}
-        <SpeechStatusIndicator 
-          isPlaying={speech.isPlaying} 
-          isPaused={speech.isPaused} 
+        <SpeechStatusIndicator
+          isPaused={speech.isPaused}
+          isPlaying={speech.isPlaying}
         />
 
         {/* Controles de reprodução */}
         <SpeechControls
-          isPlaying={speech.isPlaying}
-          isPaused={speech.isPaused}
-          isTextAvailable={Boolean(processedText)}
-          onPlay={handleSpeak}
-          onPause={pause}
-          onStop={cancel}
           compact={compact}
+          isPaused={speech.isPaused}
+          isPlaying={speech.isPlaying}
+          isTextAvailable={Boolean(processedText)}
+          onPause={pause}
+          onPlay={handleSpeak}
+          onStop={cancel}
         />
 
         {/* Controle de velocidade */}
         <SettingControl
+          compact={compact}
+          formatValue={(value) => `${value.toFixed(1)}x`}
           id="rate-control"
           label="Velocidade"
-          value={currentRate}
-          min={0.5}
           max={2}
-          step={0.1}
+          min={0.5}
           onChange={(e) => setRate(Number.parseFloat(e.target.value))}
-          formatValue={(value) => `${value.toFixed(1)}x`}
-          compact={compact}
+          step={0.1}
+          value={currentRate}
         />
 
         {/* Controle de volume */}
         <SettingControl
+          compact={compact}
+          formatValue={(value) =>
+            `${Math.round(value * VOLUME_PERCENT_MULTIPLIER)}%`
+          }
           id="volume-control"
           label="Volume"
-          value={currentVolume}
-          min={0}
           max={1}
-          step={0.1}
+          min={0}
           onChange={(e) => setVolume(Number.parseFloat(e.target.value))}
-          formatValue={(value) => `${Math.round(value * VOLUME_PERCENT_MULTIPLIER)}%`}
-          compact={compact}
+          step={0.1}
+          value={currentVolume}
         />
       </div>
 
@@ -223,15 +223,12 @@ export function SpeechSynthesis({
             orientation === "vertical" ? "flex-col" : ""
           )}
         >
-          <label
-            className="font-medium text-sm"
-            htmlFor="voice-selector"
-          >
+          <label className="font-medium text-sm" htmlFor="voice-selector">
             Voz:
           </label>
           <select
             aria-label="Selecionar voz para síntese"
-            className="bg-background border border-input px-3 py-1 rounded-md text-sm"
+            className="rounded-md border border-input bg-background px-3 py-1 text-sm"
             id="voice-selector"
             onChange={handleVoiceChange}
             value={currentVoice?.name || ""}
