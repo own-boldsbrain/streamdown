@@ -4,6 +4,16 @@
 @custom-variant dark (&:is(.dark *));
 @source "../node_modules/streamdown/dist/index.js";
 
+@keyframes gradient-x {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes gradient-y {
+  0% { background-position: 50% 0%; }
+  100% { background-position: 50% 100%; }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
