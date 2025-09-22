@@ -7,7 +7,7 @@ export const runtime = "edge";
 const SIMULATION_DELAY_MS = 500;
 
 export async function POST(req: NextRequest) {
-  const { input } = await req.json();
+  await req.json();
 
   // Criamos um encoder para transformar texto em chunks
   const encoder = new TextEncoder();
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       // Metadata NATS (exemplo de como poderia ser enviado)
-      const metadata = {
+      const _metadata = {
         subject: "ap2.pre.detection.anomaly.detected",
         event_id: `event-${Date.now()}`,
       };

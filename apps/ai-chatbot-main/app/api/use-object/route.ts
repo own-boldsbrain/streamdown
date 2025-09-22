@@ -1,7 +1,6 @@
 import { openai } from "@ai-sdk/openai"; // ou outro provider compatível
 import { streamObject } from "ai"; // AI SDK Core
 import type { NextRequest } from "next/server";
-import { z } from "zod";
 import { AnomalyReportSchema } from "@/lib/schemas/ap2";
 
 export const runtime = "edge";
