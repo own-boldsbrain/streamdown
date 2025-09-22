@@ -1,44 +1,41 @@
-'use client'
+"use client";
 
-import { memo, useState } from 'react'
-import { LifeBuoy } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { LifeBuoy } from "lucide-react";
+import { memo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter
-} from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 type MonetizationPremiumSupportProps = {
-  isPremium: boolean
-  className?: string
-}
+  isPremium: boolean;
+  className?: string;
+};
 
 const MonetizationPremiumSupport = memo(
   ({ isPremium, className }: MonetizationPremiumSupportProps) => {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
 
     if (!isPremium) {
-      return null
+      return null;
     }
 
     return (
       <>
-        <div className={cn('flex items-center justify-center', className)}>
-          <Button
-            variant="yello-stroke"
-            onClick={() => setIsOpen(true)}
-          >
+        <div className={cn("flex items-center justify-center", className)}>
+          <Button onClick={() => setIsOpen(true)} variant="yello-stroke">
             <LifeBuoy className="mr-2 h-4 w-4" />
             Premium Support
           </Button>
         </div>
 
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog onOpenChange={setIsOpen} open={isOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Premium Support</DialogTitle>
@@ -51,8 +48,11 @@ const MonetizationPremiumSupport = memo(
               <Button
                 onClick={() => {
                   // TODO: Add analytics event for tracking premium support requests
-                  window.open('mailto:support@example.com?subject=Premium Support Request', '_blank')
-                  setIsOpen(false)
+                  window.open(
+                    "mailto:support@example.com?subject=Premium Support Request",
+                    "_blank"
+                  );
+                  setIsOpen(false);
                 }}
                 variant="yello-gradient"
               >
@@ -62,10 +62,10 @@ const MonetizationPremiumSupport = memo(
           </DialogContent>
         </Dialog>
       </>
-    )
+    );
   }
-)
+);
 
-MonetizationPremiumSupport.displayName = 'MonetizationPremiumSupport'
+MonetizationPremiumSupport.displayName = "MonetizationPremiumSupport";
 
-export { MonetizationPremiumSupport }
+export { MonetizationPremiumSupport };
