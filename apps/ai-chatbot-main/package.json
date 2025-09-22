@@ -17,6 +17,8 @@
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
+    "db:setup-libsql": "node scripts/setup-libsql.js",
+    "db:push:sqlite": "drizzle-kit push:sqlite",
     "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
   },
   "dependencies": {
