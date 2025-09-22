@@ -2,43 +2,60 @@
 
 import { useMemo } from "react";
 import { Streamdown } from "streamdown";
-import { AgentCard } from "@/components/agents/agent-card";
 import { cn } from "@/lib/utils";
 
 // Definição do tipo de mensagem de chat
-interface ChatMessage {
+type ChatMessage = {
   id: string;
   role: "user" | "assistant" | "system";
   text: string;
-}
+};
 
 type ChatMessageContentProps = {
   message: ChatMessage;
   className?: string;
 };
 
+// Lista de chaves de agentes conhecidas
+const KNOWN_AGENT_KEYS = [
+  "anomaly_report",
+  "risk_score",
+  "consumption_patterns",
+  "compliance_status",
+  "consumption_validation",
+  "financing_simulation",
+  "site_assessment",
+  "preliminary_sizing",
+] as const;
+
+// Tipo para as chaves de agentes
+type AgentKey = (typeof KNOWN_AGENT_KEYS)[number];
+
+// Verifica se uma string é uma chave de agente válida
+const isValidAgentKey = (key: string): key is AgentKey => {
+  return KNOWN_AGENT_KEYS.includes(key as AgentKey);
+};
+
+// Resultado da análise de conteúdo JSON
+type ParseResult =
+  | { isAgentJson: true; agentKey: AgentKey; data: Record<string, unknown> }
+  | { isAgentJson: false };
+
 // Detecta o possível formato JSON de resposta de agente
-const tryParseAgentJson = (content: string) => {
+const tryParseAgentJson = (content: string): ParseResult => {
   try {
     // Verificamos apenas se o conteúdo parece um JSON
     if (content.trim().startsWith("{") && content.trim().endsWith("}")) {
-      const jsonData = JSON.parse(content);
-      const agentKey = Object.keys(jsonData)[0];
+      const jsonData = JSON.parse(content) as Record<string, unknown>;
+      const firstKey = Object.keys(jsonData)[0];
 
       // Verifica se é um formato de resposta de agente conhecido
-      const knownAgentKeys = [
-        "anomaly_report",
-        "risk_score",
-        "consumption_patterns",
-        "compliance_status",
-        "consumption_validation",
-        "financing_simulation",
-        "site_assessment",
-        "preliminary_sizing",
-      ];
-
-      if (knownAgentKeys.includes(agentKey)) {
-        return { isAgentJson: true, agentKey, data: jsonData };
+      if (firstKey && isValidAgentKey(firstKey)) {
+        return {
+          isAgentJson: true,
+          agentKey: firstKey,
+          data: jsonData,
+        };
       }
     }
     return { isAgentJson: false };
@@ -55,14 +72,14 @@ export function ChatMessageContent({
 
   // Análise otimizada e memoizada do conteúdo
   const { renderedContent, isAgent, agentData, agentKey } = useMemo(() => {
-    const { isAgentJson, agentKey, data } = tryParseAgentJson(content);
+    const parseResult = tryParseAgentJson(content);
 
-    if (isAgentJson && agentKey && data) {
+    if (parseResult.isAgentJson) {
       return {
         renderedContent: null,
         isAgent: true,
-        agentData: data,
-        agentKey,
+        agentData: parseResult.data,
+        agentKey: parseResult.agentKey,
       };
     }
 
@@ -70,15 +87,18 @@ export function ChatMessageContent({
       renderedContent: content,
       isAgent: false,
       agentData: null,
-      agentKey: null,
+      agentKey: null as unknown as AgentKey, // Cast seguro aqui pois só é usado quando isAgent é true
     };
   }, [content]);
 
-  // Se for uma resposta de agente, renderiza o componente especializado
-  if (isAgent && agentData && agentKey) {
+  // Se for uma resposta de agente, renderiza o componente especializado de forma dinâmica
+    // Carregamos o componente AgentCard dinamicamente para evitar problemas de importação circular
+    const AgentCardDynamic =
+      require("@/components/agents/agent-card").AgentCard;
+
     return (
       <div className={cn("chat-message-content", className)}>
-        <AgentCard agentKey={agentKey} data={agentData} />
+        <AgentCardDynamic agentKey={agentKey} data={agentData} />
       </div>
     );
   }
