@@ -92,6 +92,7 @@ export function ChatMessageContent({
   }, [content]);
 
   // Se for uma resposta de agente, renderiza o componente especializado de forma dinâmica
+  if (isAgent && agentData && agentKey) {
     // Carregamos o componente AgentCard dinamicamente para evitar problemas de importação circular
     const AgentCardDynamic =
       require("@/components/agents/agent-card").AgentCard;
