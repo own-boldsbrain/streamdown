@@ -1,10 +1,18 @@
 import { MapPin, RotateCcw, Sun } from "lucide-react";
-imp  const getOrientationIcon = (orientation: number) => {
-    if (orientation >= SOUTH_ORIENTATION_MIN && orientation <= SOUTH_ORIENTATION_MAX) {
-      return <Sun className="h-4 text-yellow-600 w-4" />;
-    }
-    return <RotateCcw className="h-4 text-blue-600 w-4" />;
-  };Badge } from "@/components/ui/badge";
+
+imp;
+const getOrientationIcon = (orientation: number) => {
+  if (
+    orientation >= SOUTH_ORIENTATION_MIN &&
+    orientation <= SOUTH_ORIENTATION_MAX
+  ) {
+    return <Sun className="h-4 w-4 text-yellow-600" />;
+  }
+  return <RotateCcw className="h-4 w-4 text-blue-600" />;
+};
+Badge;
+} from "@/components/ui/badge"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type PanelData = {
