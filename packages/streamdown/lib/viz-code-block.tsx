@@ -7,19 +7,14 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import type { BundledLanguage } from "shiki";
-import { CodeBlock } from "../code-block";
-import { cn } from "../utils";
+import { CodeBlock } from "./code-block";
+import { cn } from "./utils";
 
 const LINE_NUMBER_PADDING = 3;
-
-type ExecutionResult = {
-  output: string;
-  error?: string;
-  isRunning: boolean;
-};
 
 export interface VizCodeBlockProps extends ComponentProps<typeof CodeBlock> {
   /** Enable line highlighting */
@@ -37,6 +32,12 @@ export interface VizCodeBlockProps extends ComponentProps<typeof CodeBlock> {
   /** Custom execution button text */
   executeButtonText?: string;
 }
+
+type ExecutionResult = {
+  output: string;
+  error?: string;
+  isRunning: boolean;
+};
 
 export const VizCodeBlock = memo<VizCodeBlockProps>(
   ({
@@ -58,6 +59,7 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
       isRunning: false,
     });
     const [selectedLine, setSelectedLine] = useState<number | null>(null);
+    const codeRef = useRef<HTMLDivElement>(null);
 
     const handleExecute = useCallback(async () => {
       if (!onExecute) {
@@ -101,10 +103,9 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
         return code;
       }
 
-      const lines = code.split(
-\n);
+      const lines = code.split("\n");
       return lines
-        .map((line, index) => {
+        .map((line: string, index: number) => {
           const lineNumber = index + 1;
           const isHighlighted = highlightLines.includes(lineNumber);
           const isSelected = selectedLine === lineNumber;
@@ -112,17 +113,16 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
           let processedLine = line;
 
           if (showLineNumbers) {
-            processedLine = `${lineNumber.toString().padStart(LINE_NUMBER_PADDING, 
-)} | ${line}`;
+            processedLine = `${lineNumber.toString().padStart(LINE_NUMBER_PADDING, " ")} | ${line}`;
           }
 
           if (isHighlighted || isSelected) {
-            const lineClass = cn(
+            const spanClassName = cn(
               "block w-full",
               isHighlighted && "bg-yellow-200 dark:bg-yellow-900/30",
               isSelected && "bg-blue-200 dark:bg-blue-900/30"
             );
-            return `<span class="${lineClass}" data-line="${lineNumber}">${processedLine}</span>`;
+            return `<span class="${spanClassName}" data-line="${lineNumber}">${processedLine}</span>`;
           }
 
           if (enableLineLinking) {
@@ -131,8 +131,7 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
 
           return `<span class="block w-full">${processedLine}</span>`;
         })
-        .join(
-\n);
+        .join("\n");
     }, [
       code,
       highlightLines,
@@ -143,18 +142,22 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
 
     // Handle click events on code lines
     useEffect(() => {
-      if (!(enableLineLinking || onLineClick)) {
+      const hasLineInteraction = enableLineLinking || onLineClick;
+      if (!hasLineInteraction) {
         return;
       }
 
       const handleClick = (event: Event) => {
         const target = event.target as HTMLElement;
-        const lineElement = target.closest([data - line]) as HTMLElement;
+        const lineElement = target.closest("[data-line]") as HTMLElement;
 
         if (lineElement) {
-          const lineNumber = Number.parseInt(lineElement.dataset.line || 0, 10);
-          const lines = code.split(\n);
-          const content = lines[lineNumber - 1] || ';;;
+          const lineNumber = Number.parseInt(
+            lineElement.dataset.line || "0",
+            10
+          );
+          const lines = code.split("\n");
+          const content = lines[lineNumber - 1] || "";
 
           if (lineNumber > 0) {
             handleLineClick(lineNumber, content);
@@ -162,17 +165,21 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
         }
       };
 
-      const codeElement = document.querySelector([data - code - block]);
+      const codeElement = codeRef.current?.querySelector("[data-code-block]");
       if (codeElement) {
-        codeElement.addEventListener(click, handleClick);
-        return () => codeElement.removeEventListener(click, handleClick);
+        codeElement.addEventListener("click", handleClick);
+        return () => codeElement.removeEventListener("click", handleClick);
       }
     }, [code, enableLineLinking, handleLineClick, onLineClick]);
 
     return (
       <div className={cn("relative", className)}>
         <CodeBlock
-          className={cn(enableLineLinking && "cursor-pointer", className)}
+          className={cn(
+            "cursor-pointer",
+            enableLineLinking && "cursor-pointer",
+            className
+          )}
           code={processedCode}
           language={language}
           {...props}
@@ -182,8 +189,9 @@ export const VizCodeBlock = memo<VizCodeBlockProps>(
             {enableExecution && (
               <button
                 className={cn(
-                  "flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50",
-                  "bg-green-600 text-white hover:bg-green-700"
+                  "flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors",
+                  "bg-green-600 text-white hover:bg-green-700",
+                  "disabled:cursor-not-allowed disabled:opacity-50"
                 )}
                 disabled={executionResult.isRunning}
                 onClick={handleExecute}
