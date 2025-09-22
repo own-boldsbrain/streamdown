@@ -3,27 +3,40 @@ import { ChatSDKError } from "../errors";
 import { generateUUID } from "../utils";
 import { getPostgresDb } from "./postgres";
 import { getTursoDb } from "./turso";
+import { getLibSqlDb } from "./libsql";
 
-// Check which database provider we should use
-const DB_PROVIDER = process.env.DB_PROVIDER || "postgres";
+// Check which database driver we should use
+const DB_DRIVER = process.env.DB_DRIVER || "postgres";
 
-// Check if guest user fallback is enabled
+// Check if guest user fallback is enabled for DB errors
 const ENABLE_GUEST_USER_FALLBACK =
   process.env.ENABLE_GUEST_USER_FALLBACK === "true";
 
-// Get the appropriate database client based on the provider
+// Check if complete no-DB mode is enabled
+const ALLOW_GUEST_NO_DB = process.env.ALLOW_GUEST_NO_DB === "1";
+
+// Get the appropriate database client based on the driver
 export function getDb() {
   try {
-    if (DB_PROVIDER === "turso") {
+    // Suporte explícito para fallback total sem DB
+    if (ALLOW_GUEST_NO_DB) {
+      console.warn("Operating in NO-DB mode with ALLOW_GUEST_NO_DB=1");
+      return null;
+    }
+
+    if (DB_DRIVER === "libsql") {
+      return getLibSqlDb();
+    } else if (DB_DRIVER === "turso") {
       return getTursoDb();
     }
     return getPostgresDb();
   } catch (error) {
-    console.error("Failed to initialize database:", error);
-    if (!ENABLE_GUEST_USER_FALLBACK) {
-      throw error;
+    console.error(`Failed to initialize ${DB_DRIVER} database:`, error);
+    if (ENABLE_GUEST_USER_FALLBACK || ALLOW_GUEST_NO_DB) {
+      console.warn("Using guest fallback mode due to database initialization error");
+      return null;
     }
-    return null;
+    throw error;
   }
 }
 
@@ -38,7 +51,7 @@ export function handleDbError(
   errorMessage: string,
   fallbackValue: any = null
 ): never | any {
-  if (ENABLE_GUEST_USER_FALLBACK) {
+  if (ENABLE_GUEST_USER_FALLBACK || ALLOW_GUEST_NO_DB) {
     console.warn(`DB Error with fallback enabled: ${errorMessage}`, error);
     return fallbackValue;
   }

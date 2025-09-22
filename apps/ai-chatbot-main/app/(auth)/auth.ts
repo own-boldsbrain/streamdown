@@ -69,8 +69,17 @@ export const {
       id: "guest",
       credentials: {},
       async authorize() {
-        const [guestUser] = await createGuestUser();
-        return { ...guestUser, type: "guest" };
+        try {
+          const guestUser = await createGuestUser(); // Não desestruturas como array
+          return { ...guestUser, type: "guest" };
+        } catch (e) {
+          if (process.env.ALLOW_GUEST_NO_DB === "1") {
+            console.error("DB Error with fallback enabled:", e);
+            const ts = Date.now();
+            return { id: `guest-${ts}`, email: `guest.${ts}@local`, type: "guest", ephemeral: true };
+          }
+          throw e;
+        }
       },
     }),
   ],
