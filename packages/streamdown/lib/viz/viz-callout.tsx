@@ -1,28 +1,28 @@
 "use client";
 
+import {
+  AlertCircle,
+  AlertTriangle,
+  CheckCircle2,
+  HelpCircle,
+  Info,
+  LifeBuoy,
+  Lightbulb,
+  XCircle,
+} from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 import { memo } from "react";
 import { cn } from "../utils";
-import { 
-  AlertCircle, 
-  AlertTriangle, 
-  CheckCircle2, 
-  HelpCircle, 
-  Info, 
-  LifeBuoy, 
-  Lightbulb, 
-  XCircle,
-} from "lucide-react";
 
 // Tipos de callouts disponíveis
-type CalloutType = 
-  | "info" 
-  | "warning" 
-  | "error" 
-  | "success" 
-  | "tip" 
-  | "note" 
-  | "help" 
+type CalloutType =
+  | "info"
+  | "warning"
+  | "error"
+  | "success"
+  | "tip"
+  | "note"
+  | "help"
   | "important";
 
 // Propriedades do componente
@@ -37,42 +37,50 @@ interface VizCalloutProps extends HTMLAttributes<HTMLDivElement> {
 const calloutConfig = {
   info: {
     icon: Info,
-    className: "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/20 dark:border-blue-800/60 dark:text-blue-300",
+    className:
+      "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/20 dark:border-blue-800/60 dark:text-blue-300",
     titleClassName: "text-blue-800 dark:text-blue-300",
   },
   warning: {
     icon: AlertTriangle,
-    className: "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/20 dark:border-amber-800/60 dark:text-amber-300",
+    className:
+      "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/20 dark:border-amber-800/60 dark:text-amber-300",
     titleClassName: "text-amber-800 dark:text-amber-300",
   },
   error: {
     icon: XCircle,
-    className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/20 dark:border-red-800/60 dark:text-red-300",
+    className:
+      "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/20 dark:border-red-800/60 dark:text-red-300",
     titleClassName: "text-red-800 dark:text-red-300",
   },
   success: {
     icon: CheckCircle2,
-    className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/20 dark:border-green-800/60 dark:text-green-300",
+    className:
+      "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/20 dark:border-green-800/60 dark:text-green-300",
     titleClassName: "text-green-800 dark:text-green-300",
   },
   tip: {
     icon: Lightbulb,
-    className: "bg-purple-50 border-purple-200 text-purple-800 dark:bg-purple-950/20 dark:border-purple-800/60 dark:text-purple-300",
+    className:
+      "bg-purple-50 border-purple-200 text-purple-800 dark:bg-purple-950/20 dark:border-purple-800/60 dark:text-purple-300",
     titleClassName: "text-purple-800 dark:text-purple-300",
   },
   note: {
     icon: AlertCircle,
-    className: "bg-gray-50 border-gray-200 text-gray-800 dark:bg-gray-900/50 dark:border-gray-800 dark:text-gray-300",
+    className:
+      "bg-gray-50 border-gray-200 text-gray-800 dark:bg-gray-900/50 dark:border-gray-800 dark:text-gray-300",
     titleClassName: "text-gray-800 dark:text-gray-300",
   },
   help: {
     icon: HelpCircle,
-    className: "bg-indigo-50 border-indigo-200 text-indigo-800 dark:bg-indigo-950/20 dark:border-indigo-800/60 dark:text-indigo-300",
+    className:
+      "bg-indigo-50 border-indigo-200 text-indigo-800 dark:bg-indigo-950/20 dark:border-indigo-800/60 dark:text-indigo-300",
     titleClassName: "text-indigo-800 dark:text-indigo-300",
   },
   important: {
     icon: LifeBuoy,
-    className: "bg-pink-50 border-pink-200 text-pink-800 dark:bg-pink-950/20 dark:border-pink-800/60 dark:text-pink-300",
+    className:
+      "bg-pink-50 border-pink-200 text-pink-800 dark:bg-pink-950/20 dark:border-pink-800/60 dark:text-pink-300",
     titleClassName: "text-pink-800 dark:text-pink-300",
   },
 };
@@ -113,7 +121,7 @@ const VizCallout = memo(
                 {title}
               </h3>
             )}
-            <div className="prose-p:leading-normal prose-p:my-1 prose-sm prose-ul:my-1 prose-ul:pl-4">
+            <div className="prose-sm prose-p:my-1 prose-ul:my-1 prose-ul:pl-4 prose-p:leading-normal">
               {children}
             </div>
           </div>
