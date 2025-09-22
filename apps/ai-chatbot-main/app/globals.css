@@ -15,6 +15,7 @@
 
 /* define design tokens (light mode) */
 :root {
+  /* Base Theme */
   --background: hsl(0 0% 100%);
   --foreground: hsl(240 10% 3.9%);
   --card: hsl(0 0% 100%);
@@ -39,6 +40,8 @@
   --chart-3: hsl(197 37% 24%);
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
+  
+  /* Sidebar */
   --sidebar-background: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
@@ -47,13 +50,22 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar: hsl(0 0% 98%);
+  
+  /* Yello Solar Hub Theme */
+  --yello-primary: hsl(45, 100%, 50%);        /* Amarelo Principal */
+  --yello-secondary: hsl(36, 100%, 50%);      /* Laranja */
+  --yello-accent: hsl(15, 100%, 60%);         /* Vermelho-Laranja */
+  --yello-dark: hsl(200, 15%, 20%);           /* Azul Escuro */
+  --yello-light: hsl(44, 100%, 95%);          /* Amarelo Claro */
+  
   /* border radius unit */
   --radius: 0.5rem;
-  --sidebar: hsl(0 0% 98%);
 }
 
 /* define design tokens (dark mode) */
 .dark {
+  /* Base Theme */
   --background: hsl(240 10% 3.9%);
   --foreground: hsl(0 0% 98%);
   --card: hsl(240 10% 3.9%);
@@ -78,6 +90,8 @@
   --chart-3: hsl(30 80% 55%);
   --chart-4: hsl(280 65% 60%);
   --chart-5: hsl(340 75% 55%);
+  
+  /* Sidebar */
   --sidebar-background: hsl(240 5.9% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);
   --sidebar-primary: hsl(224.3 76.3% 48%);
@@ -87,6 +101,13 @@
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
   --sidebar: hsl(240 5.9% 10%);
+  
+  /* Yello Solar Hub Theme - Variantes Escuras */
+  --yello-primary: hsl(45, 95%, 55%);         /* Amarelo Principal (Mais Vibrante) */
+  --yello-secondary: hsl(36, 90%, 55%);       /* Laranja (Mais Vibrante) */
+  --yello-accent: hsl(15, 90%, 65%);          /* Vermelho-Laranja (Mais Vibrante) */
+  --yello-dark: hsl(200, 20%, 15%);           /* Azul Escuro (Mais Escuro) */
+  --yello-light: hsl(44, 100%, 85%);          /* Amarelo Claro (Menos Brilhante) */
 }
 
 /* define theme */

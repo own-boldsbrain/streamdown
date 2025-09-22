@@ -1,20 +1,20 @@
-import type { ButtonProps } from '@/components/ui/button';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from "react";
+import type { ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /**
  * YelloButton - Um botão com efeito de vidro e borda em degradê fino
  * seguindo o estilo Yello Solar Hub
  */
-export const YelloButton = ({ 
-  className, 
-  variant = 'yello-glass',
-  ...props 
+export const YelloButton = ({
+  className,
+  variant = "yello-glass",
+  ...props
 }: ButtonProps) => {
   return (
     <Button
-      className={cn('relative z-0', className)}
+      className={cn("relative z-0", className)}
       variant={variant}
       {...props}
     />
@@ -32,10 +32,7 @@ export const YelloCard = ({
 }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn(
-        'p-4 relative rounded-lg yello-card z-0',
-        className
-      )}
+      className={cn("yello-card relative z-0 rounded-lg p-4", className)}
       {...props}
     >
       {children}
@@ -54,10 +51,7 @@ export const YelloBorder = ({
 }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn(
-        'p-4 relative rounded-md yello-border z-0',
-        className
-      )}
+      className={cn("yello-border relative z-0 rounded-md p-4", className)}
       {...props}
     >
       {children}
