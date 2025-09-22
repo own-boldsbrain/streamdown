@@ -1,9 +1,16 @@
 "use client";
 
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
 
 /**
  * Demonstração dos componentes UI com o degradê da Yello
@@ -11,8 +18,10 @@ import { Badge } from "../ui/badge";
 export default function YelloGradientDemo() {
   return (
     <div className="container mx-auto space-y-8 py-10">
-      <h1 className="font-bold text-3xl">Demonstração de Componentes com Degradê Yello</h1>
-      
+      <h1 className="font-bold text-3xl">
+        Demonstração de Componentes com Degradê Yello
+      </h1>
+
       <section>
         <h2 className="mb-4 font-semibold text-2xl">Botões</h2>
         <div className="flex flex-wrap items-center gap-4">
@@ -21,10 +30,10 @@ export default function YelloGradientDemo() {
           <Button variant="yello-animated">Botão Animado</Button>
         </div>
       </section>
-      
+
       <section>
         <h2 className="mb-4 font-semibold text-2xl">Cards</h2>
-        <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card variant="default">
             <CardHeader>
               <CardTitle>Card Padrão</CardTitle>
@@ -37,7 +46,7 @@ export default function YelloGradientDemo() {
               <Button size="sm">Ação</Button>
             </CardFooter>
           </Card>
-          
+
           <Card variant="yello-stroke">
             <CardHeader>
               <CardTitle>Card com Stroke</CardTitle>
@@ -47,10 +56,12 @@ export default function YelloGradientDemo() {
               <p>Este card utiliza o stroke thin degradê da Yello.</p>
             </CardContent>
             <CardFooter>
-              <Button variant="yello-stroke" size="sm">Ação</Button>
+              <Button size="sm" variant="yello-stroke">
+                Ação
+              </Button>
             </CardFooter>
           </Card>
-          
+
           <Card variant="yello-animated">
             <CardHeader>
               <CardTitle>Card Animado</CardTitle>
@@ -60,21 +71,26 @@ export default function YelloGradientDemo() {
               <p>Este card utiliza o stroke animado em degradê da Yello.</p>
             </CardContent>
             <CardFooter>
-              <Button variant="yello-animated" size="sm">Ação</Button>
+              <Button size="sm" variant="yello-animated">
+                Ação
+              </Button>
             </CardFooter>
           </Card>
         </div>
       </section>
-      
+
       <section>
         <h2 className="mb-4 font-semibold text-2xl">Inputs</h2>
-        <div className="gap-6 grid grid-cols-1 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Input placeholder="Input padrão" />
           <Input placeholder="Input com stroke Yello" variant="yello-stroke" />
-          <Input placeholder="Input com stroke animado" variant="yello-animated" />
+          <Input
+            placeholder="Input com stroke animado"
+            variant="yello-animated"
+          />
         </div>
       </section>
-      
+
       <section>
         <h2 className="mb-4 font-semibold text-2xl">Badges</h2>
         <div className="flex flex-wrap gap-2">
