@@ -35,11 +35,12 @@ import { generateHashedPassword } from "./utils";
 // Enable guest user fallback for non-critical flows
 const ENABLE_GUEST_USER_FALLBACK =
   process.env.ENABLE_GUEST_USER_FALLBACK === "true";
+const ALLOW_GUEST_NO_DB = process.env.ALLOW_GUEST_NO_DB === "1";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
     const db = getDb();
-    if (!db && ENABLE_GUEST_USER_FALLBACK) {
+    if (!db && (ENABLE_GUEST_USER_FALLBACK || ALLOW_GUEST_NO_DB)) {
       return [];
     }
     return await db.select().from(user).where(eq(user.email, email));
@@ -51,7 +52,7 @@ export async function getUser(email: string): Promise<User[]> {
 export async function createUser(email: string, password: string) {
   try {
     const db = getDb();
-    if (!db && ENABLE_GUEST_USER_FALLBACK) {
+    if (!db && (ENABLE_GUEST_USER_FALLBACK || ALLOW_GUEST_NO_DB)) {
       return null;
     }
 
@@ -64,9 +65,14 @@ export async function createUser(email: string, password: string) {
 
 export async function createGuestUser() {
   try {
+    // Early return se NO-DB estiver habilitado
+      const ts = Date.now();
+      return { id: `guest-${ts}`, email: `guest.${ts}@local` };
+    }
+
     const db = getDb();
     if (!db && ENABLE_GUEST_USER_FALLBACK) {
-      // Se o fallback estiver ativo e não houver DB, retorna um objeto de usuário mínimo
+      // Fallback mínimo quando não há DB, mas fallback está ativo
       const ts = Date.now();
       return { id: `guest-${ts}`, email: `guest.${ts}@local` };
     }
@@ -92,13 +98,13 @@ export async function createGuestUser() {
       );
     }
 
-    // Se veio array, retorne o primeiro
     if (Array.isArray(result) && result.length > 0 && result[0]?.id) {
+      // Se veio array, retorne o primeiro
       return result[0];
     }
 
-    // Se veio objeto único com id/email
     if (result && result.id && result.email) {
+      // Se veio objeto único com id/email
       return result;
     }
 
