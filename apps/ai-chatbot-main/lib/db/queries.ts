@@ -44,10 +44,11 @@ const isTursoEnabled = process.env.DB_PROVIDER === "turso";
 // Initialize the Postgres client if not using Turso
 // biome-ignore lint: Forbidden non-null assertion.
 const client = !isTursoEnabled ? postgres(process.env.POSTGRES_URL!) : null;
-const db = !isTursoEnabled ? drizzle(client!) : null;
+const db = isTursoEnabled ? null : drizzle(client!);
 
 // Enable guest user fallback for non-critical flows
-const ENABLE_GUEST_USER_FALLBACK = process.env.ENABLE_GUEST_USER_FALLBACK === "true";
+const ENABLE_GUEST_USER_FALLBACK =
+  process.env.ENABLE_GUEST_USER_FALLBACK === "true";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
