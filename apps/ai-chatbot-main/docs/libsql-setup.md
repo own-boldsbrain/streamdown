@@ -46,6 +46,7 @@ pnpm db:setup-libsql
 ```
 
 Este script irá:
+
 - Criar o diretório de dados, se não existir
 - Gerar migrações com base no esquema atual
 - Aplicar migrações ao banco de dados LibSQL local
@@ -58,27 +59,31 @@ Após a configuração do banco de dados, você pode iniciar o servidor de desen
 pnpm dev
 ```
 
-O aplicativo estará disponível em http://localhost:3000.
+O aplicativo estará disponível em <http://localhost:3000>.
 
 ## Comandos Úteis
 
 - **Iniciar servidor de desenvolvimento**
+
   ```bash
   pnpm dev
   ```
 
 - **Visualizar o banco de dados no Drizzle Studio**
+
   ```bash
   pnpm db:studio
   ```
 
 - **Atualizar o esquema após mudanças**
+
   ```bash
   pnpm db:generate
   pnpm db:push:sqlite
   ```
 
 - **Executar migrações específicas para LibSQL**
+
   ```bash
   pnpm db:migrate:libsql
   ```
