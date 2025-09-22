@@ -10,6 +10,9 @@
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
+/* import Yello Solar Hub styles */
+@import "./yello-solar-styles.css";
+
 /* define design tokens (light mode) */
 :root {
   --background: hsl(0 0% 100%);

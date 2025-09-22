@@ -1,0 +1,136 @@
+/* Yello Solar Hub Glass Effect e Degradê Styles */
+@layer utilities {
+  /* Variáveis para o degradê da Yello Solar */
+  :root {
+    --yello-gradient-start: #ffc107;
+    --yello-gradient-mid: #ff9800;
+    --yello-gradient-end: #ff5722;
+    --glass-bg-opacity: 0.15;
+    --glass-border-opacity: 0.3;
+    --glass-blur: 10px;
+  }
+
+  .dark {
+    --yello-gradient-start: #ffd54f;
+    --yello-gradient-mid: #ffb74d;
+    --yello-gradient-end: #ff7043;
+    --glass-bg-opacity: 0.1;
+    --glass-border-opacity: 0.2;
+  }
+
+  /* Efeitos de Glass e Gradiente */
+  .yello-glass {
+    background: rgba(255, 255, 255, var(--glass-bg-opacity));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+
+  .dark .yello-glass {
+    background: rgba(30, 30, 30, var(--glass-bg-opacity));
+  }
+
+  /* Bordas com degradê */
+  .yello-border {
+    position: relative;
+    border: none !important;
+    z-index: 0;
+  }
+
+  .yello-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px; /* Espessura da borda */
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--yello-gradient-start),
+      var(--yello-gradient-mid),
+      var(--yello-gradient-end)
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: var(--glass-border-opacity);
+    z-index: -1;
+  }
+
+  /* Botão com efeito glass e borda gradiente */
+  .yello-button {
+    position: relative;
+    border: none !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .yello-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--yello-gradient-start),
+      var(--yello-gradient-mid),
+      var(--yello-gradient-end)
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: var(--glass-border-opacity);
+    z-index: 0;
+  }
+
+  .yello-button:hover::before {
+    opacity: 0.8;
+  }
+
+  /* Cartões com efeito glass */
+  .yello-card {
+    background: rgba(255, 255, 255, var(--glass-bg-opacity));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: none !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .yello-card {
+    background: rgba(30, 30, 30, var(--glass-bg-opacity));
+  }
+
+  .yello-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--yello-gradient-start),
+      var(--yello-gradient-mid),
+      var(--yello-gradient-end)
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: var(--glass-border-opacity);
+    z-index: 0;
+  }
+}
