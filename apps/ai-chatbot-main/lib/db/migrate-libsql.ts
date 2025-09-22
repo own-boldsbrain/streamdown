@@ -1,3 +1,32 @@
+import { createClient } from "@libsql/client";
+
+const url = process.env.LIBSQL_URL || "file:./dev.db";
+const authToken = process.env.LIBSQL_AUTH_TOKEN; // Turso remoto
+
+const ddl = `
+CREATE TABLE IF NOT EXISTS "User" (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+`;
+
+async function main() {
+  console.log("Applying LibSQL migration on", url);
+  const client = createClient({ url, authToken });
+  try {
+    await client.execute(ddl);
+    console.log("✅ LibSQL migration applied");
+  } catch (e) {
+    console.error("❌ Migration failed", e);
+    process.exit(1);
+  } finally {
+    await client.close();
+  }
+}
+
+main();
 import "server-only";
 import { sql } from "drizzle-orm";
 import { getDb } from "./provider";
