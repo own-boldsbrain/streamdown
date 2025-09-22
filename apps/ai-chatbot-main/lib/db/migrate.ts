@@ -16,6 +16,10 @@ for (const file of [".env.local", ".env"]) {
 }
 
 const runMigrate = async () => {
+  if (process.env.SKIP_DB_MIGRATE === "1") {
+    console.log("⏭  Skipping migrations due to SKIP_DB_MIGRATE=1");
+    return;
+  }
   if (!process.env.POSTGRES_URL) {
     throw new Error(
       `POSTGRES_URL is not defined. Checked load order: ${tried.join(", ")}. Set POSTGRES_URL in .env or provide it in the environment before running the build.`
