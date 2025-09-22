@@ -1,5 +1,5 @@
 import { DownloadIcon } from "lucide-react";
-import type { DetailedHTMLProps, ImgHTMLAttributes } from "react";
+import type { DetailedHTMLProps, ImgHTMLAttributes, KeyboardEvent } from "react";
 import type { ExtraProps } from "react-markdown";
 import { cn, save } from "./utils";
 
@@ -67,14 +67,50 @@ export const ImageComponent = ({
     return null;
   }
 
-  // Para evitar o erro de hidratação causado por div dentro de p,
-  // usamos um span para envolver a imagem quando necessário
-  
-  // Verificamos se estamos em um ambiente com risco de erro de hidratação
-  // usando uma abordagem diferente (não baseada em propriedades do nó)
-  const useSimpleStructure = true; // Sempre usar estrutura simples para evitar problemas
+  // Verifica se estamos em um ambiente inline (dentro de um parágrafo)
+  // Detectamos isso verificando a posição do nó no markdown
+  const isInParagraph = node?.position?.start.line === node?.position?.end.line && node?.position !== undefined;
 
-  // Caso contrário, manter o comportamento atual com o wrapper e controles
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      downloadImage();
+    }
+  };
+
+  // Se estiver dentro de um parágrafo, usamos uma estrutura baseada em spans
+  if (isInParagraph) {
+    return (
+      <span
+        className="group relative inline-block my-1"
+        data-streamdown="image-inline-wrapper"
+      >
+        {/** biome-ignore lint/nursery/useImageSize: "unknown size" */}
+        {/** biome-ignore lint/performance/noImgElement: "streamdown is framework-agnostic" */}
+        <img
+          alt={alt}
+          className={cn("max-w-full rounded-lg", className)}
+          data-streamdown="image"
+          src={src}
+          {...props}
+        />
+        <span className="pointer-events-none absolute inset-0 hidden rounded-lg bg-black/10 group-hover:block" />
+        <button
+          className={cn(
+            "absolute right-2 bottom-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md border border-border bg-background/90 shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-background",
+            "opacity-0 group-hover:opacity-100"
+          )}
+          onClick={downloadImage}
+          onKeyDown={handleKeyDown}
+          title="Download image"
+          type="button"
+        >
+          <DownloadIcon size={12} />
+        </button>
+      </span>
+    );
+  }
+
+  // Caso contrário, mantemos a estrutura de bloco normal
   return (
     <div
       className="group relative my-4 inline-block"
@@ -96,6 +132,7 @@ export const ImageComponent = ({
           "opacity-0 group-hover:opacity-100"
         )}
         onClick={downloadImage}
+        onKeyDown={handleKeyDown}
         title="Download image"
         type="button"
       >
