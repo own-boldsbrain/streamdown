@@ -97,7 +97,9 @@ export const ChatTTSPlayer = memo(
         utterance.voice = voice;
       } else {
         // Selecionar voz padrão para o idioma
-        const defaultVoice = voices.find(v => v.lang.startsWith(lang.split("-")[0]));
+        const defaultVoice = voices.find((v) =>
+          v.lang.startsWith(lang.split("-")[0])
+        );
         if (defaultVoice) {
           utterance.voice = defaultVoice;
         }
@@ -136,7 +138,18 @@ export const ChatTTSPlayer = memo(
           speechSynthesis.cancel();
         }
       };
-    }, [text, lang, rate, volume, voice, voices, isSupported, onStart, onEnd, onError]);
+    }, [
+      text,
+      lang,
+      rate,
+      volume,
+      voice,
+      voices,
+      isSupported,
+      onStart,
+      onEnd,
+      onError,
+    ]);
 
     // Auto-play
     useEffect(() => {
@@ -189,27 +202,29 @@ export const ChatTTSPlayer = memo(
 
     const renderPlayButton = () => (
       <button
-        onClick={handlePlay}
+        aria-label="Reproduzir texto"
         className={cn(
           "flex items-center justify-center rounded-md transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500",
-          theme === "dark" || (theme === "auto" && window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
+          theme === "dark" ||
+            (theme === "auto" &&
+              window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
             ? "hover:bg-gray-700"
             : "hover:bg-gray-100",
           sizeClasses[size]
         )}
-        aria-label="Reproduzir texto"
+        onClick={handlePlay}
         type="button"
       >
         <svg
+          aria-hidden="true"
           className={iconSizeClasses[size]}
           fill="currentColor"
           viewBox="0 0 20 20"
-          aria-hidden="true"
         >
           <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
             clipRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+            fillRule="evenodd"
           />
         </svg>
       </button>
@@ -217,27 +232,29 @@ export const ChatTTSPlayer = memo(
 
     const renderPauseButton = () => (
       <button
-        onClick={handlePause}
+        aria-label="Pausar reprodução"
         className={cn(
           "flex items-center justify-center rounded-md transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500",
-          theme === "dark" || (theme === "auto" && window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
+          theme === "dark" ||
+            (theme === "auto" &&
+              window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
             ? "hover:bg-gray-700"
             : "hover:bg-gray-100",
           sizeClasses[size]
         )}
-        aria-label="Pausar reprodução"
+        onClick={handlePause}
         type="button"
       >
         <svg
+          aria-hidden="true"
           className={iconSizeClasses[size]}
           fill="currentColor"
           viewBox="0 0 20 20"
-          aria-hidden="true"
         >
           <path
-            fillRule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
             clipRule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+            fillRule="evenodd"
           />
         </svg>
       </button>
@@ -245,27 +262,29 @@ export const ChatTTSPlayer = memo(
 
     const renderResumeButton = () => (
       <button
-        onClick={handleResume}
+        aria-label="Continuar reprodução"
         className={cn(
           "flex items-center justify-center rounded-md transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500",
-          theme === "dark" || (theme === "auto" && window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
+          theme === "dark" ||
+            (theme === "auto" &&
+              window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
             ? "hover:bg-gray-700"
             : "hover:bg-gray-100",
           sizeClasses[size]
         )}
-        aria-label="Continuar reprodução"
+        onClick={handleResume}
         type="button"
       >
         <svg
+          aria-hidden="true"
           className={iconSizeClasses[size]}
           fill="currentColor"
           viewBox="0 0 20 20"
-          aria-hidden="true"
         >
           <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
             clipRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+            fillRule="evenodd"
           />
         </svg>
       </button>
@@ -273,27 +292,29 @@ export const ChatTTSPlayer = memo(
 
     const renderStopButton = () => (
       <button
-        onClick={handleStop}
+        aria-label="Parar reprodução"
         className={cn(
           "flex items-center justify-center rounded-md transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500",
-          theme === "dark" || (theme === "auto" && window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
+          theme === "dark" ||
+            (theme === "auto" &&
+              window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
             ? "hover:bg-gray-700"
             : "hover:bg-gray-100",
           sizeClasses[size]
         )}
-        aria-label="Parar reprodução"
+        onClick={handleStop}
         type="button"
       >
         <svg
+          aria-hidden="true"
           className={iconSizeClasses[size]}
           fill="currentColor"
           viewBox="0 0 20 20"
-          aria-hidden="true"
         >
           <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
             clipRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            fillRule="evenodd"
           />
         </svg>
       </button>
@@ -301,22 +322,24 @@ export const ChatTTSPlayer = memo(
 
     return (
       <section
+        aria-label="Player de texto para fala"
         className={cn(
           "inline-flex items-center gap-2 rounded-lg border p-2 transition-colors",
-          theme === "dark" || (theme === "auto" && window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
+          theme === "dark" ||
+            (theme === "auto" &&
+              window?.matchMedia?.("(prefers-color-scheme: dark)")?.matches)
             ? "border-gray-600 bg-gray-800 text-white"
             : "border-gray-300 bg-white text-gray-900",
           className
         )}
-        aria-label="Player de texto para fala"
       >
         {showControls && (
           <>
-            {isPlaying ? (
-              isPaused ? renderResumeButton() : renderPauseButton()
-            ) : (
-              renderPlayButton()
-            )}
+            {isPlaying
+              ? isPaused
+                ? renderResumeButton()
+                : renderPauseButton()
+              : renderPlayButton()}
             {renderStopButton()}
           </>
         )}
@@ -326,13 +349,11 @@ export const ChatTTSPlayer = memo(
           {isPlaying && !isPaused && (
             <div className="flex gap-0.5">
               <div className="h-1 w-1 animate-pulse rounded-full bg-green-500" />
-              <div className="h-1 w-1 animate-pulse animation-delay-100 rounded-full bg-green-500" />
-              <div className="h-1 w-1 animate-pulse animation-delay-200 rounded-full bg-green-500" />
+              <div className="animation-delay-100 h-1 w-1 animate-pulse rounded-full bg-green-500" />
+              <div className="animation-delay-200 h-1 w-1 animate-pulse rounded-full bg-green-500" />
             </div>
           )}
-          {isPaused && (
-            <div className="h-1 w-1 rounded-full bg-yellow-500" />
-          )}
+          {isPaused && <div className="h-1 w-1 rounded-full bg-yellow-500" />}
         </div>
       </section>
     );
