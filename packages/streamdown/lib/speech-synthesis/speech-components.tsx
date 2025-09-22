@@ -100,7 +100,7 @@ export function SpeechControls({
       <button
         aria-label={playLabel}
         className={cn(
-          "inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
           isPlaying ? "bg-accent text-accent-foreground" : ""
         )}
         disabled={!isTextAvailable}
@@ -114,7 +114,7 @@ export function SpeechControls({
 
       <button
         aria-label="Parar"
-        className="inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-8 items-center justify-center rounded-md border border-input bg-background px-3 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         disabled={isStopDisabled}
         onClick={onStop}
         title="Parar"
@@ -141,11 +141,8 @@ export function SettingControl({
 }: SettingsControlProps) {
   return (
     <div className="flex items-center gap-2">
-      <label 
-        className={cn(
-          "text-sm font-medium",
-          compact ? "sr-only" : ""
-        )}
+      <label
+        className={cn("font-medium text-sm", compact ? "sr-only" : "")}
         htmlFor={id}
       >
         {label}:
@@ -162,7 +159,7 @@ export function SettingControl({
         type="range"
         value={value}
       />
-      <span className="text-xs text-muted-foreground" aria-hidden="true">
+      <span aria-hidden="true" className="text-muted-foreground text-xs">
         {formatValue(value)}
       </span>
     </div>
