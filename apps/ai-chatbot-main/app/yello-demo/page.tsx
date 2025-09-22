@@ -95,7 +95,7 @@ export default function YelloComponentsDemo() {
       </section>
 
       <section className="space-y-4">
-                <h2 className="font-semibold text-2xl">Toast Messages</h2>
+        <h2 className="font-semibold text-2xl">Toast Messages</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <YelloCard className="bg-black/5 p-4">
             <div className="rounded-lg border border-border bg-background p-3 shadow-md">

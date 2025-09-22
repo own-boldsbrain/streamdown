@@ -97,6 +97,7 @@ export async function createGuestUser() {
   try {
     // First attempt: Use returning API (PostgreSQL-style)
     try {
+      // @ts-ignore - Drizzle types don't play well with union types
       const result = await db
         .insert(user)
         .values({ email, password })
@@ -115,9 +116,11 @@ export async function createGuestUser() {
     }
 
     // Second attempt: Insert without returning and then select (SQLite-style)
+    // @ts-ignore - Drizzle types don't play well with union types
     await db.insert(user).values({ email, password });
     
     // Try to retrieve the inserted user
+    // @ts-ignore - Drizzle types don't play well with union types
     const selected = await db
       .select({ id: user.id, email: user.email })
       .from(user)
@@ -133,6 +136,7 @@ export async function createGuestUser() {
   } catch (error) {
     // Final fallback: Check if the user was actually created despite errors
     try {
+      // @ts-ignore - Drizzle types don't play well with union types
       const selected = await db
         .select({ id: user.id, email: user.email })
         .from(user)
