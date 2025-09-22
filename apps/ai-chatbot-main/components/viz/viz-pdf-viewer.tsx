@@ -1,23 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Download, 
-  ZoomIn, 
-  ZoomOut, 
-  RotateCw, 
-  Maximize, 
-  Printer, 
-  Search
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Maximize,
+  Printer,
+  RotateCw,
+  Search,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PDFViewerProps {
   url: string;
@@ -30,7 +36,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   url,
   className,
   previewMode = false,
-  onOpen
+  onOpen,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,12 +49,12 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   // Simula o carregamento para fins de demonstração
   useEffect(() => {
     if (previewMode) return;
-    
+
     const timer = setTimeout(() => {
       setIsLoading(false);
       setTotalPages(Math.floor(Math.random() * 20) + 5); // Simulação de número de páginas
     }, 1500);
-    
+
     return () => clearTimeout(timer);
   }, [previewMode, url]);
 
@@ -65,27 +71,27 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   };
 
   const handleZoomIn = () => {
-    setScale(prevScale => Math.min(prevScale + 0.25, 3));
+    setScale((prevScale) => Math.min(prevScale + 0.25, 3));
   };
 
   const handleZoomOut = () => {
-    setScale(prevScale => Math.max(prevScale - 0.25, 0.5));
+    setScale((prevScale) => Math.max(prevScale - 0.25, 0.5));
   };
 
   const handleRotate = () => {
-    setRotation(prevRotation => (prevRotation + 90) % 360);
+    setRotation((prevRotation) => (prevRotation + 90) % 360);
   };
 
   const handleDownload = () => {
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   const handlePrint = () => {
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
     iframe.src = url;
     document.body.appendChild(iframe);
-    
+
     iframe.onload = () => {
       iframe.contentWindow?.print();
       setTimeout(() => {
@@ -97,9 +103,9 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const goToPage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
-    const input = form.elements.namedItem('page') as HTMLInputElement;
-    const pageNumber = parseInt(input.value, 10);
-    
+    const input = form.elements.namedItem("page") as HTMLInputElement;
+    const pageNumber = Number.parseInt(input.value, 10);
+
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
@@ -107,16 +113,22 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
   if (previewMode) {
     return (
-      <Card className={cn("cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all", className)} onClick={onOpen}>
-        <CardContent className="p-4 flex items-center justify-between">
+      <Card
+        className={cn(
+          "cursor-pointer transition-all hover:ring-2 hover:ring-primary/50",
+          className
+        )}
+        onClick={onOpen}
+      >
+        <CardContent className="flex items-center justify-between p-4">
           <div className="flex flex-col">
             <span className="font-medium text-sm">Documento PDF</span>
-            <span className="text-xs text-muted-foreground truncate max-w-[150px]">
-              {url.split('/').pop() || 'documento.pdf'}
+            <span className="max-w-[150px] truncate text-muted-foreground text-xs">
+              {url.split("/").pop() || "documento.pdf"}
             </span>
           </div>
           <div className="flex items-center text-muted-foreground">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="mr-2 h-4 w-4" />
             <Maximize className="h-4 w-4" />
           </div>
         </CardContent>
@@ -125,39 +137,58 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   }
 
   return (
-    <div className={cn("flex flex-col border rounded-lg overflow-hidden", className)}>
+    <div
+      className={cn(
+        "flex flex-col overflow-hidden rounded-lg border",
+        className
+      )}
+    >
       {/* Toolbar */}
-      <div className="bg-muted p-2 border-b flex items-center justify-between flex-wrap gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-muted p-2">
         <div className="flex items-center space-x-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handlePrevPage} disabled={currentPage <= 1 || isLoading}>
+                <Button
+                  disabled={currentPage <= 1 || isLoading}
+                  onClick={handlePrevPage}
+                  size="icon"
+                  variant="outline"
+                >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Página anterior</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
-          <form onSubmit={goToPage} className="flex items-center space-x-1">
+
+          <form className="flex items-center space-x-1" onSubmit={goToPage}>
             <Input
-              type="number"
-              name="page"
-              min={1}
-              max={totalPages}
-              value={currentPage}
-              onChange={(e) => setCurrentPage(parseInt(e.target.value, 10) || 1)}
-              className="w-14 h-8 text-center"
+              className="h-8 w-14 text-center"
               disabled={isLoading}
+              max={totalPages}
+              min={1}
+              name="page"
+              onChange={(e) =>
+                setCurrentPage(Number.parseInt(e.target.value, 10) || 1)
+              }
+              type="number"
+              value={currentPage}
             />
-            <span className="text-sm text-muted-foreground">/ {totalPages}</span>
+            <span className="text-muted-foreground text-sm">
+              / {totalPages}
+            </span>
           </form>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleNextPage} disabled={currentPage >= totalPages || isLoading}>
+                <Button
+                  disabled={currentPage >= totalPages || isLoading}
+                  onClick={handleNextPage}
+                  size="icon"
+                  variant="outline"
+                >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -165,58 +196,85 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
             </Tooltip>
           </TooltipProvider>
         </div>
-        
+
         <div className="flex items-center space-x-1">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleZoomOut} disabled={isLoading}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleZoomOut}
+                  size="icon"
+                  variant="outline"
+                >
                   <ZoomOut className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Diminuir zoom</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
-          <span className="text-sm min-w-[40px] text-center">{Math.round(scale * 100)}%</span>
-          
+
+          <span className="min-w-[40px] text-center text-sm">
+            {Math.round(scale * 100)}%
+          </span>
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleZoomIn} disabled={isLoading}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleZoomIn}
+                  size="icon"
+                  variant="outline"
+                >
                   <ZoomIn className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Aumentar zoom</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleRotate} disabled={isLoading}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleRotate}
+                  size="icon"
+                  variant="outline"
+                >
                   <RotateCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Girar página</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleDownload} disabled={isLoading}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleDownload}
+                  size="icon"
+                  variant="outline"
+                >
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Baixar PDF</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handlePrint} disabled={isLoading}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handlePrint}
+                  size="icon"
+                  variant="outline"
+                >
                   <Printer className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -225,14 +283,14 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
           </TooltipProvider>
         </div>
       </div>
-      
+
       {/* PDF Container */}
-      <div 
+      <div
+        className="relative flex min-h-[500px] flex-1 items-center justify-center overflow-auto bg-gray-100"
         ref={containerRef}
-        className="relative flex-1 overflow-auto bg-gray-100 min-h-[500px] flex items-center justify-center"
       >
         {isLoading ? (
-          <div className="p-8 space-y-4">
+          <div className="space-y-4 p-8">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-64 w-full" />
             <Skeleton className="h-4 w-full" />
@@ -240,29 +298,31 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
             <Skeleton className="h-4 w-2/3" />
           </div>
         ) : (
-          <div 
-            className="my-4 mx-auto bg-white shadow-lg overflow-hidden"
+          <div
+            className="mx-auto my-4 overflow-hidden bg-white shadow-lg"
             style={{
               transform: `scale(${scale}) rotate(${rotation}deg)`,
-              transformOrigin: 'center center',
-              transition: 'transform 0.2s ease',
-              width: '8.5in',
-              height: '11in',
+              transformOrigin: "center center",
+              transition: "transform 0.2s ease",
+              width: "8.5in",
+              height: "11in",
             }}
           >
-            <iframe 
-              src={`${url}#page=${currentPage}`} 
-              className="w-full h-full border-0"
+            <iframe
+              className="h-full w-full border-0"
+              src={`${url}#page=${currentPage}`}
               title="PDF Viewer"
             />
           </div>
         )}
       </div>
-      
+
       {/* Status bar */}
-      <div className="bg-muted border-t p-1 px-3 text-xs text-muted-foreground flex items-center justify-between">
-        <span>Documento: {url.split('/').pop() || 'documento.pdf'}</span>
-        <span>Página {currentPage} de {totalPages}</span>
+      <div className="flex items-center justify-between border-t bg-muted p-1 px-3 text-muted-foreground text-xs">
+        <span>Documento: {url.split("/").pop() || "documento.pdf"}</span>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
       </div>
     </div>
   );

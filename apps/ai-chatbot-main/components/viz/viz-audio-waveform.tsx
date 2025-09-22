@@ -1,10 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Pause,
+  Play,
+  SkipBack,
+  SkipForward,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Constantes para visualização de onda de áudio
@@ -38,7 +46,7 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
   compact = false,
   onPlay,
   onPause,
-  onEnded
+  onEnded,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -59,7 +67,8 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
       const data = [];
       for (let i = 0; i < NUM_OF_BARS; i++) {
         // Cria um padrão mais natural para a forma de onda
-        const height = MIN_BAR_HEIGHT + Math.random() * (MAX_BAR_HEIGHT - MIN_BAR_HEIGHT);
+        const height =
+          MIN_BAR_HEIGHT + Math.random() * (MAX_BAR_HEIGHT - MIN_BAR_HEIGHT);
         data.push(height);
       }
       return data;
@@ -166,7 +175,10 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
 
   const handleSkipBackward = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+      audioRef.current.currentTime = Math.max(
+        0,
+        audioRef.current.currentTime - 10
+      );
     }
   };
 
@@ -182,52 +194,54 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
   // Formata o tempo em MM:SS
   const formatTime = (time: number) => {
     if (isNaN(time)) return "00:00";
-    
+
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   // Calcular qual parte da forma de onda deve estar ativa com base no tempo atual
-  const activeBarIndex = Math.floor((currentTime / duration) * waveformData.length);
+  const activeBarIndex = Math.floor(
+    (currentTime / duration) * waveformData.length
+  );
 
   return (
     <Card className={cn("overflow-hidden", className)}>
-      <CardContent className={cn(
-        "p-4",
-        compact ? "space-y-2" : "space-y-4"
-      )}>
+      <CardContent className={cn("p-4", compact ? "space-y-2" : "space-y-4")}>
         {/* Informações de áudio */}
         {!compact && (title || artist) && (
           <div className="space-y-1">
-            {title && <h3 className="font-medium text-sm truncate">{title}</h3>}
-            {artist && <p className="text-xs text-muted-foreground truncate">{artist}</p>}
+            {title && <h3 className="truncate font-medium text-sm">{title}</h3>}
+            {artist && (
+              <p className="truncate text-muted-foreground text-xs">{artist}</p>
+            )}
           </div>
         )}
 
         {/* Forma de onda de áudio */}
-        <div 
+        <div
           className={cn(
-            "flex items-end justify-center space-x-[2px] h-20",
+            "flex h-20 items-end justify-center space-x-[2px]",
             compact && "h-12"
           )}
         >
           {waveformData.map((height, index) => (
             <div
-              key={index}
               className={cn(
-                "transition-all duration-300 ease-in-out rounded-t-sm",
+                "rounded-t-sm transition-all duration-300 ease-in-out",
                 index <= activeBarIndex ? activeColor : waveColor
               )}
+              key={index}
               style={{
                 height: `${height}%`,
                 width: BAR_WIDTH,
                 minHeight: MIN_BAR_HEIGHT,
                 maxHeight: compact ? MAX_BAR_HEIGHT / 2 : MAX_BAR_HEIGHT,
                 // Efeito de animação para barras próximas à barra ativa
-                transform: isPlaying && Math.abs(index - activeBarIndex) < 5 
-                  ? `scaleY(${1 + (Math.random() * 0.2)})`
-                  : 'scaleY(1)'
+                transform:
+                  isPlaying && Math.abs(index - activeBarIndex) < 5
+                    ? `scaleY(${1 + Math.random() * 0.2})`
+                    : "scaleY(1)",
               }}
             />
           ))}
@@ -237,19 +251,19 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
         <div className="flex flex-col space-y-2">
           {/* Barra de progresso */}
           <div className="flex items-center space-x-2">
-            <span className="text-xs text-muted-foreground w-10 text-right">
+            <span className="w-10 text-right text-muted-foreground text-xs">
               {formatTime(currentTime)}
             </span>
             <Slider
-              value={[currentTime]}
-              min={0}
-              max={duration || 100}
-              step={0.1}
-              onValueChange={handleSeek}
               className="flex-1"
               disabled={!isLoaded}
+              max={duration || 100}
+              min={0}
+              onValueChange={handleSeek}
+              step={0.1}
+              value={[currentTime]}
             />
-            <span className="text-xs text-muted-foreground w-10">
+            <span className="w-10 text-muted-foreground text-xs">
               {formatTime(duration)}
             </span>
           </div>
@@ -258,31 +272,35 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSkipBackward}
-                disabled={!isLoaded}
                 className="h-8 w-8"
+                disabled={!isLoaded}
+                onClick={handleSkipBackward}
+                size="icon"
+                variant="ghost"
               >
                 <SkipBack className="h-4 w-4" />
               </Button>
-              
+
               <Button
-                variant={isPlaying ? "outline" : "default"}
-                size="icon"
-                onClick={togglePlayPause}
-                disabled={!isLoaded}
                 className="h-9 w-9"
-              >
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSkipForward}
                 disabled={!isLoaded}
+                onClick={togglePlayPause}
+                size="icon"
+                variant={isPlaying ? "outline" : "default"}
+              >
+                {isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+              </Button>
+
+              <Button
                 className="h-8 w-8"
+                disabled={!isLoaded}
+                onClick={handleSkipForward}
+                size="icon"
+                variant="ghost"
               >
                 <SkipForward className="h-4 w-4" />
               </Button>
@@ -291,28 +309,32 @@ const AudioWaveform: React.FC<AudioWaveformProps> = ({
             {/* Volume */}
             <div className="flex items-center space-x-2">
               <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleMute}
                 className="h-8 w-8"
+                onClick={toggleMute}
+                size="icon"
+                variant="ghost"
               >
-                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                {isMuted ? (
+                  <VolumeX className="h-4 w-4" />
+                ) : (
+                  <Volume2 className="h-4 w-4" />
+                )}
               </Button>
-              
+
               <Slider
-                value={[isMuted ? 0 : volume]}
-                min={0}
-                max={1}
-                step={0.01}
-                onValueChange={handleVolumeChange}
                 className="w-20"
+                max={1}
+                min={0}
+                onValueChange={handleVolumeChange}
+                step={0.01}
+                value={[isMuted ? 0 : volume]}
               />
             </div>
           </div>
         </div>
 
         {/* Audio Element (hidden) */}
-        <audio ref={audioRef} src={url} preload="metadata" />
+        <audio preload="metadata" ref={audioRef} src={url} />
       </CardContent>
     </Card>
   );
