@@ -9,6 +9,11 @@
     --glass-bg-opacity: 0.15;
     --glass-border-opacity: 0.3;
     --glass-blur: 10px;
+    
+    /* Variáveis para mensagens no estilo "Marrento Certo" */
+    --yello-msg-border-radius: 1rem;
+    --yello-msg-padding: 1rem;
+    --yello-msg-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .dark {
