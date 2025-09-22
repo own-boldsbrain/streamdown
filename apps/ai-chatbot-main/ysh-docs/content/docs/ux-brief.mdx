@@ -42,7 +42,7 @@ description: UX Strategy + UX Writing no tom Marrento Certo da Yello Solar Hub
 
 **Mensagens-chave**
 
-- **WhatsApp (homologação):** "Papelada na rede. ⏳ Prazo médio {{prazo\_dias}}. Se a concessionária travar, eu empurro."
+- **WhatsApp (homologação):** "Papelada na rede. ⏳ Prazo médio {{prazo_dias}}. Se a concessionária travar, eu empurro."
 - **SMS (instalação):** "Instala {{data}} {{janela}} — equipe {{equipe}}. Dúvidas: {{fone}}. SAIR p/ descad."
 - **Toast (engenharia):** "Projeto fechado. Sem gambiarra, só número."
 
@@ -58,7 +58,7 @@ description: UX Strategy + UX Writing no tom Marrento Certo da Yello Solar Hub
 **Mensagens-chave**
 
 - **WhatsApp (anomalia):** "Gerou menos hoje. Nada de pânico — provável sombra/poeira. Quer que eu acione limpeza?"
-- **E-mail (boletim):** "{{geracao\_kWh}} kWh no mês, conta caiu \~{{economia\_pct}}%. ROI no trilho."
+- **E-mail (boletim):** "{{geracao_kWh}} kWh no mês, conta caiu ~{{economia_pct}}%. ROI no trilho."
 
 ---
 
@@ -68,19 +68,19 @@ description: UX Strategy + UX Writing no tom Marrento Certo da Yello Solar Hub
 
 - **AnomalyReport (card título):** "Consumo torto, eu desentorto."
 
-  - Sub: "Picos em {{faixa\_horaria}}. Dá pra domar com ajuste fininho."
+  - Sub: "Picos em {{faixa_horaria}}. Dá pra domar com ajuste fininho."
   - CTA: "Ver recomendação"
 
 - **RiskGauge (legendas):**
   Baixo: "Suave. Pode tocar." | Médio: "Atenção esperta." | Alto: "Para tudo. Vamos revisar."
-- **PreSizingCard:** "Tamanho do kit: {{kWp}} kWp. Payback: \~{{anos}} anos. Sem firula."
+- **PreSizingCard:** "Tamanho do kit: {{kWp}} kWp. Payback: ~{{anos}} anos. Sem firula."
 - **GenerationChart (tooltip):** "{{mes}}: {{kWh}} kWh — segue o baile."
 
 ### ONGOING
 
 - **SingleLineDiagram (header):** "Esquema elétrico sem mistério."
 - **ARTPacket (sub):** "Assinado e na régua. Eng. resp.: {{crea}}."
-- **ProtocolTimeline:** "Protocolo {{protocolo\_id}} — status {{status}}. Deixa comigo."
+- **ProtocolTimeline:** "Protocolo {{protocolo_id}} — status {{status}}. Deixa comigo."
 - **CrewCard:** "Time {{equipe}} no local. Segurança em primeiro, gambiarra em último."
 
 ### POST
@@ -110,20 +110,20 @@ description: UX Strategy + UX Writing no tom Marrento Certo da Yello Solar Hub
 ### WhatsApp (PRE → simulação)
 
 - **Header:** "Simulação pronta. ☀️"
-- **Body:** "Conta média {{conta\_mes}}. Com {{kit\_nome}} tua fatura cai \~{{economia\_pct}}% e payback \~{{payback\_anos}} anos. Quer o PDF detalhado?"
+- **Body:** "Conta média {{conta_mes}}. Com {{kit_nome}} tua fatura cai ~{{economia_pct}}% e payback ~{{payback_anos}} anos. Quer o PDF detalhado?"
 - **CTA URL:** "Abrir proposta" → `{{link}}`
 - **Footer (opt-out):** "Responda SAIR para parar."
 
 ### WhatsApp (ONGOING → homologação)
 
 - **Header:** "Concessionária em jogo. ⚙️"
-- **Body:** "Protocolo {{protocolo\_id}} enviado. Prazo médio {{prazo\_dias}}. Qualquer pepino, eu corto."
+- **Body:** "Protocolo {{protocolo_id}} enviado. Prazo médio {{prazo_dias}}. Qualquer pepino, eu corto."
 - **CTA:** "Acompanhar status" → `{{link_status}}`
 - **Footer:** "SAIR p/ descad."
 
 ### E-mail (POST → boletim mensal)
 
-- **Subject:** "Teu sol rendeu {{geracao\_kWh}} kWh — conta caiu \~{{economia\_pct}}%"
+- **Subject:** "Teu sol rendeu {{geracao_kWh}} kWh — conta caiu ~{{economia_pct}}%"
 - **Preheader:** "PR {{pr}} | CO₂ evitado {{tCO2}} t | Tudo no trilho."
 
 ### SMS (instalação)
@@ -133,7 +133,7 @@ description: UX Strategy + UX Writing no tom Marrento Certo da Yello Solar Hub
 ### Telegram (ação rápida)
 
 - **Texto:** "Anomalia leve detectada. Quer que eu agende limpeza/inspeção?"
-- **Keyboard:** \["Agendar limpeza", "Abrir gráfico", "Falar com humano"]
+- **Keyboard:** ["Agendar limpeza", "Abrir gráfico", "Falar com humano"]
 
 ---
 

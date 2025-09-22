@@ -1,13 +1,28 @@
 ---
-title: Hello World
-description: Your first document
+title: Documentação AP2 - YSH
+description: Auto Portal Fotovoltaico - Yello Solar Hub
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+# Bem-vindo à documentação AP2
 
-## What is Next?
+O Auto Portal Fotovoltaico (AP2) é uma plataforma completa para gestão do ciclo de vida de sistemas fotovoltaicos, utilizando agentes especializados, Model Context Protocol (MCP) e mensageria NATS.
+
+## Conteúdo da documentação
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card title="UX Brief - AP2" href="/docs/ux-brief" />
+  <Card title="Arquitetura do Sistema" href="/docs/arquitetura" />
+  <Card title="Agentes e Ferramentas" href="/docs/agentes" />
 </Cards>
+
+## Sobre o AP2
+
+O AP2 é construído com uma arquitetura de agentes especializados que atuam em três fases principais:
+
+1. **PRE (Planejamento)** - Desde a captação de leads até a proposta comercial
+2. **ONGOING (Execução)** - Da engenharia à instalação
+3. **POST (Operação)** - Monitoramento, expansão e outros serviços pós-instalação
+
+Cada agente utiliza ferramentas específicas via MCP (Model Context Protocol) e se comunica com outros componentes através do NATS, um sistema de mensageria de alto desempenho.
+
+A interface do usuário apresenta componentes visuais especializados (Artifacts) para cada etapa do processo, oferecendo uma experiência rica e informativa.
