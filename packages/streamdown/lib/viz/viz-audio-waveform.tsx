@@ -9,13 +9,13 @@ import {
   VolumeX,
 } from "lucide-react";
 import {
+  type HTMLAttributes,
+  memo,
+  type ReactNode,
   useCallback,
   useEffect,
   useRef,
   useState,
-  type HTMLAttributes,
-  type ReactNode,
-  memo,
 } from "react";
 import { cn } from "../utils";
 
@@ -47,30 +47,34 @@ type SliderProps = {
 };
 
 // Componentes UI simplificados para o pacote streamdown
-const Button = memo(({ 
-  className, 
-  size = "default", 
-  variant = "default", 
-  children, 
-  ...props 
-}: ButtonProps) => (
-  <button
-    className={cn(
-      "inline-flex items-center justify-center rounded-md font-medium transition-colors",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-      size === "sm" && "h-8 px-3 text-xs",
-      size === "default" && "h-10 px-4 py-2",
-      variant === "default" && "bg-primary text-primary-foreground hover:bg-primary/90",
-      variant === "outline" && "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      variant === "ghost" && "hover:bg-accent hover:text-accent-foreground",
-      className
-    )}
-    type="button"
-    {...props}
-  >
-    {children}
-  </button>
-));
+const Button = memo(
+  ({
+    className,
+    size = "default",
+    variant = "default",
+    children,
+    ...props
+  }: ButtonProps) => (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        size === "sm" && "h-8 px-3 text-xs",
+        size === "default" && "h-10 px-4 py-2",
+        variant === "default" &&
+          "bg-primary text-primary-foreground hover:bg-primary/90",
+        variant === "outline" &&
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        variant === "ghost" && "hover:bg-accent hover:text-accent-foreground",
+        className
+      )}
+      type="button"
+      {...props}
+    >
+      {children}
+    </button>
+  )
+);
 
 Button.displayName = "Button";
 
@@ -80,57 +84,68 @@ const sliderStyles = {
   thumbPosition: (value: number) => `${value * PERCENT_100}%`,
 };
 
-const Slider = memo(({ onValueChange, value, className, "aria-label": ariaLabel, ...props }: SliderProps) => {
-  const currentValue = value && value.length > 0 ? value[0] : 0;
-  
-  return (
-    <div
-      className={cn(
-        "relative flex w-full touch-none select-none items-center",
-        className
-      )}
-      role="group"
-      aria-label={ariaLabel}
-    >
-      <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
-        <div
-          className="absolute h-full bg-primary"
-          style={{ width: sliderStyles.progressWidth(currentValue) }}
+const Slider = memo(
+  ({
+    onValueChange,
+    value,
+    className,
+    "aria-label": ariaLabel,
+    ...props
+  }: SliderProps) => {
+    const currentValue = value && value.length > 0 ? value[0] : 0;
+
+    return (
+      <div
+        aria-label={ariaLabel}
+        className={cn(
+          "relative flex w-full touch-none select-none items-center",
+          className
+        )}
+        role="group"
+      >
+        <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
+          <div
+            className="absolute h-full bg-primary"
+            style={{ width: sliderStyles.progressWidth(currentValue) }}
+          />
+        </div>
+        <button
+          aria-label={`Ajustar valor para ${Math.round(currentValue * PERCENT_100)}%`}
+          className="absolute block h-5 w-5 rounded-full border-2 border-primary bg-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+          onMouseDown={(e) => {
+            // Simulação simplificada de interação com o slider
+            const container = e.currentTarget.parentElement;
+            if (!container) {
+              return;
+            }
+
+            const handleMove = (moveEvent: MouseEvent) => {
+              const rect = container.getBoundingClientRect();
+              const percent = Math.max(
+                0,
+                Math.min(1, (moveEvent.clientX - rect.left) / rect.width)
+              );
+              onValueChange?.([percent]);
+            };
+
+            const handleUp = () => {
+              document.removeEventListener("mousemove", handleMove);
+              document.removeEventListener("mouseup", handleUp);
+            };
+
+            document.addEventListener("mousemove", handleMove);
+            document.addEventListener("mouseup", handleUp);
+          }}
+          style={{
+            left: sliderStyles.thumbPosition(currentValue),
+            transform: "translateX(-50%)",
+          }}
+          type="button"
         />
       </div>
-      <button
-        className="absolute block h-5 w-5 rounded-full border-2 border-primary bg-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-        style={{ 
-          left: sliderStyles.thumbPosition(currentValue),
-          transform: "translateX(-50%)" 
-        }}
-        type="button"
-        aria-label={`Ajustar valor para ${Math.round(currentValue * PERCENT_100)}%`}
-        onMouseDown={(e) => {
-          // Simulação simplificada de interação com o slider
-          const container = e.currentTarget.parentElement;
-          if (!container) {
-            return;
-          }
-          
-          const handleMove = (moveEvent: MouseEvent) => {
-            const rect = container.getBoundingClientRect();
-            const percent = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width));
-            onValueChange?.([percent]);
-          };
-          
-          const handleUp = () => {
-            document.removeEventListener("mousemove", handleMove);
-            document.removeEventListener("mouseup", handleUp);
-          };
-          
-          document.addEventListener("mousemove", handleMove);
-          document.addEventListener("mouseup", handleUp);
-        }}
-      />
-    </div>
-  );
-});
+    );
+  }
+);
 
 Slider.displayName = "Slider";
 
@@ -203,8 +218,9 @@ const VizAudioWaveform = memo(
 
       try {
         // Cria o contexto de áudio
-        const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+        const audioContext = new (
+          window.AudioContext || (window as any).webkitAudioContext
+        )();
         audioContextRef.current = audioContext;
 
         // Cria o nó de análise
@@ -249,7 +265,7 @@ const VizAudioWaveform = memo(
 
     // Renderiza a forma de onda no canvas
     const drawWaveform = useCallback(() => {
-      if (!canvasRef.current || !analyserRef.current || !frequencyData) return;
+      if (!(canvasRef.current && analyserRef.current && frequencyData)) return;
 
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
@@ -275,39 +291,43 @@ const VizAudioWaveform = memo(
         // Calcula a média dos valores de frequência para esta barra
         let sum = 0;
         const dataIndex = i * dataStep;
-        
-        for (let j = 0; j < dataStep && dataIndex + j < frequencyData.length; j++) {
+
+        for (
+          let j = 0;
+          j < dataStep && dataIndex + j < frequencyData.length;
+          j++
+        ) {
           sum += frequencyData[dataIndex + j];
         }
-        
+
         const average = sum / dataStep;
-        
+
         // Normaliza para a altura do canvas
         const barHeight = (average / 255) * canvas.height;
-        
+
         // Posição x da barra
         const x = i * (BAR_WIDTH + BAR_GAP);
-        
+
         // Desenha a barra a partir do centro
         const y = (canvas.height - barHeight) / 2;
-        
+
         // Desenha a barra superior
         ctx.fillStyle = gradient;
         ctx.fillRect(x, y, BAR_WIDTH, barHeight);
       }
 
-      // Solicita o próximo frame se estiver tocando
       if (isPlaying) {
+        // Solicita o próximo frame se estiver tocando
         animationFrameRef.current = requestAnimationFrame(drawWaveform);
       }
     }, [frequencyData, isPlaying]);
 
     // Inicia a visualização
     const startVisualization = useCallback(() => {
-      if (!analyserRef.current || !frequencyData) return;
+      if (!(analyserRef.current && frequencyData)) return;
 
-      // Cancela qualquer animação anterior
       if (animationFrameRef.current) {
+        // Cancela qualquer animação anterior
         cancelAnimationFrame(animationFrameRef.current);
       }
 
@@ -318,16 +338,16 @@ const VizAudioWaveform = memo(
     // Atualiza o tempo atual
     const updateTime = useCallback(() => {
       if (!audioRef.current) return;
-      
+
       setCurrentTime(audioRef.current.currentTime);
     }, []);
 
     // Controles de reprodução
     const togglePlayPause = useCallback(() => {
-      if (!audioRef.current || !audioContextRef.current) return;
+      if (!(audioRef.current && audioContextRef.current)) return;
 
-      // Retoma o contexto de áudio se estiver suspenso
       if (audioContextRef.current.state === "suspended") {
+        // Retoma o contexto de áudio se estiver suspenso
         audioContextRef.current.resume();
       }
 
@@ -345,7 +365,10 @@ const VizAudioWaveform = memo(
       } else {
         audioRef.current.play();
         startVisualization();
-        updateTimerRef.current = window.setInterval(updateTime, UPDATE_INTERVAL_MS);
+        updateTimerRef.current = window.setInterval(
+          updateTime,
+          UPDATE_INTERVAL_MS
+        );
       }
 
       setIsPlaying(!isPlaying);
@@ -355,11 +378,11 @@ const VizAudioWaveform = memo(
     const handleVolumeChange = useCallback((value: number[]) => {
       const newVolume = value[0];
       setVolume(newVolume);
-      
+
       if (gainNodeRef.current) {
         gainNodeRef.current.gain.value = newVolume;
       }
-      
+
       if (newVolume === 0) {
         setIsMuted(true);
       } else {
@@ -370,7 +393,7 @@ const VizAudioWaveform = memo(
     // Controle de mudo
     const toggleMute = useCallback(() => {
       if (!gainNodeRef.current) return;
-      
+
       if (isMuted) {
         gainNodeRef.current.gain.value = volume;
         setIsMuted(false);
@@ -411,19 +434,19 @@ const VizAudioWaveform = memo(
     // Efeito para configurar o canvas
     useEffect(() => {
       if (!canvasRef.current) return;
-      
+
       const canvas = canvasRef.current;
       const dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
-      
+
       // Define o tamanho real do canvas considerando o DPR
       canvas.width = rect.width * dpr;
       canvas.height = CANVAS_HEIGHT * dpr;
-      
+
       // Ajusta o estilo CSS para manter as dimensões visuais
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${CANVAS_HEIGHT}px`;
-      
+
       // Ajusta o contexto para o DPR
       const ctx = canvas.getContext("2d");
       if (ctx) {
@@ -435,42 +458,42 @@ const VizAudioWaveform = memo(
     useEffect(() => {
       const audio = new Audio(audioSrc);
       audioRef.current = audio;
-      
+
       const handleCanPlay = () => {
         setIsLoaded(true);
       };
-      
+
       const handleLoadedMetadata = () => {
         setDuration(audio.duration);
       };
-      
+
       const handleEnded = () => {
         setIsPlaying(false);
         setCurrentTime(0);
-        
+
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
           animationFrameRef.current = null;
         }
-        
+
         if (updateTimerRef.current) {
           clearInterval(updateTimerRef.current);
           updateTimerRef.current = null;
         }
-        
+
         if (onPlaybackComplete) {
           onPlaybackComplete();
         }
       };
-      
+
       // Adiciona os listeners
       audio.addEventListener("canplay", handleCanPlay);
       audio.addEventListener("loadedmetadata", handleLoadedMetadata);
       audio.addEventListener("ended", handleEnded);
-      
+
       // Inicializa o áudio quando estiver pronto
       audio.addEventListener("canplaythrough", initAudio, { once: true });
-      
+
       // Cleanup
       return () => {
         audio.pause();
@@ -478,28 +501,28 @@ const VizAudioWaveform = memo(
         audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
         audio.removeEventListener("ended", handleEnded);
         audio.removeEventListener("canplaythrough", initAudio);
-        
+
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
-        
+
         if (updateTimerRef.current) {
           clearInterval(updateTimerRef.current);
         }
-        
+
         // Limpa os nós de áudio
         if (sourceNodeRef.current) {
           sourceNodeRef.current.disconnect();
         }
-        
+
         if (analyserRef.current) {
           analyserRef.current.disconnect();
         }
-        
+
         if (gainNodeRef.current) {
           gainNodeRef.current.disconnect();
         }
-        
+
         if (audioContextRef.current) {
           audioContextRef.current.close();
         }
@@ -507,7 +530,7 @@ const VizAudioWaveform = memo(
     }, [audioSrc, initAudio, onPlaybackComplete]);
 
     return (
-      <div 
+      <div
         className={cn(
           "rounded-lg border bg-background p-4 shadow-sm",
           className
@@ -518,17 +541,13 @@ const VizAudioWaveform = memo(
         {/* Cabeçalho com título opcional */}
         {title && (
           <div className="mb-3">
-            <h3 className="text-sm font-semibold">{title}</h3>
+            <h3 className="font-semibold text-sm">{title}</h3>
           </div>
         )}
 
         {/* Canvas para visualização da forma de onda */}
         <div className="mb-4 overflow-hidden rounded-md bg-muted/30">
-          <canvas 
-            className="w-full"
-            height={CANVAS_HEIGHT}
-            ref={canvasRef}
-          />
+          <canvas className="w-full" height={CANVAS_HEIGHT} ref={canvasRef} />
         </div>
 
         {/* Controles do player (condicionais) */}
