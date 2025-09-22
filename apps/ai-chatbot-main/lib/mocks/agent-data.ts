@@ -52,95 +52,89 @@ export const mockRiskScoreData = {
 
 // Dados para o relatório de padrões de consumo
 export const mockConsumptionPatternsData = {
-  consumption_patterns: {
-    system_id: "SYS-1234-ABCD",
-    patterns_identified: [
-      {
-        pattern_type: "seasonal_variation",
-        description:
-          "Aumento de consumo nos meses de verão, principalmente entre dezembro e fevereiro",
-        confidence: 0.92,
-      },
-      {
-        pattern_type: "weekday_pattern",
-        description:
-          "Consumo 35% maior em dias úteis comparado aos finais de semana",
-        confidence: 0.87,
-      },
-      {
-        pattern_type: "hourly_pattern",
-        description:
-          "Picos de consumo entre 14h e 16h, possivelmente devido ao uso de ar condicionado",
-        confidence: 0.75,
-      },
-      {
-        pattern_type: "equipment_signature",
-        description:
-          "Detecção de assinatura consistente com sistema de refrigeração comercial",
-        confidence: 0.63,
-      },
-    ],
-    insights: [
-      "Recomenda-se ajustar a operação de equipamentos de alto consumo para fora do horário de ponta",
-      "Possibilidade de economia com desligamento programado nos finais de semana",
-      "Avaliar viabilidade de tarifa branca para aproveitar menores custos fora do horário de ponta",
-      "Sistema fotovoltaico atual está alinhado com o perfil de consumo diurno do estabelecimento",
-    ],
-  },
+  system_id: "SYS-1234-ABCD",
+  patterns_identified: [
+    {
+      pattern_type: "seasonal_variation",
+      description:
+        "Aumento de consumo nos meses de verão, principalmente entre dezembro e fevereiro",
+      confidence: 0.92,
+    },
+    {
+      pattern_type: "weekday_pattern",
+      description:
+        "Consumo 35% maior em dias úteis comparado aos finais de semana",
+      confidence: 0.87,
+    },
+    {
+      pattern_type: "hourly_pattern",
+      description:
+        "Picos de consumo entre 14h e 16h, possivelmente devido ao uso de ar condicionado",
+      confidence: 0.75,
+    },
+    {
+      pattern_type: "equipment_signature",
+      description:
+        "Detecção de assinatura consistente com sistema de refrigeração comercial",
+      confidence: 0.63,
+    },
+  ],
+  insights: [
+    "Recomenda-se ajustar a operação de equipamentos de alto consumo para fora do horário de ponta",
+    "Possibilidade de economia com desligamento programado nos finais de semana",
+    "Avaliar viabilidade de tarifa branca para aproveitar menores custos fora do horário de ponta",
+    "Sistema fotovoltaico atual está alinhado com o perfil de consumo diurno do estabelecimento",
+  ],
 };
 
 // Dados para o relatório de status de conformidade
 export const mockComplianceStatusData = {
-  compliance_status: {
-    system_id: "SYS-1234-ABCD",
-    lei_14300_compliant: true,
-    validation_date: "2025-08-15T10:30:00Z",
-    requirements_met: [
-      "Sistema registrado na distribuidora conforme normativa",
-      "Potência instalada dentro dos limites permitidos para microgeração",
-      "Equipamentos homologados pelo INMETRO",
-      "Projeto elétrico e memorial descritivo conformes com a norma técnica",
-      "Instalação realizada por empresa credenciada",
-      "Sistema de compensação de energia corretamente configurado",
-    ],
-    next_review_date: "2026-08-15T10:30:00Z",
-  },
+  system_id: "SYS-1234-ABCD",
+  lei_14300_compliant: true,
+  validation_date: "2025-08-15T10:30:00Z",
+  requirements_met: [
+    "Sistema registrado na distribuidora conforme normativa",
+    "Potência instalada dentro dos limites permitidos para microgeração",
+    "Equipamentos homologados pelo INMETRO",
+    "Projeto elétrico e memorial descritivo conformes com a norma técnica",
+    "Instalação realizada por empresa credenciada",
+    "Sistema de compensação de energia corretamente configurado",
+  ],
+  next_review_date: "2026-08-15T10:30:00Z",
 };
 
 // Dados para o relatório de simulação de financiamento
 export const mockFinancingSimulationData = {
-  financing_simulation: {
-    system_id: "SYS-1234-ABCD",
-    system_size_kw: 10.5,
-    total_investment: 52_500,
-    financing_options: [
-      {
-        option_name: "Financiamento Banco Solar",
-        interest_rate: 0.0099, // 0.99% ao mês
-        term_months: 60,
-        monthly_payment: 1125.62,
-        total_cost: 67_537.2,
-        irr: 0.187, // 18.7%
-      },
-      {
-        option_name: "Cooperativa de Crédito Verde",
-        interest_rate: 0.0089, // 0.89% ao mês
-        term_months: 48,
-        monthly_payment: 1305.75,
-        total_cost: 62_676.0,
-        irr: 0.215, // 21.5%
-      },
-      {
-        option_name: "Financiamento Próprio",
-        interest_rate: 0, // 0% (pagamento à vista)
-        term_months: 1,
-        monthly_payment: 52_500,
-        total_cost: 52_500,
-        irr: 0.232, // 23.2%
-      },
-    ],
-    recommended_option: "Cooperativa de Crédito Verde",
-  },
+  system_id: "SYS-1234-ABCD",
+  system_size_kw: 10.5,
+  total_investment: 52_500,
+  financing_options: [
+    {
+      option_name: "Financiamento Banco Solar",
+      interest_rate: 0.0099, // 0.99% ao mês
+      term_months: 60,
+      monthly_payment: 1125.62,
+      total_cost: 67_537.2,
+      irr: 0.187, // 18.7%
+    },
+    {
+      option_name: "Cooperativa de Crédito Verde",
+      interest_rate: 0.0089, // 0.89% ao mês
+      term_months: 48,
+      monthly_payment: 1305.75,
+      total_cost: 62_676.0,
+      irr: 0.215, // 21.5%
+    },
+    {
+      option_name: "Financiamento Próprio",
+      interest_rate: 0, // 0% (pagamento à vista)
+      term_months: 1,
+      monthly_payment: 52_500,
+      total_cost: 52_500,
+      irr: 0.232, // 23.2%
+    },
+  ],
+  recommended_option: "Cooperativa de Crédito Verde",
 };
 
 // Coleção de todos os dados mock para fácil acesso

@@ -96,10 +96,13 @@ export function ChatMessageContent({
     // Carregamos o componente AgentCard dinamicamente para evitar problemas de importação circular
     const AgentCardDynamic =
       require("@/components/agents/agent-card").AgentCard;
+    
+    // Obtemos os dados reais dentro da chave do agente
+    const agentPayload = agentData[agentKey] || agentData;
 
     return (
       <div className={cn("chat-message-content", className)}>
-        <AgentCardDynamic agentKey={agentKey} data={agentData} />
+        <AgentCardDynamic agentKey={agentKey} data={agentPayload} />
       </div>
     );
   }
