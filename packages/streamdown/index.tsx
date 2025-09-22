@@ -19,6 +19,22 @@ import { cn } from "./lib/utils";
 
 export type { MermaidConfig } from "mermaid";
 
+// Exporta componentes de síntese de voz
+export { SpeechSynthesis } from "./lib/speech-synthesis/speech-synthesis";
+export { MarkdownSpeech } from "./lib/speech-synthesis/markdown-speech";
+export { useSpeechSynthesis } from "./lib/speech-synthesis/use-speech-synthesis";
+export { 
+  SpeechControls, 
+  SettingControl, 
+  SpeechStatusIndicator 
+} from "./lib/speech-synthesis/speech-ui";
+export type { SpeechSynthesisProps } from "./lib/speech-synthesis/speech-synthesis";
+export type { MarkdownSpeechProps } from "./lib/speech-synthesis/markdown-speech";
+
+// Exporta o wrapper com síntese de voz
+export { StreamdownWithSpeech } from "./lib/wrappers/streamdown-with-speech";
+export type { StreamdownWithSpeechProps } from "./lib/wrappers/streamdown-with-speech";
+
 type HardenReactMarkdownProps = Options & {
   defaultOrigin?: string;
   allowedLinkPrefixes?: string[];
