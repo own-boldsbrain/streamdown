@@ -3,7 +3,7 @@
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AnomalyReportSchema, type AnomalyReport } from "@/lib/schemas/ap2";
+import { type AnomalyReport, AnomalyReportSchema } from "@/lib/schemas/ap2";
 
 export default function AnomalyReportArtifact({
   seed,
@@ -17,7 +17,7 @@ export default function AnomalyReportArtifact({
       system_id: (seed?.system_id as string) || "system-default",
       anomalies_detected: [],
       total_anomalies: 0,
-      risk_assessment: ""
+      risk_assessment: "",
     },
   });
 
@@ -67,13 +67,15 @@ export default function AnomalyReportArtifact({
             {typedObject.anomalies_detected &&
               typedObject.anomalies_detected.length > 0 && (
                 <ul className="ml-5 list-disc">
-                  {typedObject.anomalies_detected.map((anomaly, index: number) => (
-                    <li key={`anomaly-${index}-${anomaly.type || "unknown"}`}>
-                      {anomaly.type || "Tipo desconhecido"} ·
-                      {anomaly.severity || "severity n/a"} ·
-                      {anomaly.month || "mês n/a"}
-                    </li>
-                  ))}
+                  {typedObject.anomalies_detected.map(
+                    (anomaly, index: number) => (
+                      <li key={`anomaly-${index}-${anomaly.type || "unknown"}`}>
+                        {anomaly.type || "Tipo desconhecido"} ·
+                        {anomaly.severity || "severity n/a"} ·
+                        {anomaly.month || "mês n/a"}
+                      </li>
+                    )
+                  )}
                 </ul>
               )}
           </div>

@@ -321,10 +321,10 @@ const VizPremiumMedia = memo(
               </button>
 
               <button
-                type="button"
                 aria-label={isMuted ? "Ativar som" : "Desativar som"}
                 className={mediaClasses.volumeButton}
                 onClick={toggleMute}
+                type="button"
               >
                 {isMuted ? (
                   <VolumeX className="h-5 w-5" />
@@ -356,10 +356,10 @@ const VizPremiumMedia = memo(
             <div className="flex items-center gap-2">
               {downloadable && (
                 <button
-                  type="button"
                   aria-label="Download"
                   className={mediaClasses.downloadButton}
                   onClick={handleDownload}
+                  type="button"
                 >
                   <Download className="h-5 w-5" />
                 </button>
@@ -367,10 +367,10 @@ const VizPremiumMedia = memo(
 
               {type === "video" && (
                 <button
-                  type="button"
                   aria-label="Tela cheia"
                   className={mediaClasses.volumeButton}
                   onClick={toggleFullscreen}
+                  type="button"
                 >
                   <Maximize className="h-5 w-5" />
                 </button>
