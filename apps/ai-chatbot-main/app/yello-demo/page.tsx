@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { YelloBorder, YelloButton, YelloCard } from "@/components/yello-ui";
 
 export default function YelloComponentsDemo() {
@@ -44,6 +45,39 @@ export default function YelloComponentsDemo() {
             <h3 className="mb-2 font-medium text-lg">Card Padrão</h3>
             <p>Card com estilo padrão da aplicação para comparação.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-semibold text-2xl">Cards com Componentes UI</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <Card variant="default">
+            <CardHeader>
+              <CardTitle>Card Padrão</CardTitle>
+              <CardDescription>Card com estilo padrão do sistema</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Este é um exemplo do componente Card com estilo padrão.</p>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="mr-2">Cancelar</Button>
+              <Button>Confirmar</Button>
+            </CardFooter>
+          </Card>
+
+          <Card variant="glass">
+            <CardHeader>
+              <CardTitle>Card com Glass Effect</CardTitle>
+              <CardDescription>Usando a variante glass do Yello Solar Hub</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Este é um exemplo do componente Card com efeito glass e bordas em degradê.</p>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="mr-2">Cancelar</Button>
+              <YelloButton>Confirmar</YelloButton>
+            </CardFooter>
+          </Card>
         </div>
       </section>
 

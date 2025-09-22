@@ -2,18 +2,17 @@
 @layer utilities {
   /* Variáveis para o degradê da Yello Solar */
   :root {
-    --yello-gradient-start: #ffc107;
-    --yello-gradient-mid: #ff9800;
-    --yello-gradient-end: #ff5722;
+    /* Usando as variáveis definidas no globals.css */
+    --yello-gradient-start: var(--yello-primary);
+    --yello-gradient-mid: var(--yello-secondary);
+    --yello-gradient-end: var(--yello-accent);
     --glass-bg-opacity: 0.15;
     --glass-border-opacity: 0.3;
     --glass-blur: 10px;
   }
 
   .dark {
-    --yello-gradient-start: #ffd54f;
-    --yello-gradient-mid: #ffb74d;
-    --yello-gradient-end: #ff7043;
+    /* Variáveis no modo escuro já definidas no globals.css */
     --glass-bg-opacity: 0.1;
     --glass-border-opacity: 0.2;
   }
@@ -23,6 +22,9 @@
     background: rgba(255, 255, 255, var(--glass-bg-opacity));
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: none;
+    position: relative;
+    z-index: 0;
   }
 
   .dark .yello-glass {

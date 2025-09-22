@@ -3,7 +3,6 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { DUMMY_PASSWORD } from "@/lib/constants";
-import { getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -44,6 +43,7 @@ export const {
     Credentials({
       credentials: {},
       async authorize({ email, password }: any) {
+        const { getUser } = await import("@/lib/db/queries");
         const users = await getUser(email);
 
         if (users.length === 0) {

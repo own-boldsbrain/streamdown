@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import YelloSolarStyleApplier from "@/components/yello-solar-style-applier";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -79,7 +80,11 @@ export default function RootLayout({
           enableSystem
         >
           <Toaster position="top-center" />
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            {children}
+            {/* Aplicador de estilos Yello Solar Hub */}
+            {process.env.NODE_ENV !== 'production' && <YelloSolarStyleApplier />}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
