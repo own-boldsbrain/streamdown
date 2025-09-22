@@ -1,13 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Streamdown } from "streamdown";
 import { AgentCard } from "@/components/agents/agent-card";
 import { ChatMessageContent } from "@/components/chat/chat-message-content";
-import { Streamdown } from "streamdown";
-import { mockAgentData, mockChatMessages, mockMarkdownContent } from "@/lib/mocks/agent-data";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  mockAgentData,
+  mockChatMessages,
+  mockMarkdownContent,
+} from "@/lib/mocks/agent-data";
 
 // Constantes
 const CHAR_STREAM_INTERVAL_MS = 30;
@@ -18,8 +28,11 @@ type MarkdownKey = keyof typeof mockMarkdownContent;
 
 export default function TestPage() {
   const [selectedAgent, setSelectedAgent] = useState<AgentKey>("anomaly_report");
-  const [selectedMarkdown, setSelectedMarkdown] = useState<MarkdownKey>("simple");
-  const [currentMessages, setCurrentMessages] = useState(mockChatMessages.slice(0, 2));
+  const [selectedMarkdown, setSelectedMarkdown] =
+    useState<MarkdownKey>("simple");
+  const [currentMessages, setCurrentMessages] = useState(
+    mockChatMessages.slice(0, 2)
+  );
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("agents");
@@ -28,13 +41,13 @@ export default function TestPage() {
   const startStreaming = () => {
     setIsStreaming(true);
     setStreamingText("");
-    
+
     const fullText = mockMarkdownContent.streaming;
     let index = 0;
-    
+
     const streamInterval = setInterval(() => {
       if (index < fullText.length) {
-        setStreamingText(prev => prev + fullText.charAt(index));
+        setStreamingText((prev) => prev + fullText.charAt(index));
         index++;
       } else {
         clearInterval(streamInterval);
@@ -45,7 +58,10 @@ export default function TestPage() {
 
   // Adiciona mais mensagens à conversa
   const addMoreMessages = () => {
-    const nextLength = Math.min(currentMessages.length + 2, mockChatMessages.length);
+    const nextLength = Math.min(
+      currentMessages.length + 2,
+      mockChatMessages.length
+    );
     setCurrentMessages(mockChatMessages.slice(0, nextLength));
   };
 
@@ -66,43 +82,57 @@ export default function TestPage() {
             <CardContent>
               <div className="mb-4">
                 <Select
-                  value={selectedAgent}
                   onValueChange={(value) => setSelectedAgent(value as AgentKey)}
+                  value={selectedAgent}
                 >
                   <SelectTrigger className="w-72">
                     <SelectValue placeholder="Selecione um tipo de agente" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="anomaly_report">Relatório de Anomalias</SelectItem>
-                    <SelectItem value="risk_score">Pontuação de Risco</SelectItem>
-                    <SelectItem value="consumption_patterns">Padrões de Consumo</SelectItem>
-                    <SelectItem value="compliance_status">Status de Conformidade</SelectItem>
-                    <SelectItem value="financing_simulation">Simulação de Financiamento</SelectItem>
+                    <SelectItem value="anomaly_report">
+                      Relatório de Anomalias
+                    </SelectItem>
+                    <SelectItem value="risk_score">
+                      Pontuação de Risco
+                    </SelectItem>
+                    <SelectItem value="consumption_patterns">
+                      Padrões de Consumo
+                    </SelectItem>
+                    <SelectItem value="compliance_status">
+                      Status de Conformidade
+                    </SelectItem>
+                    <SelectItem value="financing_simulation">
+                      Simulação de Financiamento
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="mt-6">
-                <AgentCard 
-                  agentKey={selectedAgent} 
+                <AgentCard
+                  agentKey={selectedAgent}
                   data={mockAgentData[selectedAgent]}
                 />
               </div>
             </CardContent>
           </Card>
         );
-      
+
       case "markdown":
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Teste de Renderização Markdown com Streamdown</CardTitle>
+              <CardTitle>
+                Teste de Renderização Markdown com Streamdown
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="mb-4">
                 <Select
+                  onValueChange={(value) =>
+                    setSelectedMarkdown(value as MarkdownKey)
+                  }
                   value={selectedMarkdown}
-                  onValueChange={(value) => setSelectedMarkdown(value as MarkdownKey)}
                 >
                   <SelectTrigger className="w-72">
                     <SelectValue placeholder="Selecione um exemplo" />
@@ -113,7 +143,7 @@ export default function TestPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="mt-6 rounded-lg border p-6">
                 <Streamdown
                   className="prose prose-neutral dark:prose-invert max-w-none"
@@ -130,7 +160,7 @@ export default function TestPage() {
             </CardContent>
           </Card>
         );
-      
+
       case "chat":
         return (
           <Card>
@@ -139,23 +169,35 @@ export default function TestPage() {
             </CardHeader>
             <CardContent>
               <div className="mb-4 flex gap-2">
-                <Button onClick={addMoreMessages}>Adicionar Mais Mensagens</Button>
-                <Button variant="outline" onClick={resetMessages}>Reiniciar</Button>
+                <Button onClick={addMoreMessages}>
+                  Adicionar Mais Mensagens
+                </Button>
+                <Button onClick={resetMessages} variant="outline">
+                  Reiniciar
+                </Button>
               </div>
-              
+
               <div className="mt-6 space-y-6">
                 {currentMessages.map((message) => (
-                  <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-3xl rounded-lg p-4 ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                  <div
+                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    key={message.id}
+                  >
+                    <div
+                      className={`max-w-3xl rounded-lg p-4 ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                    >
                       {message.role === "user" ? (
                         <p>{message.text}</p>
                       ) : (
-                        <ChatMessageContent 
+                        <ChatMessageContent
                           message={{
                             id: message.id,
-                            role: message.role as "user" | "assistant" | "system",
-                            text: message.text
-                          }} 
+                            role: message.role as
+                              | "user"
+                              | "assistant"
+                              | "system",
+                            text: message.text,
+                          }}
                         />
                       )}
                     </div>
@@ -165,7 +207,7 @@ export default function TestPage() {
             </CardContent>
           </Card>
         );
-      
+
       case "streaming":
         return (
           <Card>
@@ -174,11 +216,13 @@ export default function TestPage() {
             </CardHeader>
             <CardContent>
               <div className="mb-4">
-                <Button onClick={startStreaming} disabled={isStreaming}>
-                  {isStreaming ? "Streaming em andamento..." : "Iniciar Streaming"}
+                <Button disabled={isStreaming} onClick={startStreaming}>
+                  {isStreaming
+                    ? "Streaming em andamento..."
+                    : "Iniciar Streaming"}
                 </Button>
               </div>
-              
+
               <div className="mt-6 rounded-lg border p-6">
                 <Streamdown
                   className="prose prose-neutral dark:prose-invert max-w-none"
@@ -195,7 +239,7 @@ export default function TestPage() {
             </CardContent>
           </Card>
         );
-      
+
       default:
         return null;
     }
@@ -203,41 +247,41 @@ export default function TestPage() {
 
   return (
     <div className="container py-8">
-      <h1 className="font-bold mb-8 text-3xl">Página de Teste Visual</h1>
-      
+      <h1 className="mb-8 font-bold text-3xl">Página de Teste Visual</h1>
+
       <div className="mb-6">
-        <div className="border-b flex">
+        <div className="flex border-b">
           <button
-            type="button"
             className={`border-b-2 px-4 py-2 ${activeTab === "agents" ? "border-primary" : "border-transparent"}`}
             onClick={() => setActiveTab("agents")}
+            type="button"
           >
             Componentes de Agentes
           </button>
           <button
-            type="button"
             className={`border-b-2 px-4 py-2 ${activeTab === "markdown" ? "border-primary" : "border-transparent"}`}
             onClick={() => setActiveTab("markdown")}
+            type="button"
           >
             Visualização Markdown
           </button>
           <button
-            type="button"
             className={`border-b-2 px-4 py-2 ${activeTab === "chat" ? "border-primary" : "border-transparent"}`}
             onClick={() => setActiveTab("chat")}
+            type="button"
           >
             Simulação de Chat
           </button>
           <button
-            type="button"
             className={`border-b-2 px-4 py-2 ${activeTab === "streaming" ? "border-primary" : "border-transparent"}`}
             onClick={() => setActiveTab("streaming")}
+            type="button"
           >
             Streaming
           </button>
         </div>
       </div>
-      
+
       {renderTabContent()}
     </div>
   );

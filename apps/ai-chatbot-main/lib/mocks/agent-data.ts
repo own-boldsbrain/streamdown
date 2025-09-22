@@ -34,22 +34,20 @@ export const mockAnomalyReportData = {
 
 // Dados para o relatório de pontuação de risco
 export const mockRiskScoreData = {
-  risk_score: {
-    system_id: "SYS-1234-ABCD",
-    overall_score: 72,
-    breakdown: {
-      consumption_anomalies: 65,
-      billing_irregularities: 85,
-      pattern_deviations: 55,
-      compliance_risks: 70,
-    },
-    recommendations: [
-      "Ajustar o dimensionamento do sistema para reduzir picos de consumo",
-      "Verificar possíveis irregularidades na fatura de energia elétrica",
-      "Implementar sistema de monitoramento em tempo real para melhor controle",
-      "Revisar a conformidade com a legislação atual de geração distribuída",
-    ],
+  system_id: "SYS-1234-ABCD",
+  overall_score: 72,
+  breakdown: {
+    consumption_anomalies: 65,
+    billing_irregularities: 85,
+    pattern_deviations: 55,
+    compliance_risks: 70,
   },
+  recommendations: [
+    "Ajustar o dimensionamento do sistema para reduzir picos de consumo",
+    "Verificar possíveis irregularidades na fatura de energia elétrica",
+    "Implementar sistema de monitoramento em tempo real para melhor controle",
+    "Revisar a conformidade com a legislação atual de geração distribuída",
+  ],
 };
 
 // Dados para o relatório de padrões de consumo
